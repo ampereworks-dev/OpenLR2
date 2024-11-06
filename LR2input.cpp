@@ -1166,7 +1166,7 @@ int WaitInput(inputStructure *is){
 }
 
 //4bf020
-int InputToButton(inputStructure *is, CONFIG_INPUT *cfg_input, int player, int flag) {
+int InputToButton(inputStructure *is, CONFIG_INPUT *cfg_input, int player, int isReplay) {
 	
 	ProcessInput(is, cfg_input->sys_inputinterval);
 	if (midi.controller_n > 0) {
@@ -1176,7 +1176,7 @@ int InputToButton(inputStructure *is, CONFIG_INPUT *cfg_input, int player, int f
 		midi.controller_v = 0;
 	}
 
-	if (flag == 0) {
+	if (isReplay == 0) {
 		if (player == 0) {
 			for (int i = 0; i < 20; i++) {
 				unsigned char &button = is->p1_buttonInput[i];
@@ -1218,7 +1218,7 @@ int InputToButton(inputStructure *is, CONFIG_INPUT *cfg_input, int player, int f
 				}
 			}
 		}
-		else if (player == 2) {
+		else if (player == 2) { //TOFIX: never called
 			for (int i = 0; i < 20; i++) {
 				unsigned char &button = is->p2_buttonInput[i];
 				for (int j = 0; j < 16; j++) {
@@ -1246,6 +1246,7 @@ int InputToButton(inputStructure *is, CONFIG_INPUT *cfg_input, int player, int f
 			else if (button == 3) button = 0;
 		}
 	}
+
 	//scaratch input
 	if (is->p1_buttonInput[10] == 1 || is->p1_buttonInput[11] == 1) {
 		is->p1_buttonInput[0] = 1;
@@ -1266,6 +1267,7 @@ int InputToButton(inputStructure *is, CONFIG_INPUT *cfg_input, int player, int f
 	else if (is->p2_buttonInput[10] == 3 || is->p2_buttonInput[11] == 3) {
 		is->p2_buttonInput[0] = 3;
 	}
+
 	return 1;
 }
 

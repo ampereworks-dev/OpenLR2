@@ -33,6 +33,6 @@ int CloseMIDI(void);
 void ProcessInput(inputStructure *is, int interval);
 void CALLBACK MIDIInProc(HMIDIIN hMidiIn, uint wMsg, dword dwInstance, dword dwParam1, dword dwParam2);
 int WaitInput(inputStructure *is);
-int InputToButton(inputStructure *is, CONFIG_INPUT *cfg_input, int player, int flag);
+int InputToButton(inputStructure *is, CONFIG_INPUT *cfg_input, int player, int isReplay);
 void InitMIDIInput(void);
 int InitInputStructure(inputStructure *is);

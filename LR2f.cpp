@@ -12586,422 +12586,325 @@ int ProcGame(game *g) {
 			g->gameplay.stageMixer[i] = ChangeValueByTime(0.0, 100.0, g->gameplay.connection_unkC[i], g->gameplay.connection_unkD[i], t41, 0);
 		}
 	}
+		
+	while (true) {
 
-	if (g->gameplay.bmsobj.notes[g->gameplay.bmsobj.note_count].realTiming < t142) {
-		while (g->gameplay.bmsobj.notes[g->gameplay.bmsobj.note_count].realTiming < t142) {
-			if (g->gameplay.bpmChangedBmstime >= 0) break;
-
-			int op = g->gameplay.bmsobj.notes[g->gameplay.bmsobj.note_count].op;
-			int val = g->gameplay.bmsobj.notes[g->gameplay.bmsobj.note_count].val;
-			int stage = g->gameplay.bmsobj.notes[g->gameplay.bmsobj.note_count].stage;
-			if (op < 50) {
-				switch (op) {
-				case 1:
-					if (g->rec.recMode != 2) {
-						PlaySound(&g->audio, &g->gameplay.keysound[val], g->audio.chnStageBgm[stage], stage);
-					}
-					break;
-				case 2:
-					g->timer1.clock[140] = 0.0;
-					g->timer1.Rhythm = 0.0;
-					break;
-				case 3:
-				case 8:
-					g->gameplay.BPM = abs(val);
-					if (val < 0) {
-						g->gameplay.bpmChangedBmstime = RealTimeToBMSTime(&g->gameplay, g->config.play.judgetiming + GetTimeLapse(41, &g->timer1));
-						g->gameplay.bpmChangedRealtime = t142;
-					}
-					break;
-				case 4:
-					if (g->gameplay.courseType == 1) {
-						g->gameplay.courseBgaLayer1[stage] = val;
-						g->gameplay.isBgaPlaying = 1;
-						if (1 <= val && val < 6479) {
-							SeekMovieToGraph(g->gameplay.bgaHandle[val], 0);
-							if (val == 1295 && g->gameplay.bgaHandle[1295] != -1 && g->gameplay.soundonly) {
-								PlayMovieToGraph(g->gameplay.bgaHandle[1295], 3, 0);
-							}
-							else {
-								PlayMovieToGraph(g->gameplay.bgaHandle[val], 1, 0);
-							}
-							g->gameplay.courseLayer1ChangeTime[stage] = GetTimeWrap();
-							SetMovieVolumeToGraph(0, g->gameplay.bgaHandle[val]);
-						}
-					}
-					else {
-						g->gameplay.bgaLayer1 = val;
-						g->gameplay.isBgaPlaying = 1;
-						if (1 <= val && val < 6479) {
-							SeekMovieToGraph(g->gameplay.bgaHandle[val], 0);
-							if (val == 1295 && g->gameplay.bgaHandle[1295] != -1 && g->gameplay.soundonly) {
-								PlayMovieToGraph(g->gameplay.bgaHandle[1295], 3, 0);
-							}
-							else {
-								PlayMovieToGraph(g->gameplay.bgaHandle[val], 1, 0);
-							}
-							g->gameplay.layer1ChangeTime = GetTimeWrap();
-							SetMovieVolumeToGraph(0, g->gameplay.bgaHandle[val]);
-						}
-					}
-					break;
-				case 5:
-				case 9:
-					break;
-				case 6:
-					if (g->gameplay.courseType == 1) {
-						g->gameplay.courseMissLayer[stage] = val;
-						g->gameplay.isBgaPlaying = 1;
-					}
-					else {
-						g->gameplay.missLayer = val;
-						g->gameplay.isBgaPlaying = 1;
-					}
-					break;
-				case 7:
-					if (g->gameplay.courseType == 1) {
-						g->gameplay.courseBgaLayer2[stage] = val;
-						g->gameplay.isBgaPlaying = 1;
-						if (1 <= val && val < 6479) {
-							SeekMovieToGraph(g->gameplay.bgaHandle[val], 0);
-							PlayMovieToGraph(g->gameplay.bgaHandle[val], 1, 0);
-							g->gameplay.layer2ChangeTime = GetTimeWrap();
-							SetMovieVolumeToGraph(0, g->gameplay.bgaHandle[val]);
-						}
-					}
-					else {
-						g->gameplay.bgaLayer2 = val;
-						g->gameplay.isBgaPlaying = 1;
-						if (1 <= val && val < 6479) {
-							SeekMovieToGraph(g->gameplay.bgaHandle[val], 0);
-							PlayMovieToGraph(g->gameplay.bgaHandle[val], 1, 0);
-							g->gameplay.layer2ChangeTime = GetTimeWrap();
-							SetMovieVolumeToGraph(0, g->gameplay.bgaHandle[val]);
-						}
-					}
-					break;
-				case 10:
-				case 11:
-				case 12:
-				case 13:
-				case 14:
-				case 15:
-				case 16:
-				case 17:
-				case 18:
-				case 19:
-				case 20:
-				case 21:
-				case 22:
-				case 23:
-				case 24:
-				case 25:
-				case 26:
-				case 27:
-				case 28:
-				case 29:
-					if ((g->gameplay.is_notplaying_unchecked == 0 && g->config.play.m_lunaris == 0 && g->gameplay.isPreviewLoad == 0) || val <= 0) {
-						if (g->gameplay.bmsobj_note[op - 10].autoplay && val > 0) {
-							PlaySound(&g->audio, &g->gameplay.keysound[val], g->audio.chnStageKey[stage], stage);
-							g->gameplay.bmsobj_note[op - 10].noteVal = val;
-						}
-					}
-					else {
-						PlaySound(&g->audio, &g->gameplay.keysound[val], g->audio.chnStageKey[stage], stage);
-						g->gameplay.bmsobj_note[op - 10].noteVal = val;
-						if (g->config.play.m_lunaris) {
-							g->gameplay.player[0].note_current++;
-							g->gameplay.player[0].note_current2++;
-						}
-					}
-					break;
-				default:
-					g->gameplay.bmsobj_note[op - 30].noteVal = val;
-				}
+		if (g->gameplay.bmsobj.notes[g->gameplay.bmsobj.note_count].realTiming >= t142 || g->gameplay.bpmChangedBmstime >= 0) {
+			SoundGetCurrentTime(&g->audio, &g->gameplay.muon); //anti cheat
+			NONE_004b6770();
+			t142 = GetTimeLapse(142, &g->timer1);
+			if (g->gameplay.isPreviewLoad == '\0') {
+				ReactInput(g);
 			}
-			else if (op == 1001) {
 
-				switch (val) {
-				case 0:
-					g->gameplay.player[0].judgetime[5] = 12;
-					g->gameplay.player[0].judgetime[4] = 24;
-					g->gameplay.player[0].judgetime[3] = 60;
-					g->gameplay.player[0].judgetime[2] = 200;
-					g->gameplay.player[0].judgetime[1] = 1000;
-					break;
-				case 1:
-					g->gameplay.player[0].judgetime[5] = 15;
-					g->gameplay.player[0].judgetime[4] = 30;
-					g->gameplay.player[0].judgetime[3] = 80;
-					g->gameplay.player[0].judgetime[2] = 200;
-					g->gameplay.player[0].judgetime[1] = 1000;
-					break;
-				default:
-					g->gameplay.player[0].judgetime[5] = 18;
-					g->gameplay.player[0].judgetime[4] = 40;
-					g->gameplay.player[0].judgetime[3] = 100;
-					g->gameplay.player[0].judgetime[2] = 200;
-					g->gameplay.player[0].judgetime[1] = 1000;
-					break;
-				case 3:
-					g->gameplay.player[0].judgetime[5] = 21;
-					g->gameplay.player[0].judgetime[4] = 60;
-					g->gameplay.player[0].judgetime[3] = 120;
-					g->gameplay.player[0].judgetime[2] = 200;
-					g->gameplay.player[0].judgetime[1] = 1000;
-					break;
-				}
-				if (g->config.play.m_gambol == 1) {
-					g->gameplay.player[0].judgetime[5] = 12;
-					g->gameplay.player[0].judgetime[4] = 24;
-					g->gameplay.player[0].judgetime[3] = 60;
-					g->gameplay.player[0].judgetime[2] = 200;
-					g->gameplay.player[0].judgetime[1] = 1000;
-				}
-				else if (g->config.play.m_gambol == 2) {
-					g->gameplay.player[0].judgetime[5] = 12;
-					g->gameplay.player[0].judgetime[4] = 12;
-					g->gameplay.player[0].judgetime[3] = 12;
-					g->gameplay.player[0].judgetime[2] = 200;
-					g->gameplay.player[0].judgetime[1] = 1000;
-				}
-			}
-			else if (op == 1002 && stage < 10) {
-				g->gameplay.courseStageNow = stage;
-				CSTR tmp;
+			if (g->is_starter || (g->procSelecter == 4 && g->procPhase != 2 && g->procPhase != 3)) {
 
-				if (stage + 1 == g->sSelect.bmsList[g->sSelect.cur_song].courseStageCount) {
-					cstrSprintf(&tmp, "%s", g->sSelect.bmsList[g->sSelect.cur_song].courseTitle[stage]);
+				if ((g->gameplay.player[0].HP >= 2.0 || g->config.play.battle == 1) && (g->gameplay.player[0].HP >= 2.0 || g->gameplay.player[1].HP >= 2.0 || g->config.play.battle != 1) || g->gameplay.isPreviewLoad) {
+
+					if (g->gameplay.is_notplaying_unchecked == 0 && g->config.play.m_lunaris == 0 && g->gameplay.isPreviewLoad == 0) {
+						oldt142 = t142;
+						if (g->gameplay.bpmChangedRealtime > 0) {
+							t142 = g->gameplay.bpmChangedRealtime * 2 - t142;
+						}
+
+						for (int i = 0; i < 10; i++) {
+							ProcNoteOnTiming(g, i, g->KeyInput.p1_buttonInput[i], t142, 0);
+						}
+						if (g->gameplay.ghostBattle == 0) {
+							for (int i = 10; i < 20; i++) {
+								ProcNoteOnTiming(g, i, g->KeyInput.p2_buttonInput[i - 10], t142, g->config.play.battle == 1);
+							}
+						}
+						if (g->gameplay.bpmChangedRealtime > 0) {
+							t142 = oldt142;
+						}
+					}
+
+					if (g->config.play.m_lunaris == 0 && g->gameplay.is_notplaying_unchecked == 0 && g->gameplay.replay.status != 2 && g->config.play.autojudge > 0 && g->config.play.battle != 1 && g->gameplay.autojudge_midcount > 9) {
+
+						if (g->gameplay.autojudge_midsum > 0) g->config.play.judgetiming++;
+						else if (g->gameplay.autojudge_midsum < 0) g->config.play.judgetiming--;
+
+						g->gameplay.autojudge_midcount = 0;
+						g->gameplay.autojudge_midsum = 0;
+					}
+
+					for (int p = 0; p < 2; p++) {
+						if (g->gameplay.player[p].HP_unk != g->gameplay.player[p].HP) {
+							g->gameplay.player[p].HP_old = g->gameplay.player[p].HP_print;
+							g->gameplay.player[p].time_oldHP = GetTimeWrap();
+							g->gameplay.player[p].time_newHP = (int)GetTimeWrap() + abs((int)(g->gameplay.player[p].HP_old - g->gameplay.player[p].HP)) * 10;
+						}
+						g->gameplay.player[p].HP_unk = g->gameplay.player[p].HP;
+						if (g->gameplay.player[p].score != g->gameplay.player[p].score_unk) {
+							g->gameplay.player[p].score_old = g->gameplay.player[p].score_print;
+							g->gameplay.player[p].time_oldScore = GetTimeWrap();
+							g->gameplay.player[p].time_newScore = GetTimeWrap() + 500;
+						}
+						g->gameplay.player[p].score_unk = g->gameplay.player[p].score;
+
+						g->gameplay.player[p].HP_print = ChangeValueByTime(g->gameplay.player[p].HP_old, g->gameplay.player[p].HP, g->gameplay.player[p].time_oldHP, g->gameplay.player[p].time_newHP, GetTimeWrap(), 0);
+						g->gameplay.player[p].score_print = ChangeValueByTime(g->gameplay.player[p].score_old, g->gameplay.player[p].score, g->gameplay.player[p].time_oldScore, g->gameplay.player[p].time_newScore, GetTimeWrap(), 0);
+					}
+
+					LogGraphPlayData(&g->gameplay.statgraph[0], &g->gameplay.player[0], t142, g->gameplay.song_runtime);
+					if (g->config.play.battle == 1 || g->gameplay.ghostBattle) LogGraphPlayData(&g->gameplay.statgraph[1], &g->gameplay.player[1], t142, g->gameplay.song_runtime);
+
+					LogGraphData(&g->gameplay.rategraph[0], g->gameplay.highScore.rate, t142, g->gameplay.song_runtime);
+					LogGraphData(&g->gameplay.rategraph[1], g->gameplay.targetScore.rate, t142, g->gameplay.song_runtime);
+
+					if (g->gameplay.is_notplaying_unchecked == 0 && g->is_starter == 0 && g->gameplay.isPreviewLoad == 0) {
+						int t160 = GetTimeLapse(160, &g->timer1);
+						if (t160 >= 5000) {
+							g->gameplay.delayCheckCount++;
+
+							if (SoundGetCurrentTime(&g->audio, &g->gameplay.muon) / g->gameplay.freqSpeedMultiplier - t160 >= 800.0 || (uint)g->gameplay.muon.length <= 6000) {
+								g->gameplay.delayDetectedCount++;
+							}
+							SetTimeLapse(160, &g->timer1);
+							PlaySound(&g->audio, &g->gameplay.muon, g->audio.chnBgm, -1);
+						}
+					}
+					return 1;
 				}
 				else {
-					cstrSprintf(&tmp, "%s", g->sSelect.bmsList[g->sSelect.cur_song].courseTitle[stage]);
-				}
-				SetObjectString(10, tmp, g->txtStruct.objectStr);
-			}
-
-			g->gameplay.bmsobj.note_count++;
-
-
-			if (g->gameplay.bmsobj.size <= g->gameplay.bmsobj.note_count && g->gameplay.replay.status != 2) {
-				break;
-			}
-			if (g->gameplay.song_runtime < t142) {
-				ErrorLogFmtAdd("endtime\n");
-				break;
-			}
-			if (g->is_starter) {
-				if (g->KeyInput.inputID[D_DIK_ESCAPE] == 2 || (g->KeyInput.p1_buttonInput[12] == 2 && g->KeyInput.p1_buttonInput[13] == 2)) {
+					SetTimeLapse(3, &g->timer1);
+					g->procPhase = 3;
 					for (int i = 0; i < 6480; i++) {
 						StopSound(&g->audio, &g->gameplay.keysound[i]);
 					}
-					break;
+					if (g->rec.recMode == 2) {
+						RecordFadeout(&g->audio, GetTimeWrap(), 10.0);
+					}
+					PlaySound(&g->audio, &g->audio.sysSound.stop, g->audio.chnBgm, -1);
 				}
 			}
+			break;
+		}
 
-			if (g->is_starter == 0) {
-				if (g->procSelecter != 4 || g->procPhase == 2 || g->procPhase == 3) {
-					break;
+		int op = g->gameplay.bmsobj.notes[g->gameplay.bmsobj.note_count].op;
+		int val = g->gameplay.bmsobj.notes[g->gameplay.bmsobj.note_count].val;
+		int stage = g->gameplay.bmsobj.notes[g->gameplay.bmsobj.note_count].stage;
+		if (op < 50) {
+			switch (op) {
+			case 1:
+				if (g->rec.recMode != 2) {
+					PlaySound(&g->audio, &g->gameplay.keysound[val], g->audio.chnStageBgm[stage], stage);
 				}
+				break;
+			case 2:
+				g->timer1.clock[140] = 0.0;
+				g->timer1.Rhythm = 0.0;
+				break;
+			case 3:
+			case 8:
+				g->gameplay.BPM = abs(val);
+				if (val < 0) {
+					g->gameplay.bpmChangedBmstime = RealTimeToBMSTime(&g->gameplay, (double)g->config.play.judgetiming + GetTimeLapse(41, &g->timer1));
+					g->gameplay.bpmChangedRealtime = t142;
+				}
+				break;
+			case 4:
+				if (g->gameplay.courseType == 1) {
+					g->gameplay.courseBgaLayer1[stage] = val;
+					g->gameplay.isBgaPlaying = 1;
+					if (1 <= val && val < 6479) {
+						SeekMovieToGraph(g->gameplay.bgaHandle[val], 0);
+						if (val == 1295 && g->gameplay.bgaHandle[1295] != -1 && g->gameplay.soundonly) {
+							PlayMovieToGraph(g->gameplay.bgaHandle[1295], 3, 0);
+						}
+						else {
+							PlayMovieToGraph(g->gameplay.bgaHandle[val], 1, 0);
+						}
+						g->gameplay.courseLayer1ChangeTime[stage] = GetTimeWrap();
+						SetMovieVolumeToGraph(0, g->gameplay.bgaHandle[val]);
+					}
+				}
+				else {
+					g->gameplay.bgaLayer1 = val;
+					g->gameplay.isBgaPlaying = 1;
+					if (1 <= val && val < 6479) {
+						SeekMovieToGraph(g->gameplay.bgaHandle[val], 0);
+						if (val == 1295 && g->gameplay.bgaHandle[1295] != -1 && g->gameplay.soundonly) {
+							PlayMovieToGraph(g->gameplay.bgaHandle[1295], 3, 0);
+						}
+						else {
+							PlayMovieToGraph(g->gameplay.bgaHandle[val], 1, 0);
+						}
+						g->gameplay.layer1ChangeTime = GetTimeWrap();
+						SetMovieVolumeToGraph(0, g->gameplay.bgaHandle[val]);
+					}
+				}
+				break;
+			case 5:
+			case 9:
+				break;
+			case 6:
+				if (g->gameplay.courseType == 1) {
+					g->gameplay.courseMissLayer[stage] = val;
+					g->gameplay.isBgaPlaying = 1;
+				}
+				else {
+					g->gameplay.missLayer = val;
+					g->gameplay.isBgaPlaying = 1;
+				}
+				break;
+			case 7:
+				if (g->gameplay.courseType == 1) {
+					g->gameplay.courseBgaLayer2[stage] = val;
+					g->gameplay.isBgaPlaying = 1;
+					if (1 <= val && val < 6479) {
+						SeekMovieToGraph(g->gameplay.bgaHandle[val], 0);
+						PlayMovieToGraph(g->gameplay.bgaHandle[val], 1, 0);
+						g->gameplay.layer2ChangeTime = GetTimeWrap();
+						SetMovieVolumeToGraph(0, g->gameplay.bgaHandle[val]);
+					}
+				}
+				else {
+					g->gameplay.bgaLayer2 = val;
+					g->gameplay.isBgaPlaying = 1;
+					if (1 <= val && val < 6479) {
+						SeekMovieToGraph(g->gameplay.bgaHandle[val], 0);
+						PlayMovieToGraph(g->gameplay.bgaHandle[val], 1, 0);
+						g->gameplay.layer2ChangeTime = GetTimeWrap();
+						SetMovieVolumeToGraph(0, g->gameplay.bgaHandle[val]);
+					}
+				}
+				break;
+			case 10:
+			case 11:
+			case 12:
+			case 13:
+			case 14:
+			case 15:
+			case 16:
+			case 17:
+			case 18:
+			case 19:
+			case 20:
+			case 21:
+			case 22:
+			case 23:
+			case 24:
+			case 25:
+			case 26:
+			case 27:
+			case 28:
+			case 29:
+				if ((g->gameplay.is_notplaying_unchecked == 0 && g->config.play.m_lunaris == 0 && g->gameplay.isPreviewLoad == 0) || val <= 0) {
+					if (g->gameplay.bmsobj_note[op - 10].autoplay && val > 0) {
+						PlaySound(&g->audio, &g->gameplay.keysound[val], g->audio.chnStageKey[stage], stage);
+						g->gameplay.bmsobj_note[op - 10].noteVal = val;
+					}
+				}
+				else {
+					PlaySound(&g->audio, &g->gameplay.keysound[val], g->audio.chnStageKey[stage], stage);
+					g->gameplay.bmsobj_note[op - 10].noteVal = val;
+					if (g->config.play.m_lunaris) {
+						g->gameplay.player[0].note_current++;
+						g->gameplay.player[0].note_current2++;
+					}
+				}
+				break;
+			default:
+				g->gameplay.bmsobj_note[op - 30].noteVal = val;
 			}
+		}
+		else if (op == 1001) {
 
-			if ((g->gameplay.player[0].HP < 2.0 && g->config.play.battle != 1 && g->gameplay.ghostBattle == 0) || (g->gameplay.player[0].HP < 2.0 && g->gameplay.player[1].HP < 2.0 && (g->config.play.battle == 1 || g->gameplay.ghostBattle)) && (g->gameplay.isPreviewLoad == 0)) {
-				SetTimeLapse(3, &g->timer1);
-				g->procPhase = 3;
-				for (int i = 0; i < 6480; i++) {
-					StopSound(&g->audio, &g->gameplay.keysound[i]);
-				}
-				if (g->rec.recMode == 2) {
-					RecordFadeout(&g->audio, GetTimeWrap(), 10.0);
-				}
-				PlaySound(&g->audio, &g->audio.sysSound.stop, g->audio.chnBgm, -1);
+			switch (val) {
+			case 0:
+				g->gameplay.player[0].judgetime[5] = 12;
+				g->gameplay.player[0].judgetime[4] = 24;
+				g->gameplay.player[0].judgetime[3] = 60;
+				g->gameplay.player[0].judgetime[2] = 200;
+				g->gameplay.player[0].judgetime[1] = 1000;
+				break;
+			case 1:
+				g->gameplay.player[0].judgetime[5] = 15;
+				g->gameplay.player[0].judgetime[4] = 30;
+				g->gameplay.player[0].judgetime[3] = 80;
+				g->gameplay.player[0].judgetime[2] = 200;
+				g->gameplay.player[0].judgetime[1] = 1000;
+				break;
+			default:
+				g->gameplay.player[0].judgetime[5] = 18;
+				g->gameplay.player[0].judgetime[4] = 40;
+				g->gameplay.player[0].judgetime[3] = 100;
+				g->gameplay.player[0].judgetime[2] = 200;
+				g->gameplay.player[0].judgetime[1] = 1000;
+				break;
+			case 3:
+				g->gameplay.player[0].judgetime[5] = 21;
+				g->gameplay.player[0].judgetime[4] = 60;
+				g->gameplay.player[0].judgetime[3] = 120;
+				g->gameplay.player[0].judgetime[2] = 200;
+				g->gameplay.player[0].judgetime[1] = 1000;
 				break;
 			}
-
-			//exit loop sequence
-			if (g->gameplay.bmsobj.notes[g->gameplay.bmsobj.note_count].realTiming >= t142) {
-				SoundGetCurrentTime(&g->audio, &g->gameplay.muon); //anti cheat
-				NONE_004b6770();
-				t142 = GetTimeLapse(142, &g->timer1);
-				if (g->gameplay.isPreviewLoad == '\0') {
-					ReactInput(g);
-				}
-
-				if (g->is_starter || (g->procSelecter == 4 && g->procPhase != 2 && g->procPhase != 3)) {
-
-					if ((g->gameplay.player[0].HP >= 2.0 || g->config.play.battle == 1) && (g->gameplay.player[0].HP >= 2.0 || g->gameplay.player[1].HP >= 2.0 || g->config.play.battle != 1) || g->gameplay.isPreviewLoad) {
-
-						if (g->gameplay.is_notplaying_unchecked == 0 && g->config.play.m_lunaris == 0 && g->gameplay.isPreviewLoad == 0) {
-							oldt142 = t142;
-							if (g->gameplay.bpmChangedRealtime > 0) {
-								t142 = g->gameplay.bpmChangedRealtime * 2 - t142;
-							}
-
-							for (int i = 0; i < 10; i++) {
-								ProcNoteOnTiming(g, i, g->KeyInput.p1_buttonInput[i], t142, 0);
-							}
-							if (g->gameplay.ghostBattle == 0) {
-								for (int i = 10; i < 20; i++) {
-									ProcNoteOnTiming(g, i, g->KeyInput.p2_buttonInput[i - 10], t142, g->config.play.battle == 1);
-								}
-							}
-							if (g->gameplay.bpmChangedRealtime > 0) {
-								t142 = oldt142;
-							}
-						}
-
-						if (g->config.play.m_lunaris == 0 && g->gameplay.is_notplaying_unchecked == 0 && g->gameplay.replay.status != 2 && g->config.play.autojudge > 0 && g->config.play.battle != 1 && g->gameplay.autojudge_midcount > 9) {
-
-							if (g->gameplay.autojudge_midsum > 0) g->config.play.judgetiming++;
-							else if (g->gameplay.autojudge_midsum < 0) g->config.play.judgetiming--;
-
-							g->gameplay.autojudge_midcount = 0;
-							g->gameplay.autojudge_midsum = 0;
-						}
-
-						for (int p = 0; p < 2; p++) {
-							if (g->gameplay.player[p].HP_unk != g->gameplay.player[p].HP) {
-								g->gameplay.player[p].HP_old = g->gameplay.player[p].HP_print;
-								g->gameplay.player[p].time_oldHP = GetTimeWrap();
-								g->gameplay.player[p].time_newHP = (int)GetTimeWrap() + abs((int)(g->gameplay.player[p].HP_old - g->gameplay.player[p].HP)) * 10;
-							}
-							g->gameplay.player[p].HP_unk = g->gameplay.player[p].HP;
-							if (g->gameplay.player[p].score != g->gameplay.player[p].score_unk) {
-								g->gameplay.player[p].score_old = g->gameplay.player[p].score_print;
-								g->gameplay.player[p].time_oldScore = GetTimeWrap();
-								g->gameplay.player[p].time_newScore = GetTimeWrap() + 500;
-							}
-							g->gameplay.player[p].score_unk = g->gameplay.player[p].score;
-
-							g->gameplay.player[p].HP_print = ChangeValueByTime(g->gameplay.player[p].HP_old, g->gameplay.player[p].HP, g->gameplay.player[p].time_oldHP, g->gameplay.player[p].time_newHP, GetTimeWrap(), 0);
-							g->gameplay.player[p].score_print = ChangeValueByTime(g->gameplay.player[p].score_old, g->gameplay.player[p].score, g->gameplay.player[p].time_oldScore, g->gameplay.player[p].time_newScore, GetTimeWrap(), 0);
-						}
-
-						LogGraphPlayData(&g->gameplay.statgraph[0], &g->gameplay.player[0], t142, g->gameplay.song_runtime);
-						if (g->config.play.battle == 1 || g->gameplay.ghostBattle) LogGraphPlayData(&g->gameplay.statgraph[1], &g->gameplay.player[1], t142, g->gameplay.song_runtime);
-
-						LogGraphData(&g->gameplay.rategraph[0], g->gameplay.highScore.rate, t142, g->gameplay.song_runtime);
-						LogGraphData(&g->gameplay.rategraph[1], g->gameplay.targetScore.rate, t142, g->gameplay.song_runtime);
-
-						if (g->gameplay.is_notplaying_unchecked == 0 && g->is_starter == 0 && g->gameplay.isPreviewLoad == 0) {
-							int t160 = GetTimeLapse(160, &g->timer1);
-							if (t160 > 4999) {
-								g->gameplay.delayCheckCount++;
-
-								if (SoundGetCurrentTime(&g->audio, &g->gameplay.muon) / g->gameplay.freqSpeedMultiplier - t160 >= 800.0 || g->gameplay.muon.length <= 6000) {
-									g->gameplay.delayDetectedCount++;
-								}
-								SetTimeLapse(160, &g->timer1);
-								PlaySound(&g->audio, &g->gameplay.muon, g->audio.chnBgm, -1);
-							}
-						}
-						return 1;
-					}
-					else {
-						SetTimeLapse(3, &g->timer1);
-						g->procPhase = 3;
-						for (int i = 0; i < 6480; i++) {
-							StopSound(&g->audio, &g->gameplay.keysound[i]);
-						}
-						if (g->rec.recMode == 2) {
-							RecordFadeout(&g->audio, GetTimeWrap(), 10.0);
-						}
-						PlaySound(&g->audio, &g->audio.sysSound.stop, g->audio.chnBgm, -1);
-					}
-				}
+			if (g->config.play.m_gambol == 1) {
+				g->gameplay.player[0].judgetime[5] = 12;
+				g->gameplay.player[0].judgetime[4] = 24;
+				g->gameplay.player[0].judgetime[3] = 60;
+				g->gameplay.player[0].judgetime[2] = 200;
+				g->gameplay.player[0].judgetime[1] = 1000;
+			}
+			else if (g->config.play.m_gambol == 2) {
+				g->gameplay.player[0].judgetime[5] = 12;
+				g->gameplay.player[0].judgetime[4] = 12;
+				g->gameplay.player[0].judgetime[3] = 12;
+				g->gameplay.player[0].judgetime[2] = 200;
+				g->gameplay.player[0].judgetime[1] = 1000;
 			}
 		}
-	}
+		else if (op == 1002 && stage < 10) {
+			g->gameplay.courseStageNow = stage;
+			CSTR tmp;
 
-	//exit loop sequence
-	else if (g->gameplay.bmsobj.notes[g->gameplay.bmsobj.note_count].realTiming >= t142) {
-		SoundGetCurrentTime(&g->audio, &g->gameplay.muon); //anti cheat
-		NONE_004b6770();
-		t142 = GetTimeLapse(142, &g->timer1);
-		if (g->gameplay.isPreviewLoad == '\0') {
-			ReactInput(g);
-		}
-
-		if (g->is_starter || (g->procSelecter == 4 && g->procPhase != 2 && g->procPhase != 3)) {
-
-			if ((g->gameplay.player[0].HP >= 2.0 || g->config.play.battle == 1) && (g->gameplay.player[0].HP >= 2.0 || g->gameplay.player[1].HP >= 2.0 || g->config.play.battle != 1) || g->gameplay.isPreviewLoad) {
-
-				if (g->gameplay.is_notplaying_unchecked == 0 && g->config.play.m_lunaris == 0 && g->gameplay.isPreviewLoad == 0) {
-					oldt142 = t142;
-					if (g->gameplay.bpmChangedRealtime > 0) {
-						t142 = g->gameplay.bpmChangedRealtime * 2 - t142;
-					}
-
-					for (int i = 0; i < 10; i++) {
-						ProcNoteOnTiming(g, i, g->KeyInput.p1_buttonInput[i], t142, 0);
-					}
-					if (g->gameplay.ghostBattle == 0) {
-						for (int i = 10; i < 20; i++) {
-							ProcNoteOnTiming(g, i, g->KeyInput.p2_buttonInput[i - 10], t142, g->config.play.battle == 1);
-						}
-					}
-					if (g->gameplay.bpmChangedRealtime > 0) {
-						t142 = oldt142;
-					}
-				}
-
-				if (g->config.play.m_lunaris == 0 && g->gameplay.is_notplaying_unchecked == 0 && g->gameplay.replay.status != 2 && g->config.play.autojudge > 0 && g->config.play.battle != 1 && g->gameplay.autojudge_midcount > 9) {
-
-					if (g->gameplay.autojudge_midsum > 0) g->config.play.judgetiming++;
-					else if (g->gameplay.autojudge_midsum < 0) g->config.play.judgetiming--;
-
-					g->gameplay.autojudge_midcount = 0;
-					g->gameplay.autojudge_midsum = 0;
-				}
-
-				for (int p = 0; p < 2; p++) {
-					if (g->gameplay.player[p].HP_unk != g->gameplay.player[p].HP) {
-						g->gameplay.player[p].HP_old = g->gameplay.player[p].HP_print;
-						g->gameplay.player[p].time_oldHP = GetTimeWrap();
-						g->gameplay.player[p].time_newHP = (int)GetTimeWrap() + abs((int)(g->gameplay.player[p].HP_old - g->gameplay.player[p].HP)) * 10;
-					}
-					g->gameplay.player[p].HP_unk = g->gameplay.player[p].HP;
-					if (g->gameplay.player[p].score != g->gameplay.player[p].score_unk) {
-						g->gameplay.player[p].score_old = g->gameplay.player[p].score_print;
-						g->gameplay.player[p].time_oldScore = GetTimeWrap();
-						g->gameplay.player[p].time_newScore = GetTimeWrap() + 500;
-					}
-					g->gameplay.player[p].score_unk = g->gameplay.player[p].score;
-
-					g->gameplay.player[p].HP_print = ChangeValueByTime(g->gameplay.player[p].HP_old, g->gameplay.player[p].HP, g->gameplay.player[p].time_oldHP, g->gameplay.player[p].time_newHP, GetTimeWrap(), 0);
-					g->gameplay.player[p].score_print = ChangeValueByTime(g->gameplay.player[p].score_old, g->gameplay.player[p].score, g->gameplay.player[p].time_oldScore, g->gameplay.player[p].time_newScore, GetTimeWrap(), 0);
-				}
-
-				LogGraphPlayData(&g->gameplay.statgraph[0], &g->gameplay.player[0], t142, g->gameplay.song_runtime);
-				if (g->config.play.battle == 1 || g->gameplay.ghostBattle) LogGraphPlayData(&g->gameplay.statgraph[1], &g->gameplay.player[1], t142, g->gameplay.song_runtime);
-
-				LogGraphData(&g->gameplay.rategraph[0], g->gameplay.highScore.rate, t142, g->gameplay.song_runtime);
-				LogGraphData(&g->gameplay.rategraph[1], g->gameplay.targetScore.rate, t142, g->gameplay.song_runtime);
-
-				if (g->gameplay.is_notplaying_unchecked == 0 && g->is_starter == 0 && g->gameplay.isPreviewLoad == 0) {
-					int t160 = GetTimeLapse(160, &g->timer1);
-					if (t160 > 4999) {
-						g->gameplay.delayCheckCount++;
-
-						if (SoundGetCurrentTime(&g->audio, &g->gameplay.muon) / g->gameplay.freqSpeedMultiplier - t160 >= 800.0 || g->gameplay.muon.length <= 6000) {
-							g->gameplay.delayDetectedCount++;
-						}
-						SetTimeLapse(160, &g->timer1);
-						PlaySound(&g->audio, &g->gameplay.muon, g->audio.chnBgm, -1);
-					}
-				}
-				return 1;
+			if (stage + 1 == g->sSelect.bmsList[g->sSelect.cur_song].courseStageCount) {
+				cstrSprintf(&tmp, "%s", g->sSelect.bmsList[g->sSelect.cur_song].courseTitle[stage]);
 			}
 			else {
-				SetTimeLapse(3, &g->timer1);
-				g->procPhase = 3;
+				cstrSprintf(&tmp, "%s", g->sSelect.bmsList[g->sSelect.cur_song].courseTitle[stage]);
+			}
+			SetObjectString(10, tmp, g->txtStruct.objectStr);
+		}
+
+		g->gameplay.bmsobj.note_count++;
+
+		if (g->gameplay.bmsobj.size <= g->gameplay.bmsobj.note_count && g->gameplay.replay.status != 2) {
+			break;
+		}
+		if (g->gameplay.song_runtime < t142) {
+			ErrorLogFmtAdd("endtime\n");
+			break;
+		}
+		if (g->is_starter) {
+			if (g->KeyInput.inputID[D_DIK_ESCAPE] == 2 || (g->KeyInput.p1_buttonInput[12] == 2 && g->KeyInput.p1_buttonInput[13] == 2)) {
 				for (int i = 0; i < 6480; i++) {
 					StopSound(&g->audio, &g->gameplay.keysound[i]);
 				}
-				if (g->rec.recMode == 2) {
-					RecordFadeout(&g->audio, GetTimeWrap(), 10.0);
-				}
-				PlaySound(&g->audio, &g->audio.sysSound.stop, g->audio.chnBgm, -1);
+				break;
 			}
+		}
+
+		if (g->is_starter == 0) {
+			if (g->procSelecter != 4 || g->procPhase == 2 || g->procPhase == 3) {
+				break;
+			}
+		}
+
+		if ((g->gameplay.player[0].HP < 2.0 && g->config.play.battle != 1 && g->gameplay.ghostBattle == 0) || (g->gameplay.player[0].HP < 2.0 && g->gameplay.player[1].HP < 2.0 && (g->config.play.battle == 1 || g->gameplay.ghostBattle)) && (g->gameplay.isPreviewLoad == 0)) {
+			SetTimeLapse(3, &g->timer1);
+			g->procPhase = 3;
+			for (int i = 0; i < 6480; i++) {
+				StopSound(&g->audio, &g->gameplay.keysound[i]);
+			}
+			if (g->rec.recMode == 2) {
+				RecordFadeout(&g->audio, GetTimeWrap(), 10.0);
+			}
+			PlaySound(&g->audio, &g->audio.sysSound.stop, g->audio.chnBgm, -1);
+			break;
 		}
 	}
 
@@ -13114,6 +13017,7 @@ int ProcGame(game *g) {
 		g->gameplay.flag_threadExist = 0;
 		g->gameplay.flag_gameinput = 0;
 	}
+
 	return 1;
 }
 
@@ -18158,7 +18062,7 @@ int GetTextGraphLength(CSTR *str, ImageFont *imF) {
 	return ret;
 }
 
-//49b2a0 대충 다한거같은데
+//49b2a0 seems like ruined it
 void LRDrawText(int* grHandle, DSTdraw *dstd, CSTR *str, ImageFont *imF) {
 	double hl;
 	float width, wl;
@@ -18363,7 +18267,7 @@ int LRDraw(DrawingBuf *drBuf, TextStruct *txt, SONGSELECT *sSel, skstruct *sks, 
 		}
 	}
 	else if (draw.grHandle != -1) return 1;
-	//if (draw.subHandle == -1) return 1; //TODO this line is not in original
+	//if (draw.subHandle == -1) return 1; //TODO : this line is not in original
 	if (draw.fontHandle != -1) {
 		if (draw.subHandle < 10000) {
 			if (draw.subHandle < 1000) {
@@ -21050,7 +20954,7 @@ int ReadSkin(skstruct *sk,CSTR FilePath, int unused, int skin_num, SkinUser* sku
 							sk->op[csv.val[1]] = (csv.val[2] != 0);
 						}
 						else {
-							ErrorLogFmtAdd("スキン読み込みエラー %d行目\n%s\n#SETOPTIONの第一引数 (オプション値)は900〜999の範囲内にして下さい。\n", line, fBuf);
+							ErrorLogFmtAdd("スキン読み込みエラー %d行目\n%s\n#SETOPTIONの第一引数(オプション値)は900〜999の範囲内にして下さい。\n", line, fBuf);
 						}
 					}
 					else if (fBuf.left(13).isSame("#SRC_BAR_RANK")) {
@@ -22883,88 +22787,89 @@ int LoadBmsResource(gameplay *gp, CSTR BMSfilepath, AUDIO *aud, ConfigStruct *cf
 
 	gp->flag_0note = 1;
 	for (int i = 0; i < gp->bmsobj.size; i++) {
-		if (gp->bmsobj.notes[i].op > 9 && gp->bmsobj.notes[i].op < 30
-			&& gp->bmsobj.notes[i].val > 0 && gp->bmsobj.notes[i].val < 6480.0
+		if ( (10 <= gp->bmsobj.notes[i].op && gp->bmsobj.notes[i].op < 30)
+			&& (0 < gp->bmsobj.notes[i].val && gp->bmsobj.notes[i].val < 6480.0)
 			&& gp->keysound[(int)gp->bmsobj.notes[i].val].load) {
 
 			gp->flag_0note = 0;
 			break;
 		}
 	}
-	if (!noVideo) {
-		if (cfg->system.isablebmsthread == 0) CoInitialize(NULL);
-		GetTransColor(&Rtmp,&Gtmp,&Btmp);
-		SetTransColor(0,0,0);
-		for (int i = 0; true;) {
-			if (gp->BMP_filename[i].length() > 0) {
-				if (gp->BMP_filename[i].right(3).isSame("mpg") || gp->BMP_filename[i].right(3).isSame("avi")) {
-					SetTransColor(0, 255, 0);
-					gp->bgaHandle[i] = LoadGraph(gp->BMP_filename[i]);
-					SetTransColor(0, 0, 0);
-				}
-				else {
-					gp->bgaHandle[i] = LoadGraph(gp->BMP_filename[i]);
-				}
-				gp->loadObject_loaded++;
+
+	if (noVideo) {
+		gp->loadObject_loaded = gp->loadObject_total;
+		LeaveCriticalSection(&gp->criticalSection);
+		return 1;
+	}
+	
+	if (cfg->system.isablebmsthread == 0) CoInitialize(NULL);
+	GetTransColor(&Rtmp,&Gtmp,&Btmp);
+	SetTransColor(0,0,0);
+	for (int i = 0; i < 6480; i++) {
+		if (gp->BMP_filename[i].length() > 0) {
+			if (gp->BMP_filename[i].right(3).isSame("mpg") || gp->BMP_filename[i].right(3).isSame("avi")) {
+				SetTransColor(0, 255, 0);
+				gp->bgaHandle[i] = LoadGraph(gp->BMP_filename[i]);
+				SetTransColor(0, 0, 0);
 			}
-
-			if (gp->flag_closingPhase) {
-				if (cfg->system.isablebmsthread == 0) CoUninitialize();
-				LeaveCriticalSection(&gp->criticalSection);
-				return 1;
+			else {
+				gp->bgaHandle[i] = LoadGraph(gp->BMP_filename[i]);
 			}
+			gp->loadObject_loaded++;
+		}
 
-			i++;
-
-			if (i >= 6480) {
-				SetTransColor(Rtmp, Gtmp, Btmp);
-				if (cfg->system.isablebmsthread == 0) CoUninitialize();
-				if (gp->bgaHandle[0] != -1) gp->missLayer = 0;
-				
-				if (gp->is_notplaying_unchecked == 1) {
-
-					for (int j = 0; j < gp->bmsobj.size; j++) {
-						if (!(gp->bmsobj.notes[j].op >= 10 && gp->bmsobj.notes[j].op < 30)) {
-							if (gp->bmsobj.notes[j].op == 1) {
-								if (gp->bmsobj.notes[j].val > 0 && gp->bmsobj.notes[j].val < 6480.0) {
-									if ((gp->song_runtime < gp->keysound[(int)gp->bmsobj.notes[j].val].length + gp->bmsobj.notes[j].realTiming) && gp->keysound[(int)gp->bmsobj.notes[j].val].length > 0) {										
-										gp->song_runtime = gp->bmsobj.notes[j].realTiming + ((gp->keysound[(int)gp->bmsobj.notes[j].val].length < 0) ? gp->keysound[(int)gp->bmsobj.notes[j].val].length + 4294967296.0 : gp->keysound[(int)gp->bmsobj.notes[j].val].length);
-									}
-								}
-							}
-							else if ((gp->bmsobj.notes[j].op == 4 || gp->bmsobj.notes[j].op == 7) 
-								&& gp->bmsobj.notes[j].val > 0 && gp->bmsobj.notes[j].val < 6480.0
-								&& gp->song_runtime < gp->bmsobj.notes[j].realTiming) {
-								
-								gp->song_runtime = gp->bmsobj.notes[j].realTiming;
-							}
-						}
-						else if (gp->bmsobj.notes[j].val > 0 && gp->bmsobj.notes[j].val < 6480.0) {
-							if (gp->keysound[(int)gp->bmsobj.notes[j].val].load == 0 && gp->song_runtime < gp->bmsobj.notes[j].realTiming)
-								gp->song_runtime = gp->bmsobj.notes[j].realTiming;
-
-							if (gp->keysound[(int)gp->bmsobj.notes[j].val].length < 2000 && gp->keysound[(int)gp->bmsobj.notes[j].val].length > 0) {
-								if (gp->song_runtime < gp->bmsobj.notes[j].realTiming + gp->keysound[(int)gp->bmsobj.notes[j].val].length) {
-									gp->song_runtime = gp->bmsobj.notes[j].realTiming + gp->keysound[(int)gp->bmsobj.notes[j].val].length;
-								}
-							}
-							else {
-								if ((gp->song_runtime < gp->bmsobj.notes[j].realTiming + ((gp->keysound[(int)gp->bmsobj.notes[j].val].length < 0) ? gp->keysound[(int)gp->bmsobj.notes[j].val].length + 4294967296.0 : gp->keysound[(int)gp->bmsobj.notes[j].val].length)) && gp->keysound[(int)gp->bmsobj.notes[j].val].length > 0) {
-									gp->song_runtime = gp->bmsobj.notes[j].realTiming + ((gp->keysound[(int)gp->bmsobj.notes[j].val].length < 0) ? gp->keysound[(int)gp->bmsobj.notes[j].val].length + 4294967296.0 : gp->keysound[(int)gp->bmsobj.notes[j].val].length);
-								}
-							}
-						}
-					}
-				}
-				LeaveCriticalSection(&gp->criticalSection);
-				return 0;
-			}
+		if (gp->flag_closingPhase) {
+			if (cfg->system.isablebmsthread == 0) CoUninitialize();
+			LeaveCriticalSection(&gp->criticalSection);
+			return 1;
 		}
 	}
 
-	gp->loadObject_loaded = gp->loadObject_total;
+	SetTransColor(Rtmp, Gtmp, Btmp);
+	if (cfg->system.isablebmsthread == 0) CoUninitialize();
+	if (gp->bgaHandle[0] != -1) gp->missLayer = 0;
+
+	if (gp->is_notplaying_unchecked == 1) {
+
+		for (int i = 0; i < gp->bmsobj.size; i++) {
+			if (!(gp->bmsobj.notes[i].op >= 10 && gp->bmsobj.notes[i].op < 30)) {
+				if (gp->bmsobj.notes[i].op == 1) {
+					if (0 < gp->bmsobj.notes[i].val && gp->bmsobj.notes[i].val < 6480.0) { //TODO : is it okay to delete compiler code dealing unsigned?
+						if ((gp->song_runtime < gp->keysound[(int)gp->bmsobj.notes[i].val].length + gp->bmsobj.notes[i].realTiming) && (int)gp->keysound[(int)gp->bmsobj.notes[i].val].length > 0) {
+							double len = gp->keysound[(int)gp->bmsobj.notes[i].val].length;
+							if ((int)gp->keysound[(int)gp->bmsobj.notes[i].val].length < 0) len += 4294967296.0;
+							gp->song_runtime = gp->bmsobj.notes[i].realTiming + len;
+						}
+					}
+				}
+				else if ((gp->bmsobj.notes[i].op == 4 || gp->bmsobj.notes[i].op == 7)
+					&& 0 < gp->bmsobj.notes[i].val && gp->bmsobj.notes[i].val < 6480.0
+					&& gp->song_runtime < gp->bmsobj.notes[i].realTiming) {
+
+					gp->song_runtime = gp->bmsobj.notes[i].realTiming;
+				}
+			}
+			else if (0 < gp->bmsobj.notes[i].val && gp->bmsobj.notes[i].val < 6480.0) {
+				if (gp->keysound[(int)gp->bmsobj.notes[i].val].load == 0 && gp->song_runtime < gp->bmsobj.notes[i].realTiming)
+					gp->song_runtime = gp->bmsobj.notes[i].realTiming;
+
+				if (gp->keysound[(int)gp->bmsobj.notes[i].val].length < 2000 && gp->keysound[(int)gp->bmsobj.notes[i].val].length > 0) {
+					if (gp->song_runtime < gp->bmsobj.notes[i].realTiming + gp->keysound[(int)gp->bmsobj.notes[i].val].length) {
+						gp->song_runtime = gp->bmsobj.notes[i].realTiming + gp->keysound[(int)gp->bmsobj.notes[i].val].length;
+					}
+				}
+				else {
+					double len = gp->keysound[(int)gp->bmsobj.notes[i].val].length;
+					if ((int)gp->keysound[(int)gp->bmsobj.notes[i].val].length < 0) len += 4294967296.0;
+					if (gp->song_runtime < gp->bmsobj.notes[i].realTiming + len && (int)gp->keysound[(int)gp->bmsobj.notes[i].val].length > 0) {
+						gp->song_runtime = gp->bmsobj.notes[i].realTiming + len;
+					}
+				}
+			}
+		}
+	}
 	LeaveCriticalSection(&gp->criticalSection);
-	return 1;
+	return 0;
 }
 
 //4ad200

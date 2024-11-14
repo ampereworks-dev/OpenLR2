@@ -7263,10 +7263,12 @@ void CheckNewSong(glb_dbgame *glb) {
 			sqlite3_finalize(pStmt);
 		}
 	}
+
 	glb->pGame->sSelect.filterDifficulty = filDiff;
 	glb->pGame->sSelect.filterKey = filKey;
 	glb->pGame->sSelect.isFolder = 0;
-	for (int i = 0; i < glb->pGame->sSelect.queryCount; i++) {
+	int i = 0;
+	for (i = 0; i < glb->pGame->sSelect.queryCount; i++) {
 		int flag;
 		if (glb->pGame->sSelect.curQuery[i].findStrPos("__EXPERT__") > 0) {
 			flag = SearchCourseFromDB(glb->pSql, &glb->pGame->sSelect, glb->pGame->sSelect.filterKey, 0);
@@ -7285,8 +7287,11 @@ void CheckNewSong(glb_dbgame *glb) {
 		}
 
 		if(flag != -1) break;
+		glb->pGame->sSelect.filterDifficulty = filDiff;
+		glb->pGame->sSelect.filterKey = filKey;
 		glb->pGame->sSelect.isFolder = i + 1;
 	}
+	if (i >= glb->pGame->sSelect.queryCount) glb->pGame->sSelect.isFolder = -1;
 
 	if (glb->pGame->sSelect.isFolder != -1 && glb->pGame->config.skin.disableimagefont == 0) {
 		LoadFontForSongs(glb->pGame, 1);

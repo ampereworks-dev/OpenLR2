@@ -1455,14 +1455,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 																	|| gs.skstruct.image.dst[i].timer == 3
 																	|| gs.skstruct.image.dst[i].timer == 48
 																	|| gs.skstruct.image.dst[i].timer == 49
-																	|| (gs.skstruct.image.dst[i].timer >= 50 && gs.skstruct.image.dst[i].timer < 70)
+																	|| (50 <= gs.skstruct.image.dst[i].timer && gs.skstruct.image.dst[i].timer < 70)
 																	|| gs.skstruct.image.dst[i].timer == 140))
 							) {
 							int objx = 0, objy = 0;
 							if ((gs.skstruct.adjust.note_1p_x || gs.skstruct.adjust.note_1p_y || gs.skstruct.adjust.note_2p_x || gs.skstruct.adjust.note_2p_y) && gs.procSelecter == 4) {
 								int t = gs.skstruct.image.dst[i].timer;
 								//refactored
-								if ((50 <= t && t< 60) || (70 <= t && t< 80) || t == 48) {
+								if ((50 <= t && t < 60) || (70 <= t && t < 80) || t == 48) {
 									objx = gs.skstruct.adjust.note_1p_x;
 									objy = gs.skstruct.adjust.note_1p_y;
 								}
@@ -1470,65 +1470,45 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 									objx = gs.skstruct.adjust.note_2p_x;
 									objy = gs.skstruct.adjust.note_2p_y;
 								}
-								else {
+								else if ((100 <= t && t < 110) || (120 <= t && t < 130)) {
 									objx = gs.skstruct.adjust.note_1p_x;
 									objy = gs.skstruct.adjust.note_1p_y;
-									if ((100 <= t && t < 110) || (120 <= t && t < 130)) {
-										objx = gs.skstruct.adjust.note_1p_x;
-										objy = gs.skstruct.adjust.note_1p_y;
-										if (gs.skstruct.image.dst->draw[gs.skstruct.image.dst->dstCount - 1].h < 100.0) {
-											if (gs.skstruct.image.dst->draw[gs.skstruct.image.dst->dstCount - 1].h > -100.0) {
-												if (gs.skstruct.image.dst->draw[0].h < 100.0) {
-													objx = 0;
-													objy = 0;
-													if (gs.skstruct.image.dst->draw[0].h <= -100.0) {
-														objx = gs.skstruct.adjust.note_1p_x;
-														objy = gs.skstruct.adjust.note_1p_y;
-													}
-												}
-											}
-										}
-									}
-									else if ((110 <= t && t < 120) || (130 <= t && t < 140)) {
-										objx = gs.skstruct.adjust.note_2p_x;
-										objy = gs.skstruct.adjust.note_2p_y;
-										if (gs.skstruct.image.dst->draw[gs.skstruct.image.dst->dstCount - 1].h < 100.0) {
-											objx = gs.skstruct.adjust.note_2p_x;
-											objy = gs.skstruct.adjust.note_2p_y;
-											if (gs.skstruct.image.dst->draw[gs.skstruct.image.dst->dstCount - 1].h > -100.0) {
-												objx = gs.skstruct.adjust.note_2p_x;
-												objy = gs.skstruct.adjust.note_2p_y;
-												if (gs.skstruct.image.dst->draw[0].h < 100.0) {
-													objx = 0;
-													objy = 0;
-													if (gs.skstruct.image.dst->draw[0].h <= -100.0) {
-														objx = gs.skstruct.adjust.note_2p_x;
-														objy = gs.skstruct.adjust.note_2p_y;
-													}
-												}
-											}
-										}
-									}
-									else {
+									if (-100.0 < gs.skstruct.image.dst[i].draw[gs.skstruct.image.dst[i].dstCount - 1].h && gs.skstruct.image.dst[i].draw[gs.skstruct.image.dst[i].dstCount - 1].h < 100.0
+										&& -100.0 < gs.skstruct.image.dst[i].draw[0].h && gs.skstruct.image.dst[i].draw[0].h < 100.0) {
+
 										objx = 0;
 										objy = 0;
-										if (gs.skstruct.dst_JUDGELINE[0].dstCount > 0) {
-											if ( (gs.skstruct.dst_JUDGELINE[0].draw->w - gs.skstruct.image.dst->draw[gs.skstruct.image.dst->dstCount - 1].w <= 10.0)
-												&& (gs.skstruct.dst_JUDGELINE[0].draw->x - gs.skstruct.image.dst->draw[gs.skstruct.image.dst->dstCount - 1].x <= 5.0)
-												&& (gs.skstruct.dst_JUDGELINE[0].draw->y >= gs.skstruct.image.dst->draw[gs.skstruct.image.dst->dstCount - 1].y && gs.skstruct.image.dst->draw[gs.skstruct.image.dst->dstCount - 1].h < 0.0)) {
+									}
+								}
+								else if ((110 <= t && t < 120) || (130 <= t && t < 140)) {
+									objx = gs.skstruct.adjust.note_2p_x;
+									objy = gs.skstruct.adjust.note_2p_y;
+									if (-100.0 < gs.skstruct.image.dst[i].draw[gs.skstruct.image.dst[i].dstCount - 1].h && gs.skstruct.image.dst[i].draw[gs.skstruct.image.dst[i].dstCount - 1].h < 100.0
+										&& -100.0 < gs.skstruct.image.dst[i].draw[0].h && gs.skstruct.image.dst[i].draw[0].h < 100.0) {
 
-												objx = gs.skstruct.adjust.note_1p_x;
-												objy = gs.skstruct.adjust.note_1p_y;
-											}
+										objx = 0;
+										objy = 0;
+									}
+								}
+								else {
+									objx = 0;
+									objy = 0;
+									if (gs.skstruct.dst_JUDGELINE[0].dstCount > 0) {
+										if ( abs(gs.skstruct.dst_JUDGELINE[0].draw->w - gs.skstruct.image.dst[i].draw[gs.skstruct.image.dst[i].dstCount - 1].w) <= 10.0
+											&& abs(gs.skstruct.dst_JUDGELINE[0].draw->x - gs.skstruct.image.dst[i].draw[gs.skstruct.image.dst[i].dstCount - 1].x) <= 5.0
+											&& (gs.skstruct.dst_JUDGELINE[0].draw->y >= gs.skstruct.image.dst[i].draw[gs.skstruct.image.dst[i].dstCount - 1].y || gs.skstruct.image.dst[i].draw[gs.skstruct.image.dst[i].dstCount - 1].h < 0.0)) {
 
-											if (gs.skstruct.dst_JUDGELINE[1].dstCount > 0) {
-												if (gs.skstruct.dst_JUDGELINE[1].draw->w - gs.skstruct.image.dst->draw[gs.skstruct.image.dst->dstCount - 1].w <= 10.0 
-													&& gs.skstruct.dst_JUDGELINE[1].draw->x - gs.skstruct.image.dst->draw[gs.skstruct.image.dst->dstCount - 1].x <= 5.0
-													&& (gs.skstruct.dst_JUDGELINE[1].draw->y >= gs.skstruct.image.dst->draw[gs.skstruct.image.dst->dstCount - 1].y || gs.skstruct.image.dst->draw[gs.skstruct.image.dst->dstCount - 1].h < 0.0)) {
+											objx = gs.skstruct.adjust.note_1p_x;
+											objy = gs.skstruct.adjust.note_1p_y;
+										}
+
+										else if (gs.skstruct.dst_JUDGELINE[1].dstCount > 0) {
+											if ( abs(gs.skstruct.dst_JUDGELINE[1].draw->w - gs.skstruct.image.dst[i].draw[gs.skstruct.image.dst[i].dstCount - 1].w) <= 10.0 
+												&& abs(gs.skstruct.dst_JUDGELINE[1].draw->x - gs.skstruct.image.dst[i].draw[gs.skstruct.image.dst[i].dstCount - 1].x) <= 5.0
+												&& (gs.skstruct.dst_JUDGELINE[1].draw->y >= gs.skstruct.image.dst[i].draw[gs.skstruct.image.dst[i].dstCount - 1].y || gs.skstruct.image.dst[i].draw[gs.skstruct.image.dst[i].dstCount - 1].h < 0.0)) {
 													
-													objx = gs.skstruct.adjust.note_2p_x;
-													objy = gs.skstruct.adjust.note_2p_y;
-												}
+												objx = gs.skstruct.adjust.note_2p_x;
+												objy = gs.skstruct.adjust.note_2p_y;
 											}
 										}
 									}

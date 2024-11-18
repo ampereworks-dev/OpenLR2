@@ -13890,7 +13890,7 @@ int ProcI_PO4Select(game *g, sqlite3 *sql) { //not tested
 			}
 			else if (g->KeyInput.inputID[D_DIK_DOWN] == 1) {
 				g->config.play.hiSpeed[0] -= 10;
-				if (g->config.play.hiSpeed[0] <= 50) g->config.play.hiSpeed[0] = 5;
+				if (g->config.play.hiSpeed[0] <= 50) g->config.play.hiSpeed[0] = 50;
 			}
 
 			if (GetTimeLapse(412, &g->timer1) < 0.0) {

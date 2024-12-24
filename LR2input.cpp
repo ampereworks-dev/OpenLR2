@@ -1515,13 +1515,12 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 		gp->courseConnection[4] = 0;
 	}
 	stages = gp->courseStageCount;
-	if (gp->courseType != 1 || gp->is2Pplay == 0) {
+	if (gp->courseType != 1 || gp->isCourse == 0) {
 		stages = 1;
 	}
 	endtime = 0.0;
 
 	//TOFIX : in nonstop mode(courseType==1), gp->courseConnection[stage - 1] doesn't check if stage >= 1. It can affects at #BPM
-	//TODO : is2Pplay is really 2p flag??
 	/* start of stage loop */
 	for (int stage = 0; stage < stages; stage++) {
 		//
@@ -1532,7 +1531,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 		lastNoteTime = lastMeasure;
 		gp->freqSpeedMultiplier = oldSpeedMultiplier;
 		int stageStartMeasure = lastMeasure;
-		if (gp->is2Pplay) {
+		if (gp->isCourse) {
 			if (gp->courseType == 1) {
 				filename = gp->courseFilepath[stage];
 				if (gp->courseConnection[stage - 1] == 4 || gp->courseConnection[stage - 1] == 5) {
@@ -1966,7 +1965,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 				param1 = Base36ToInt(*fBuf.atPos(4), *fBuf.atPos(5));
 				gp->loadObject_total++;
 				if (param1 < 1296) {
-					if (gp->is2Pplay == 0 && stage * 1296 + param1 < 1296) {
+					if (gp->isCourse == 0 && stage * 1296 + param1 < 1296) {
 						CSTR filename = fBuf.right(fBuf.length() - 7);
 						filename.nullAtPos(2);
 						for (int i = 0; true; i++) {
@@ -2010,7 +2009,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 		fclose(hFile);
 		/* parse BMS file end*/
 
-		if (gp->soundonly && gp->is2Pplay == 0) {
+		if (gp->soundonly && gp->isCourse == 0) {
 			gp->bmsobj.notes[gp->bmsobj.size].bmsTiming = stageStartMeasure;
 			gp->bmsobj.notes[gp->bmsobj.size].val = 1295.0;
 			gp->bmsobj.notes[gp->bmsobj.size].op = 4;
@@ -2157,7 +2156,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 				
 				double addRealtime = (240.0 / nowBPM * meaLength * (gp->bmsobj.notes[i].bmsTiming - prevNoteRealtime) * 1000.0);
 				bpmt_realtime += addRealtime + stopRealtime;
-				if (cfg->play.hsfix == 4 || (gp->is2Pplay && gp->courseType == 1)) {
+				if (cfg->play.hsfix == 4 || (gp->isCourse && gp->courseType == 1)) {
 					bpmt_bmstime += addRealtime * 1.2;
 					prevNoteRealtime = gp->bmsobj.notes[i].bmsTiming;
 					stopRealtime = 0.0;
@@ -2347,7 +2346,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 		}
 
 		if (cfg->play.battle == 3) {
-			if (cfg->play.battle == 3 && meta->keymode == 9 && gp->is2Pplay == 0 && gp->isPreviewLoad == 0) {
+			if (cfg->play.battle == 3 && meta->keymode == 9 && gp->isCourse == 0 && gp->isPreviewLoad == 0) {
 				ErrorLogFmtAdd("PMSTOSPマージを行います");
 				for (int cur = 0; cur < gp->bmsobj.size; cur++) {
 					gp->bmsobj.notes[cur].bmsTiming_ln = gp->bmsobj.notes[cur].bmsTiming;
@@ -2355,7 +2354,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 				}
 				PMStoSP(gp);
 			}
-			if (cfg->play.battle == 3 && (meta->keymode == 10 || meta->keymode == 14) && gp->is2Pplay == 0 && gp->isPreviewLoad == 0) { //TOFIX: cfg->play.battle==3 duplicated
+			if (cfg->play.battle == 3 && (meta->keymode == 10 || meta->keymode == 14) && gp->isCourse == 0 && gp->isPreviewLoad == 0) { //TOFIX: cfg->play.battle==3 duplicated
 				ErrorLogFmtAdd("DPTOSPマージを行います");
 				for (int cur = 0; cur < gp->bmsobj.size; cur++) {
 					gp->bmsobj.notes[cur].bmsTiming_ln = gp->bmsobj.notes[cur].bmsTiming;
@@ -2364,7 +2363,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 				DPtoSP(gp);
 			}
 		}
-		if (cfg->play.is_extra > 0 && gp->is2Pplay == 0 && gp->isPreviewLoad == 0) {
+		if (cfg->play.is_extra > 0 && gp->isCourse == 0 && gp->isPreviewLoad == 0) {
 			gp->extramode_level = cfg->play.m_extra;
 			for (int cur = 0; cur < gp->bmsobj.size; cur++) {
 				gp->bmsobj.notes[cur].bmsTiming_ln = gp->bmsobj.notes[cur].bmsTiming;
@@ -2372,7 +2371,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 			}
 			MakeExtraChart(gp, &cc);
 		}
-		if (cfg->play.m_addnote > 0 && gp->is2Pplay == 0 && gp->isPreviewLoad == 0) {
+		if (cfg->play.m_addnote > 0 && gp->isCourse == 0 && gp->isPreviewLoad == 0) {
 
 			for (int i = 0; i < gp->bmsobj.size; i++) {
 				gp->bmsobj.notes[i].bmsTiming_ln = gp->bmsobj.notes[i].bmsTiming;
@@ -2450,7 +2449,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 			}
 			qsort(gp->bmsobj.notes, gp->bmsobj.size, sizeof(NoteStruct), CMP_NotesByRealTimingOp);
 		}
-		if (cfg->play.m_loudness > 0 && gp->is2Pplay == 0 && gp->isPreviewLoad == 0) {
+		if (cfg->play.m_loudness > 0 && gp->isCourse == 0 && gp->isPreviewLoad == 0) {
 
 			for (int i = 0; i < gp->bmsobj.size; i++) {
 				gp->bmsobj.notes[i].bmsTiming_ln = gp->bmsobj.notes[i].bmsTiming;
@@ -2598,7 +2597,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 		}
 		// -2331 line
 		// 4033- line
-		if (gp->is2Pplay) {
+		if (gp->isCourse) {
 			if (stage != stages - 1) {
 				if (objNumLastMeasure > 0) {
 					for (int i = objNumLastMeasure; i < gp->bmsobj.size; i++) {
@@ -2609,7 +2608,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 				}
 				if (bpmt_count > 0) gp->bpmt_count = bpmt_count;
 			}
-			if (gp->is2Pplay && stage && objNumFirstMeasure > 0) {
+			if (gp->isCourse && stage && objNumFirstMeasure > 0) {
 				for (int i = bmsobj_stageFirst; i < objNumFirstMeasure; i++) {
 					if (gp->bmsobj.notes[i].op == 2) {
 						gp->bmsobj.notes[i].op = -1;
@@ -2695,7 +2694,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 	gp->freqSpeedMultiplier = oldSpeedMultiplier;
 	qsort(gp->bmsobj.notes, gp->bmsobj.size, sizeof(NoteStruct), CMP_NotesByRealTiming);
 
-	if (gp->is2Pplay == 1 && gp->courseType == 1) gp->speedmultiplier = 1.0;
+	if (gp->isCourse == 1 && gp->courseType == 1) gp->speedmultiplier = 1.0;
 	else if (avgBPM_notes > 0 && cfg->play.hsfix == 3) gp->speedmultiplier = 150.0 / (avgBPM_bpmsum / avgBPM_notes); //average
 	else if (gp->maxBPM > 0.0 && cfg->play.hsfix == 1) gp->speedmultiplier = 150.0 / gp->maxBPM;
 	else if (gp->minBPM > 0.0 && cfg->play.hsfix == 2) gp->speedmultiplier = 150.0 / gp->minBPM;
@@ -2879,7 +2878,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 		int optemp = gp->bmsobj.notes[i].op;
 		if (optemp < 10 || optemp >= 30) {
 			if (optemp == 2) {
-				if (cfg->play.battle == 3 && (meta->keymode == 5 || meta->keymode == 7) && gp->is2Pplay == 0) {
+				if (cfg->play.battle == 3 && (meta->keymode == 5 || meta->keymode == 7) && gp->isCourse == 0) {
 					for (int j = 0; j < 10; j++) {
 						unused_swapLane[j] = unused_LaneA[j];
 						unused_LaneA[j] = unused_LaneB[j];
@@ -3279,7 +3278,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 			double dmg_totalbase = 100.0 / (double)recover;
 			double dmg = max(dmg_notebase * 10, dmg_totalbase) / 10.0;
 
-			if (!gp->is2Pplay) {
+			if (!gp->isCourse) {
 				switch (cfg->play.gaugeOption[p]) {
 				default:
 					gp->player[p].judge_damage[5] = total[p] / (float)notes;

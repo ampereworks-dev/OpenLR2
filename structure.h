@@ -1520,7 +1520,7 @@ struct gameplay {
 	struct CONFIG_PLAY targetCfg; /* //1p_speed ~ struct */
 	int delayDetectedCount;
 	int delayCheckCount;
-	undefined1 is2Pplay; /* Created by retype action */
+	undefined1 isCourse; /* Created by retype action */
 	undefined field142_0x7c075;
 	undefined field143_0x7c076;
 	undefined field144_0x7c077;

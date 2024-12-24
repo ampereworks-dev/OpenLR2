@@ -414,7 +414,6 @@ int InitFxParam(game *g, int fxNum){
 }
 
 //401fe0
-//TODO : banner image load fails
 void ThreadProc_LoadBanner(void *param) {
 	game* g = (game*)param;
 
@@ -1836,7 +1835,7 @@ int LogGraphPlayerDataToEnd(GRAPHDATA *grp, PLAYERSTATUS *pstat){
 }
 
 //405da0
-int CheckClear(PLAYERSTATUS *pstat, int gaugeType, char is2p){
+int CheckClear(PLAYERSTATUS *pstat, int gaugeType, char isCourse){
 
 	pstat->clearType = 1;
 	if (pstat->totalnotes == pstat->max_combo) {
@@ -1849,7 +1848,7 @@ int CheckClear(PLAYERSTATUS *pstat, int gaugeType, char is2p){
 		}
 	}
 	else {
-		if (is2p) {
+		if (isCourse) {
 			if (pstat->note_current != pstat->totalnotes)
 				return pstat->clearType;
 			if (pstat->HP >= 2.0) {
@@ -1957,7 +1956,7 @@ int ApplyJudgeToScore(int judge, game *g, int player, int lane, Timer *T, char i
 
 	int hp = ((int)g->gameplay.player[player].HP / 2) * 2;
 	double damage;
-	if (hp <= 30 && (!(g->config.play.gaugeOption[player] == 0 || g->config.play.gaugeOption[player] == 3) || g->gameplay.is2Pplay != 0) && judge <= 2) {
+	if (hp <= 30 && (!(g->config.play.gaugeOption[player] == 0 || g->config.play.gaugeOption[player] == 3) || g->gameplay.isCourse != 0) && judge <= 2) {
 		damage = g->gameplay.player[player].judge_damage[judge] * 0.6;
 	}
 	else {
@@ -1965,7 +1964,7 @@ int ApplyJudgeToScore(int judge, game *g, int player, int lane, Timer *T, char i
 	}
 	g->gameplay.player[player].HP += damage;
 
-	if (g->gameplay.is2Pplay == 0 && g->gameplay.player[player].HP <= 2.0 && (g->config.play.gaugeOption[player] == 0 || g->config.play.gaugeOption[player] == 3)) {
+	if (g->gameplay.isCourse == 0 && g->gameplay.player[player].HP <= 2.0 && (g->config.play.gaugeOption[player] == 0 || g->config.play.gaugeOption[player] == 3)) {
 		g->gameplay.player[player].HP = 2.0;
 	}
 
@@ -2538,7 +2537,7 @@ int DrawHPgauge(game *g){
 	char survival;
 
 	for (int i = 0; i < 2; i++) {
-		if (g->gameplay.is2Pplay == 0 && (g->config.play.gaugeOption[i] == 0 || g->config.play.gaugeOption[i] == 3)) {
+		if (g->gameplay.isCourse == 0 && (g->config.play.gaugeOption[i] == 0 || g->config.play.gaugeOption[i] == 3)) {
 			survival = 0;
 		}
 		else {
@@ -2651,7 +2650,7 @@ int Proc_Result(game *g, skstruct *sk, Timer *T) {
 			int last = 0;
 			while (val != g->gameplay.statgraph[0].hp[axis]) {
 				
-				if (g->gameplay.is2Pplay == 0 && g->config.play.gaugeOption[0] != 1 && g->config.play.gaugeOption[0] != 2 && g->config.play.gaugeOption[0] != 5 && g->config.play.gaugeOption[0] != 4 && val < 80) {
+				if (g->gameplay.isCourse == 0 && g->config.play.gaugeOption[0] != 1 && g->config.play.gaugeOption[0] != 2 && g->config.play.gaugeOption[0] != 5 && g->config.play.gaugeOption[0] != 4 && val < 80) {
 					
 					int targetval = sk->src_GAUGECHART_1P[0].op2 * val / (-100);
 					if (last != targetval) {
@@ -2671,7 +2670,7 @@ int Proc_Result(game *g, skstruct *sk, Timer *T) {
 				if (val > g->gameplay.statgraph[0].hp[axis]) val--;
 			}
 
-			if (g->gameplay.is2Pplay == 0 && g->config.play.gaugeOption[0] != 1 && g->config.play.gaugeOption[0] != 2 && g->config.play.gaugeOption[0] != 5 && g->config.play.gaugeOption[0] != 4 && g->gameplay.statgraph[0].hp[axis] < 80) {
+			if (g->gameplay.isCourse == 0 && g->config.play.gaugeOption[0] != 1 && g->config.play.gaugeOption[0] != 2 && g->config.play.gaugeOption[0] != 5 && g->config.play.gaugeOption[0] != 4 && g->gameplay.statgraph[0].hp[axis] < 80) {
 				AddDrawingBuffer_Object(&sk->drBuf, &sk->src_GAUGECHART_1P[0], &sk->dst_GAUGECHART_1P[0], T, i, sk->src_GAUGECHART_1P[0].op2 * g->gameplay.statgraph[0].hp[axis] / (-100));
 			}
 			else {
@@ -2694,7 +2693,7 @@ int Proc_Result(game *g, skstruct *sk, Timer *T) {
 			int last = 0;
 			while (val != g->gameplay.statgraph[1].hp[axis]) {
 
-				if (g->gameplay.is2Pplay == 0 && g->config.play.gaugeOption[p] != 1 && g->config.play.gaugeOption[p] != 2 && val < 80) {
+				if (g->gameplay.isCourse == 0 && g->config.play.gaugeOption[p] != 1 && g->config.play.gaugeOption[p] != 2 && val < 80) {
 
 					int targetval = sk->src_GAUGECHART_2P[0].op2 * val / (-100);
 					if (last != targetval) {
@@ -2714,7 +2713,7 @@ int Proc_Result(game *g, skstruct *sk, Timer *T) {
 				if (val > g->gameplay.statgraph[1].hp[axis]) val--;
 			}
 
-			if (g->gameplay.is2Pplay == 0 && g->config.play.gaugeOption[p] != 1 && g->config.play.gaugeOption[p] != 2 && g->gameplay.statgraph[1].hp[axis] < 80) {
+			if (g->gameplay.isCourse == 0 && g->config.play.gaugeOption[p] != 1 && g->config.play.gaugeOption[p] != 2 && g->gameplay.statgraph[1].hp[axis] < 80) {
 				AddDrawingBuffer_Object(&sk->drBuf, &sk->src_GAUGECHART_2P[0], &sk->dst_GAUGECHART_2P[0], T, i, sk->src_GAUGECHART_2P[0].op2 * g->gameplay.statgraph[1].hp[axis] / (-100));
 			}
 			else {
@@ -4284,7 +4283,7 @@ void ThreadProc_PO4parseBMS(game *g) {
 	
 	g->gameplay.bmsResourceLoaded = 0;
 	g->gameplay.flag_closingPhase = 0;
-	g->gameplay.is2Pplay = 0;
+	g->gameplay.isCourse = 0;
 	g->gameplay.courseStageCount = 0;
 	InitGameplay(&g->gameplay, &g->config.play);
 	
@@ -4615,19 +4614,19 @@ bool GetOptionFlag_dst(game *gs, int option) {
 
 		case 42:
 			if (gs->config.play.gaugeOption[0] != 0 && gs->config.play.gaugeOption[0] != 3) return !ret;
-			if (gs->gameplay.is2Pplay == 0) return ret;
+			if (gs->gameplay.isCourse == 0) return ret;
 			break;
 		case 43:
 			if (gs->config.play.gaugeOption[0] != 0 && gs->config.play.gaugeOption[0] != 3) return ret;
-			if (gs->gameplay.is2Pplay == 0) return !ret;
+			if (gs->gameplay.isCourse == 0) return !ret;
 			return ret;
 		case 44:
 			if (gs->config.play.gaugeOption[1] != 0 && gs->config.play.gaugeOption[1] != 3) return !ret;
-			if (gs->gameplay.is2Pplay == 0) return ret;
+			if (gs->gameplay.isCourse == 0) return ret;
 			break;
 		case 45:
 			if (gs->config.play.gaugeOption[1] != 0 && gs->config.play.gaugeOption[1] != 3) return ret;
-			if (gs->gameplay.is2Pplay == 0) return !ret;
+			if (gs->gameplay.isCourse == 0) return !ret;
 			return ret;
 
 		case 46:
@@ -7673,7 +7672,7 @@ void LoadPreview(game *g) {
 	g->gameplay.flag_gameinput = '\0';
 	g->gameplay.isAutoplay = 1;
 	g->gameplay.courseType = -1;
-	g->gameplay.is2Pplay = 0;
+	g->gameplay.isCourse = 0;
 	g->gameplay.courseStageCount = 0;
 	StopAllKeysound(g);
 	InitKeysound(g);
@@ -7915,7 +7914,7 @@ int ProcI_SkinSelect(game *g) {
 
 	if (g->skinData.select <= 4 || g->skinData.select == 12 || g->skinData.select == 13) {
 		for (int i = 0; i < 2; i++) {
-			if (g->gameplay.is2Pplay == 0 && (g->config.play.gaugeOption[i] == 0 || g->config.play.gaugeOption[i] == 3)) 
+			if (g->gameplay.isCourse == 0 && (g->config.play.gaugeOption[i] == 0 || g->config.play.gaugeOption[i] == 3)) 
 				AddDrawingBuffer_Gauge(&g->skstruct2.drBuf, &g->skstruct2.src_GROOVEGAUGE[i], &g->skstruct2.dst_GROOVEGAUGE[i], &g->timer2, (int)g->gameplay.player[i].HP_print / 2, 0);
 			else
 				AddDrawingBuffer_Gauge(&g->skstruct2.drBuf, &g->skstruct2.src_GROOVEGAUGE[i], &g->skstruct2.dst_GROOVEGAUGE[i], &g->timer2, (int)g->gameplay.player[i].HP_print / 2, 1);
@@ -9042,7 +9041,7 @@ int SaveResult(game *g, sqlite3* sql) {
 
 	if (g->gameplay.isAutoplay) return -1;
 
-	CheckClear(&g->gameplay.player[0], g->config.play.gaugeOption[0], g->gameplay.is2Pplay);
+	CheckClear(&g->gameplay.player[0], g->config.play.gaugeOption[0], g->gameplay.isCourse);
 	if (g->gameplay.courseType == 0 || g->gameplay.courseType == 2) {
 		ErrorLogFmtAdd("エキスパ用のスコア保存処理を行います\n");
 		if (CheckScoreSaveConditon(g) == 0) return -1;
@@ -9200,7 +9199,7 @@ int SaveResult(game *g, sqlite3* sql) {
 		ErrorLogFmtAdd("通常のスコア保存処理を行います\n");
 		
 		if (g->config.play.battle == 1) {
-			CheckClear(&g->gameplay.player[1], g->config.play.gaugeOption[1], g->gameplay.is2Pplay);
+			CheckClear(&g->gameplay.player[1], g->config.play.gaugeOption[1], g->gameplay.isCourse);
 		}
 		else {
 			g->gameplay.player[1].clearType = g->gameplay.player[0].clearType;
@@ -9465,7 +9464,7 @@ int SaveResult(game *g, sqlite3* sql) {
 						g->net.IRresultMessage = "この曲はIRに登録できません";
 					}
 					else {
-						if (g->gameplay.is2Pplay == 0) {
+						if (g->gameplay.isCourse == 0) {
 							g->net.myRanking.InitRanking();
 							BMSMETA meta;
 							ParseBMSMETA(&meta, g->sSelect.bmsList[g->sSelect.cur_song].filepath, 0);
@@ -22571,7 +22570,7 @@ int InitGameplay(gameplay *gp, CONFIG_PLAY *cfg) {
 
 	for (int p = 0; p < 2; p++) {
 		if (gp->courseStageNow < 1) {
-			if (gp->is2Pplay == 0 && (cfg->gaugeOption[p] == 0 || cfg->gaugeOption[p] == 3)) {
+			if (gp->isCourse == 0 && (cfg->gaugeOption[p] == 0 || cfg->gaugeOption[p] == 3)) {
 				gp->player[p].HP = 20.0;
 				gp->player[p].HP_old = 20.0;
 				gp->player[p].HP_print = 20.0;
@@ -22947,7 +22946,7 @@ int InitGameplay_retry(gameplay *gp, AUDIO *snd, game *g) {
 	gp->player[1].flag_active = 0;
 
 	for (int p = 0; p < 2; p++) {
-		if (gp->is2Pplay) {
+		if (gp->isCourse) {
 			gp->player[p].HP = 100.0;
 			gp->player[p].HP_old = 100.0;
 			gp->player[p].HP_print = 100.0;
@@ -27523,7 +27522,7 @@ int REPLAY_ApplyJudgeToScore(gameplay *gp, Timer *T, game *g, uint judge, int pl
 
 	int hp = ((int)gp->player[player].HP / 2) * 2;
 	double damage;
-	if (hp <= 30 && (!(g->config.play.gaugeOption[player] == 0 || g->config.play.gaugeOption[player] == 3) || gp->is2Pplay != 0) && judge <= 2) {
+	if (hp <= 30 && (!(g->config.play.gaugeOption[player] == 0 || g->config.play.gaugeOption[player] == 3) || gp->isCourse != 0) && judge <= 2) {
 		damage = gp->player[player].judge_damage[judge] * 0.6;
 	}
 	else {
@@ -27531,7 +27530,7 @@ int REPLAY_ApplyJudgeToScore(gameplay *gp, Timer *T, game *g, uint judge, int pl
 	}
 	gp->player[player].HP += damage;
 
-	if (gp->is2Pplay == 0 && gp->player[player].HP <= 2.0 && (g->config.play.gaugeOption[player] == 0 || g->config.play.gaugeOption[player] == 3)) {
+	if (gp->isCourse == 0 && gp->player[player].HP <= 2.0 && (g->config.play.gaugeOption[player] == 0 || g->config.play.gaugeOption[player] == 3)) {
 		gp->player[player].HP = 2.0;
 	}
 

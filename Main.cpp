@@ -420,7 +420,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			gs.gameplay.p1Score.judge_queue = NULL;
 			gs.gameplay.targetScore.judge_queue_count = 0;
 			gs.gameplay.targetScore.judge_queue = NULL;
-			gs.gameplay.is2Pplay = 0;
+			gs.gameplay.isCourse = 0;
 			gs.gameplay.isPreviewLoad = 0;
 			gs.gameplay.previewStatus = 0;
 			InitializeCriticalSection(&gs.gameplay.criticalSection);
@@ -521,7 +521,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					StopSound(&gs.audio, &gs.gameplay.keysound[i]);
 				}
 				gs.gameplay.previewStatus = 0;
-				gs.gameplay.is2Pplay = 0;
+				gs.gameplay.isCourse = 0;
 				gs.gameplay.courseStageCount = 1;
 				for (int i = 0; i < 5; i++) {
 					gs.gameplay.courseFilepath[i].fillzero();
@@ -1090,7 +1090,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 								StopSound(&gs.audio, &gs.gameplay.keysound[i]);
 							}
 							gs.gameplay.previewStatus = 0;
-							gs.gameplay.is2Pplay = 0;
+							gs.gameplay.isCourse = 0;
 							gs.gameplay.courseStageCount = 1;
 							gs.gameplay.randomseed = 0;
 							for (int i = 0; i < 5; i++) {
@@ -1100,7 +1100,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 							gs.gameplay.courseType = -1;
 							if (gs.sSelect.bmsList[gs.sSelect.cur_song].coursePlayable == 1) {
 								SONGDATA sd;
-								gs.gameplay.is2Pplay = 1;
+								gs.gameplay.isCourse = 1;
 								gs.gameplay.courseStageCount = gs.sSelect.bmsList[gs.sSelect.cur_song].courseStageCount;
 								for (int i = 0; i < gs.sSelect.bmsList[gs.sSelect.cur_song].courseStageCount; i++) {
 									GetSongData(gs.sSelect.bmsList[gs.sSelect.cur_song].courseHash[i], &sd, sql3, &gs.sSelect);

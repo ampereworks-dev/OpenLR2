@@ -1827,10 +1827,12 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 					}
 				}
 				else if (channel == 3) { //Change of BPM 	BPM 1 « [01-FF] » BPM 255
-					for (int i = 0; i < (fBuf.length() - 7) / 2; i++) {
+					int div = (fBuf.length() - 7) / 2;
+					for (int i = 0; i < div; i++) {
 						int ii = i * 2 + 7;
 						if (HEXcharToInt(*fBuf.atPos(ii), *fBuf.atPos(ii + 1))) {
-							gp->bmsobj.notes[gp->bmsobj.size].bmsTiming = (i / (float)((fBuf.length() - 7) / 2)) + thisMeasure;
+							float notepos = i / (float)div; //do not simplify this. float80 - float32 noise is in original LR2
+							gp->bmsobj.notes[gp->bmsobj.size].bmsTiming = (int)thisMeasure + notepos;
 							gp->bmsobj.notes[gp->bmsobj.size].val = HEXcharToInt(*fBuf.atPos(ii), *fBuf.atPos(ii + 1)) * gp->freqSpeedMultiplier;
 							gp->bmsobj.notes[gp->bmsobj.size].op = 3;
 							gp->bmsobj.size++;
@@ -1841,10 +1843,12 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 					}
 				}
 				else if (channel > 0) {
-					for (int i = 0; i < (fBuf.length() - 7) / 2; i++) {
+					int div = (fBuf.length() - 7) / 2;
+					for (int i = 0; i < div; i++) {
 						int ii = i * 2 + 7;
 						if (Base36ToInt(*fBuf.atPos(ii), *fBuf.atPos(ii + 1))) {
-							gp->bmsobj.notes[gp->bmsobj.size].bmsTiming = (i / (float)((fBuf.length() - 7) / 2)) + thisMeasure;
+							float notepos = i / (float)div; //do not simplify this. float80 - float32 noise is in original LR2
+							gp->bmsobj.notes[gp->bmsobj.size].bmsTiming = (int)thisMeasure + notepos;
 							if (isVisibleNote(channel)) {
 								if (lastMeasure <= thisMeasure) {
 									lastMeasure = thisMeasure;
@@ -1873,7 +1877,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 							if (gp->bmsobj.size == gp->bmsobj.count) ExpandNoteBuffer(&gp->bmsobj, 1000);
 
 							if (((10 <= channel && channel < 20) || (30 <= channel && channel < 40) || (50 <= channel && channel < 60)) && (meta->keymode < 10 && ((cfg->play.battle == 1 && (cfg->play.random[0] != cfg->play.random[1])) || cfg->play.battle == 2))) {
-								gp->bmsobj.notes[gp->bmsobj.size].bmsTiming = i / (float)((fBuf.length() - 7) / 2) + thisMeasure;
+								gp->bmsobj.notes[gp->bmsobj.size].bmsTiming = (int)thisMeasure + notepos;
 								gp->bmsobj.notes[gp->bmsobj.size].val = Base36ToInt(*fBuf.atPos(ii), *fBuf.atPos(ii + 1)) + stage * 1296;
 								gp->bmsobj.notes[gp->bmsobj.size].op = channel + 10;
 								gp->bmsobj.size++;

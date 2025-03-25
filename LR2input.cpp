@@ -1858,7 +1858,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 							if (isVisibleNote(channel) && firstNoteTime == -1.0) {
 								firstNoteTime = gp->bmsobj.notes[gp->bmsobj.size].bmsTiming;
 							}
-							else if (gp->bmsobj.notes[gp->bmsobj.size].bmsTiming < firstNoteTime) {
+							else if (gp->bmsobj.notes[gp->bmsobj.size].bmsTiming < firstNoteTime) { //visible no check?
 								firstNoteTime = gp->bmsobj.notes[gp->bmsobj.size].bmsTiming;
 							}
 
@@ -1918,7 +1918,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 					gp->bpmt_data[gp->bpmt_count].converted = (double)stageStartMeasure;
 					gp->bpmt_data[gp->bpmt_count].realtime = 0.0;
 				}
-				gp->bpmt_count++;
+				gp->bpmt_count++; //TOFIX: possibility of writing over allocated memory
 				if (gp->bmsobj.size == gp->bmsobj.count) {
 					ExpandNoteBuffer(&gp->bmsobj, 1000);
 				}
@@ -2892,7 +2892,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 					SPtoDP(&gp->bmsobj, i, &cc);
 				}
 
-				memcpy(&gp->bmsobj_line.notes[gp->bmsobj_line.size], &gp->bmsobj.notes[i].bmsTiming, sizeof(NoteStruct));
+				memcpy(&gp->bmsobj_line.notes[gp->bmsobj_line.size], &gp->bmsobj.notes[i], sizeof(NoteStruct));
 				gp->bmsobj_line.size++;;
 
 				if (gp->bmsobj_line.size == gp->bmsobj_line.count) {

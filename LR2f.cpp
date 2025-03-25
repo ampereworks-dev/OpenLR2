@@ -1973,7 +1973,7 @@ int ApplyJudgeToScore(int judge, game *g, int player, int lane, Timer *T, char i
 
 	int newhp = ((int)g->gameplay.player[player].HP / 2) * 2;
 	if (hp <= 0) {
-		g->gameplay.player[player].HP = 0; //?
+		g->gameplay.player[player].HP = 0; //prevents revive after death
 		newhp = 0;
 		ResetTimeLapse(44 + player, T);
 	}
@@ -2092,7 +2092,7 @@ int ApplyJudge(int judge, game *g, int player, int lane, int damage) {
 	return 1;
 }
 
-//406710 //TODO skin adjust test
+//406710
 int DrawNotes(game *g, skstruct *sk, Timer *T, CONFIG_PLAY *cfg) {
 	//TODO : refactor, test maniac mode
 	DSTdraw tDdraw;
@@ -12830,7 +12830,7 @@ int ProcGame(game *g) {
 				g->gameplay.bmsobj_note[op - 30].noteVal = val;
 			}
 		}
-		else if (op == 1001) {
+		else if (op == 1001) { //NONSTOP MIX #RANK
 
 			switch (val) {
 			case 0:
@@ -16500,9 +16500,9 @@ int SearchCourseFromDB(sqlite3 *sql, SONGSELECT *ss, int keys, int multistagemod
 		if (song.courseStageCount > 9) song.courseStageCount = 10;
 		if (song.hash.length() > 63) {
 			for (int i = 0; i < 10; i++) {
-				song.courseKeys[i] = *song.hash.atPos(i) - 48;
+				song.courseKeys[i] = *song.hash.atPos(i) - 0x30;
 			}
-			song.courseType = *song.hash.atPos(10) - 48;
+			song.courseType = *song.hash.atPos(10) - 0x30;
 			song.coursePlayable = 1;
 		}
 
@@ -16532,11 +16532,10 @@ int SearchCourseFromDB(sqlite3 *sql, SONGSELECT *ss, int keys, int multistagemod
 			song.artist = "曲が設定されていないのでプレイできません";
 		}
 
-		if (multistagemode == 1) {
+		if (multistagemode == 1) { //nonstop
 			cstrSprintf(&str, "LR2files/Replay/%s/%s.lr2rep", ss->playerID, MD5str(song.hash));
 		}
 		else {
-
 			cstrSprintf(&str, "LR2files/Replay/%s/c/%s", ss->playerID, MD5str(song.hash));
 		}
 		song.replayExist = IsFileExist(str);

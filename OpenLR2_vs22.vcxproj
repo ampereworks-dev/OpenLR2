@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LR2\dbgtool.h" />
+    <ClInclude Include="LR2\Engine.h" />
+    <ClInclude Include="LR2\En_audio.h" />
+    <ClInclude Include="LR2\En_dbio.h" />
+    <ClInclude Include="LR2\En_fileutil.h" />
+    <ClInclude Include="LR2\En_graphic.h" />
+    <ClInclude Include="LR2\En_input.h" />
+    <ClInclude Include="LR2\En_recordmovie.h" />
+    <ClInclude Include="LR2\En_timer.h" />
+    <ClInclude Include="LR2\En_value.h" />
+    <ClInclude Include="LR2\En_xml.h" />
+    <ClInclude Include="LR2\LR2.h" />
+    <ClInclude Include="LR2\LR2_audio.h" />
+    <ClInclude Include="LR2\LR2_bmsload.h" />
+    <ClInclude Include="LR2\LR2_configsave.h" />
+    <ClInclude Include="LR2\LR2_gameloop.h" />
+    <ClInclude Include="LR2\LR2_ghost.h" />
+    <ClInclude Include="LR2\LR2_ir.h" />
+    <ClInclude Include="LR2\LR2_makemp3.h" />
+    <ClInclude Include="LR2\LR2_replay.h" />
+    <ClInclude Include="LR2\LR2_skindraw.h" />
+    <ClInclude Include="LR2\LR2_skinload.h" />
+    <ClInclude Include="LR2\LR2_skinmanage.h" />
+    <ClInclude Include="LR2\LR2_skinobject.h" />
+    <ClInclude Include="LR2\LR2_songmanage.h" />
+    <ClInclude Include="LR2\LR2_statlong.h" />
+    <ClInclude Include="LR2\LR2_statplay.h" />
+    <ClInclude Include="LR2\Scene02_Songselect.h" />
+    <ClInclude Include="LR2\Scene03_Decide.h" />
+    <ClInclude Include="LR2\Scene04_Play.h" />
+    <ClInclude Include="LR2\Scene05_Result.h" />
+    <ClInclude Include="LR2\Scene06_Keyconfig.h" />
+    <ClInclude Include="LR2\Scene07_Skinselect.h" />
+    <ClInclude Include="LR2\Scene08_Lunaris.h" />
+    <ClInclude Include="LR2\Scene09_Po4menu.h" />
+    <ClInclude Include="LR2\Scene10_Po4decide.h" />
+    <ClInclude Include="LR2\Scene11_Po4select.h" />
+    <ClInclude Include="LR2\Scene13_Courseresult.h" />
+    <ClInclude Include="LR2\Scenes.h" />
+    <ClInclude Include="LR2\strclass.h" />
+    <ClInclude Include="LR2\structure.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="lib\md5.cpp" />
+    <ClCompile Include="lib\sqlite\sqlite3.c" />
+    <ClCompile Include="lib\tinyxml\tinystr.cpp" />
+    <ClCompile Include="lib\tinyxml\tinyxml.cpp" />
+    <ClCompile Include="lib\tinyxml\tinyxmlerror.cpp" />
+    <ClCompile Include="lib\tinyxml\tinyxmlparser.cpp" />
+    <ClCompile Include="LR2\dbgtool.cpp" />
+    <ClCompile Include="LR2\En_audio.cpp" />
+    <ClCompile Include="LR2\En_dbio.cpp" />
+    <ClCompile Include="LR2\En_fileutil.cpp" />
+    <ClCompile Include="LR2\En_graphic.cpp" />
+    <ClCompile Include="LR2\En_input.cpp" />
+    <ClCompile Include="LR2\En_recordmovie.cpp" />
+    <ClCompile Include="LR2\En_timer.cpp" />
+    <ClCompile Include="LR2\En_value.cpp" />
+    <ClCompile Include="LR2\En_xml.cpp" />
+    <ClCompile Include="LR2\LR2_audio.cpp" />
+    <ClCompile Include="LR2\LR2_bmsload.cpp" />
+    <ClCompile Include="LR2\LR2_configsave.cpp" />
+    <ClCompile Include="LR2\LR2_gameloop.cpp" />
+    <ClCompile Include="LR2\LR2_ghost.cpp" />
+    <ClCompile Include="LR2\LR2_ir.cpp" />
+    <ClCompile Include="LR2\LR2_makemp3.cpp" />
+    <ClCompile Include="LR2\LR2_replay.cpp" />
+    <ClCompile Include="LR2\LR2_skindraw.cpp" />
+    <ClCompile Include="LR2\LR2_skinload.cpp" />
+    <ClCompile Include="LR2\LR2_skinmanage.cpp" />
+    <ClCompile Include="LR2\LR2_skinobject.cpp" />
+    <ClCompile Include="LR2\LR2_songmanage.cpp" />
+    <ClCompile Include="LR2\LR2_statlong.cpp" />
+    <ClCompile Include="LR2\LR2_statplay.cpp" />
+    <ClCompile Include="LR2\Main.cpp" />
+    <ClCompile Include="LR2\Scene02_Songselect.cpp" />
+    <ClCompile Include="LR2\Scene03_Decide.cpp" />
+    <ClCompile Include="LR2\Scene04_Play.cpp" />
+    <ClCompile Include="LR2\Scene05_Result.cpp" />
+    <ClCompile Include="LR2\Scene06_Keyconfig.cpp" />
+    <ClCompile Include="LR2\Scene07_Skinselect.cpp" />
+    <ClCompile Include="LR2\Scene08_Lunaris.cpp" />
+    <ClCompile Include="LR2\Scene09_Po4menu.cpp" />
+    <ClCompile Include="LR2\Scene10_Po4decide.cpp" />
+    <ClCompile Include="LR2\Scene11_Po4select.cpp" />
+    <ClCompile Include="LR2\Scene13_Courseresult.cpp" />
+    <ClCompile Include="LR2\strclass.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="lib\FMODex\fmodex_vc.lib" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{01fa731b-9406-4b8b-8604-7023e88298f5}</ProjectGuid>
+    <RootNamespace>OpenLR2vs22</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)lib\DxLib;$(ProjectDir)lib\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/execution-charset:shift-JIS /arch:IA32 %(AdditionalOptions)</AdditionalOptions>
+      <FloatingPointModel>Precise</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib\FMODex\;$(ProjectDir)lib\DxLib\;$(ProjectDir)lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)lib\DxLib;$(ProjectDir)lib\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/execution-charset:shift-JIS /arch:IA32 %(AdditionalOptions)</AdditionalOptions>
+      <FloatingPointModel>Precise</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib\FMODex\;$(ProjectDir)lib\DxLib\;$(ProjectDir)lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)lib\DxLib;$(ProjectDir)lib\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/execution-charset:shift-JIS %(AdditionalOptions)</AdditionalOptions>
+      <FloatingPointModel>Precise</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib\FMODex\;$(ProjectDir)lib\DxLib\;$(ProjectDir)lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)lib\DxLib;$(ProjectDir)lib\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/execution-charset:shift-JIS %(AdditionalOptions)</AdditionalOptions>
+      <FloatingPointModel>Precise</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib\FMODex\;$(ProjectDir)lib\DxLib\;$(ProjectDir)lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

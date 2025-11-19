@@ -24,10 +24,10 @@ sending score to LR2IR is disabled to avoid accidents.
  - readme left click scroll is faster than original (not important)
 
 # build
-use visual studio 2008, with japanese locale (locale emulator works).
+use visual studio 2022, right click on OpenLR2_vs22, build. x86 release build only
 
 # libraries
-*DxLib 3.01a -> 3.02
+*DxLib 3.01a => 3.24f(custom old dxa)
 	orginal library is dxlib 3.01a, not available. we can get 3.01 or 3.02.
 
 *FMODex 4.13.4(080401)
@@ -38,5 +38,4 @@ use visual studio 2008, with japanese locale (locale emulator works).
 
 *md5.c, md5.h
  from https://github.com/Zunawe/md5-c. not in original LR2 but to save time I used this.
-
 

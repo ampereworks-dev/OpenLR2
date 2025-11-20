@@ -3,9 +3,9 @@
 //hash
 int makeFileHash(LPCSTR filepath, LPCSTR oBuf);
 //convertTime 
-int GetNowUnixtime(void);
-int GetUnixtimeFromFiletime(FILETIME & filetime);
-int GetFileUnixtime(CSTR str);
+time_t GetNowUnixtime(void);
+time_t GetUnixtimeFromFiletime(FILETIME & filetime);
+time_t GetFileUnixtime(CSTR str);
 //files
 CSTR GetRandomFileOnDir(CSTR path, char fOnlyName);
 bool CheckStringHead(CSTR* bigS, CSTR* head);

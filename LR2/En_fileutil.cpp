@@ -42,56 +42,27 @@ int makeFileHash(LPCSTR filepath, LPCSTR oBuf) {
 	return 1;
 }
 
-//TOFIX : convert unixtime
-/*
-//don't compute with SYSTEMTIME
-time_t convertWindowsTimeToUnixTime(_FILETIME ft){
-	ULARGE_INTEGER ul{ ft.dwLowDateTime, ft.dwHighDateTime };
-	return (unsigned int)((ul.QuadPart - 116444736000000000ULL)/10000000);
-}
-*/
-
+//TODO : using own local time.. GMT
+//TODO : posix 2038y problem
 //437de0
-int GetNowUnixtime(void){
+time_t GetNowUnixtime(void){
 	SYSTEMTIME systime;
 	_FILETIME filetime;
-	int hVal, lVal;
-	double dTemp;
 
 	GetLocalTime((LPSYSTEMTIME)&systime);
-	systime.wYear = systime.wYear - 369;
 	SystemTimeToFileTime(&systime, &filetime);
-
-	dTemp = filetime.dwHighDateTime;
-	hVal = (dTemp * -429.4836225);
-
-	dTemp = filetime.dwLowDateTime;
-	lVal = (dTemp / 10000000.0);
-
-	return lVal - hVal;
+		
+	return GetUnixtimeFromFiletime(filetime);
 }
 
 //437e90
-int GetUnixtimeFromFiletime(FILETIME &filetime) {
-	SYSTEMTIME systime;
-	int hVal, lVal;
-	double dTemp;
-
-	FileTimeToSystemTime(&filetime, &systime);
-	systime.wYear = systime.wYear - 369;
-	SystemTimeToFileTime(&systime, &filetime);
-
-	dTemp = filetime.dwHighDateTime;
-	hVal = (dTemp * -429.4836225);
-
-	dTemp = filetime.dwLowDateTime;
-	lVal = (dTemp / 10000000.0);
-
-	return lVal - hVal;
+time_t GetUnixtimeFromFiletime(FILETIME &filetime) {
+	ULARGE_INTEGER ul{ filetime.dwLowDateTime, filetime.dwHighDateTime };
+	return (unsigned int)((ul.QuadPart - 116444736000000000ULL) / 10000000);
 }
 
 //437f00
-int GetFileUnixtime(CSTR str) {
+time_t GetFileUnixtime(CSTR str) {
 	WIN32_FIND_DATA FindFileData;
 	LPWIN32_FIND_DATAA lpFindFileData;
 	HANDLE hFindFile;

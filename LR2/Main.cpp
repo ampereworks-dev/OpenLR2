@@ -16,8 +16,8 @@ extern "C" {
 
 
 
-#define LR2TITLE "LR2 beta3 version 100201"
-#define LR2VERSIONSTRING "LR2 beta3 version 100201 re-written 210807"
+#define LR2TITLE "LR2 beta4 version 251121 - testbuild"
+#define LR2VERSIONSTRING "LR2 beta4 version 251121 - testbuild"
 
 using namespace std;
 

@@ -1869,3 +1869,19 @@ int LoadScene(skstruct *sk, CSTR skinfile, int p5, char font) {
 	}
 	return ReadSkin(sk, skinfile, p5, 0, &tsku, font);
 }
+int LoadSceneG(game* g, skstruct* sk, int skinNum) {
+	CSTR skinfile(g->config.skin.skinFilePath[skinNum]);
+
+	Resize(g, g->skinData.Data[g->skinData.skinID[skinNum]].targetX, g->skinData.Data[g->skinData.skinID[skinNum]].targetY, 0);
+	
+	LoadScene(sk, skinfile, g->skinData.Data[g->skinData.skinID[skinNum]].informationP5, 0);
+	return 0;
+}
+int LoadSceneG(game* g, skstruct* sk, int skinNum, int font) {
+	CSTR skinfile(g->config.skin.skinFilePath[skinNum]);
+
+	Resize(g, g->skinData.Data[g->skinData.skinID[skinNum]].targetX, g->skinData.Data[g->skinData.skinID[skinNum]].targetY, 0);
+	
+	LoadScene(sk, skinfile, g->skinData.Data[g->skinData.skinID[skinNum]].informationP5, font);
+	return 0;
+}

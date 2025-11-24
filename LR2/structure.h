@@ -1565,6 +1565,10 @@ struct SkinHeader { /* SkinInfo */
 	int informationP5;
 	struct SkinCustom customs[100];
 	int custom_count;
+
+	//RESOLUTION
+	int targetX = 640;
+	int targetY = 480;
 };
 
 struct RANKINGPLAYER {

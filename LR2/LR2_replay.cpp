@@ -161,7 +161,7 @@ int ReleaseReplayBuffer(REPLAY *rp){
 
 
 //4c0c00
-int AddReplayData(REPLAY *rp, int timing, char op, short value){
+int AddReplayData(REPLAY *rp, int timing, uchar op, short value){
 
 	if (rp->max < 1) {
 		return 0;

@@ -1726,9 +1726,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					printfDx("occured %d\n", gs.timer1.GAPcount);
 					//TEST END
 					//TEST2
+					int dx, dy;
+					GetDrawScreenSize(&dx, &dy);
+					printfDx("skinsize %d %d \n", dx, dy);
 					GetWindowSize(&screenSizeX, &screenSizeY);
-					printfDx("skinsize %d %d \n", skinSizeX, skinSizeY);
-					printfDx("screensz %d %d \n", screenSizeX, screenSizeY);
+					printfDx("scrnsize %d %d \n", screenSizeX, screenSizeY);
 					printfDx("mode %d\n", gs.config.system.screenmode);
 					//TEST2 END
 				}

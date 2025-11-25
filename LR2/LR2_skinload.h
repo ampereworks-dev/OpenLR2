@@ -26,8 +26,7 @@ int ApplyFlipside(skstruct * sk);
 int ReadSkin(skstruct * sk, CSTR FilePath, int unused, int skin_num, SkinUser * sku, char flag_skipFont);
 
 int LoadScene(skstruct * sk, CSTR skinfile, int p5 = 0, char font = 0);
-int LoadSceneG(game* g, skstruct* sk, int skinNum);
-int LoadSceneG(game* g, skstruct* sk, int skinNum, int font);
+int LoadSceneG(game* g, skstruct* sk, int skinNum, int font = 0);
 
 
 int ClearSkinGraph(skstruct * sk);

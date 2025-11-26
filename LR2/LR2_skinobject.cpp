@@ -2743,16 +2743,6 @@ int Proc_Text(game *g, sqlite3 *sql, char flag) {
 				GetKeyInputString(buf, g->txtStruct.hKeyInput);
 				CSTR query;
 
-				CSTR unused_path;
-				CSTR unused_type;
-				unused_path = g->sSelect.bmsList[g->sSelect.cur_song].filepath;
-				if (g->sSelect.bmsList[g->sSelect.cur_song].keymode == 0) {
-					unused_type = "folder";
-				}
-				else if (g->sSelect.bmsList[g->sSelect.cur_song].keymode > 0) {
-					unused_type = "song";
-				}
-
 				switch (g->txtStruct.st_text_num) {
 				case 20:
 					SetObjectString(g->txtStruct.st_text_num - 10, buf, g->txtStruct.objectStr);

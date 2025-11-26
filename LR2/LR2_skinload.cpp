@@ -467,8 +467,6 @@ int InitSkin(skstruct *sk, int /*unused*/, char font) {
 	(sk->adjust).shift_y = 0;
 	(sk->adjust).judge_x = 0;
 	(sk->adjust).judge_y = 0;
-	(sk->adjust).unk18 = 0; //name
-	(sk->adjust).unk1c = 0; //name
 	(sk->adjust).size_x = 0;
 	(sk->adjust).size_y = 0;
 	(sk->adjust).dark_type = 0;

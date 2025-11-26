@@ -242,8 +242,6 @@ int InitGameplay(gameplay *gp, CONFIG_PLAY *cfg) {
 	gp->nabeatsu_x = 0.0;
 	gp->nabeatsu_y = 0.0;
 	gp->isNosave = '\0'; //TOFIX : ?
-	gp->unusedX_7bf50 = 0.0;
-	gp->unusedY_7bf54 = 0.0;
 	gp->earthquake_x = 0.0;
 	gp->earthquake_y = 0.0;
 	
@@ -395,8 +393,6 @@ int InitGameplay(gameplay *gp, CONFIG_PLAY *cfg) {
 	}
 	gp->rategraph[0].cursor = 0;
 	gp->rategraph[1].cursor = 0;
-	gp->unused_73b68 = 0;
-	gp->unused_7bf68 = 0;
 	for (int i = 0; i < 6480; i++) {
 		gp->keysound_filename[i].fillzero();
 		gp->BMP_filename[i].fillzero();
@@ -609,8 +605,6 @@ int InitGameplay_retry(gameplay *gp, AUDIO *snd, game *g) {
 	gp->bgaMixer[9] = 0;
 	gp->bgaMixer[0] = 100;
 
-	gp->unused_7bf68 = '\0';
-	gp->unused_73b68 = 0;
 	gp->lanecoverDisplayP1 = true;
 	gp->lanecoverDisplayP2 = true;
 	gp->flag_threadDoingProcGame = false;
@@ -710,8 +704,6 @@ int InitGameplay_retry(gameplay *gp, AUDIO *snd, game *g) {
 	gp->nabeatsu_y = 0.0;
 	gp->bpmChangedRealtime = -1;
 	gp->bpmChangedBmstime = -1;
-	gp->unusedX_7bf50 = 0.0;
-	gp->unusedY_7bf54 = 0.0;
 	gp->earthquake_x = 0.0;
 	gp->earthquake_y = 0.0;
 	
@@ -3360,10 +3352,6 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 	for (int i = 0; i < 30; i++) intArr[i] = -1;
 	memset(mapAdded, 0, sizeof(mapAdded));
 	char chArr[20] = { 0, };
-	int unkFbuf = 0; //rename this unused one
-	int unused_LaneA[10], unused_LaneB[10], unused_swapLane[10];
-	for (int i = 0; i < 10; i++) unused_LaneA[i] = -1;
-	for (int i = 0; i < 10; i++) unused_LaneB[i] = -1;
 	int isBattle = 0;
 
 
@@ -3375,11 +3363,6 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 		if (optemp < 10 || optemp >= 30) {
 			if (optemp == 2) {
 				if (cfg->play.battle == 3 && (meta->keymode == 5 || meta->keymode == 7) && gp->isCourse == 0) {
-					for (int j = 0; j < 10; j++) {
-						unused_swapLane[j] = unused_LaneA[j];
-						unused_LaneA[j] = unused_LaneB[j];
-						unused_LaneB[j] = unused_swapLane[j];
-					}
 					SPtoDP(&gp->bmsobj, i, &cc);
 				}
 
@@ -3411,9 +3394,6 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 							chArr[lane] = 0;
 						}
 					}
-					
-					if (unkFbuf == 1 || unkFbuf == 2) unkFbuf += 2;
-					else unkFbuf = 0;
 				}
 			}
 			else {
@@ -3432,9 +3412,6 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 							chArr[10 + lane] = 0;
 						}
 					}
-
-					if (unkFbuf == 1 || unkFbuf == 2) unkFbuf += 2;
-					else unkFbuf = 0;
 				}
 			}
 

@@ -71,8 +71,6 @@ void RANKING::ExpandRankingBuffer(int add) {
 
 //4ba6e0
 void RANKING::Init() {
-	this->unk_4.fillzero();
-	this->unk_0.fillzero();
 	this->lastupdate.fillzero();
 	this->clearPlayers[0] = 0;
 	this->clearPlayers[1] = 0;
@@ -80,14 +78,11 @@ void RANKING::Init() {
 	this->clearPlayers[3] = 0;
 	this->clearPlayers[4] = 0;
 	this->clearPlayers[5] = 0;
-	this->unused30 = NULL;
 	this->rankingCursor = 0;
 	this->totalPlaycount = 0;
 	this->rankingCount = 0;
 	this->myRanking = 0;
 	this->showRanking = '\0';
-	this->unused48 = NULL;
-	this->unused44 = NULL;
 	for (int i = 0; i < this->rankingMax; i++) {
 		this->ranking[i].name.fillzero();
 		this->ranking[i].id = 0;
@@ -518,7 +513,6 @@ RANKING::RANKING() {
 
 //4bbb80
 int NETWORK::Init() {
-	this->unk234 = 0;
 	this->waitForHandle = '\0';
 	this->domain = "www.dream-pro.info";
 	this->timeout = 15000;
@@ -557,7 +551,7 @@ int NETWORK::HTTPrequest() {
 			cstrSprintf(&this->request_debug, "ソケットエラー : %d\n", WSAGetLastError());
 			ErrorLogAdd(this->request_debug);
 			closesocket(s);
-			return this->isRequestSuccess = 0;
+			return 0;
 		}
 
 		server.sin_family = AF_INET;
@@ -570,7 +564,7 @@ int NETWORK::HTTPrequest() {
 				else cstrSprintf(&this->request_debug, "その他のエラーです : %d\n", WSAGetLastError());
 				ErrorLogAdd(this->request_debug);
 				closesocket(s);
-				return this->isRequestSuccess = 0;
+				return 0;
 			}
 
 			for (int i = 0; host->h_addr_list[i]; i++) {
@@ -580,7 +574,7 @@ int NETWORK::HTTPrequest() {
 						cstrSprintf(&this->request_debug, "接続に失敗しました : %d\n", WSAGetLastError());
 						ErrorLogAdd(this->request_debug);
 						closesocket(s);
-						return this->isRequestSuccess = 0;
+						return 0;
 					}
 					break;
 				}
@@ -591,7 +585,7 @@ int NETWORK::HTTPrequest() {
 				cstrSprintf(&this->request_debug, "接続に失敗しました : %d\n", WSAGetLastError());
 				ErrorLogAdd(this->request_debug);
 				closesocket(s);
-				return this->isRequestSuccess = 0;
+				return 0;
 			}
 		}
 
@@ -605,7 +599,7 @@ int NETWORK::HTTPrequest() {
 			cstrSprintf(&this->request_debug, "データの送信に失敗しました : %d\n", WSAGetLastError());
 			ErrorLogAdd(this->request_debug);
 			closesocket(s);
-			return this->isRequestSuccess = 0;
+			return 0;
 		}
 
 		request.fillzero(); //from this time, request is used as response result
@@ -645,23 +639,23 @@ int NETWORK::HTTPrequest() {
 
 	if (request.findStrPos("#") != -1) {
 		this->httpResult = request.right(request.length() - (request.findStrPos("#") + 1));
-		return this->isRequestSuccess = 1;
+		return 1;
 	}
 
 	if (request.findStrPos("503") != -1) {
 		cstrSprintf(&this->request_debug, "503エラーです : %d\n", WSAGetLastError());
 		ErrorLogAdd(this->request_debug);
-		return this->isRequestSuccess = 0;
+		return 0;
 	}
 	if (request.findStrPos("404") != -1) {
 		cstrSprintf(&this->request_debug, "404エラーです : %d\n", WSAGetLastError());
 		ErrorLogAdd(this->request_debug);
-		return this->isRequestSuccess = 0;
+		return 0;
 	}
 	if (this->waitForHandle) {
 		cstrSprintf(&this->request_debug, "接続を中断しました : %d\n", WSAGetLastError());
 		ErrorLogAdd(this->request_debug);
-		return this->isRequestSuccess = -1;
+		return -1;
 	}
 	if (request.isSame("TIMEOUT")) {
 		cstrSprintf(&this->request_debug, "タイムアウト : %d\n", WSAGetLastError());
@@ -670,7 +664,7 @@ int NETWORK::HTTPrequest() {
 	}
 	cstrSprintf(&this->request_debug, "その他のエラーです : %d\n", WSAGetLastError());
 	ErrorLogAdd(this->request_debug);
-	return this->isRequestSuccess = 0;
+	return 0;
 #else
 	return -1; // FIXME(linux): stub
 #endif // _WIN32
@@ -833,7 +827,6 @@ int NETWORK::GetTargetInfo(int mode, CSTR songmd5, CSTR *oData, CSTR *oName, int
 
 //4bcc50
 NETWORK::NETWORK(){
-	unk234 = 0;
 	waitForHandle = '\0';
 	domain = "www.dream-pro.info";
 	timeout = 15000;

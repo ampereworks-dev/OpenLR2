@@ -4,6 +4,11 @@
 #include <stdio.h>
 
 
+struct glb_dbgame {
+	struct sqlite3 * pSql;
+	struct game * pGame;
+};
+
 //401be0
 int SetTarget(game *g) {
 
@@ -1923,7 +1928,6 @@ void SubProcI_Select(game *g, sqlite3 *sql) {
 					g->sSelect.unk4fa4[1] = sqlite3_snprintf(1024, buf, "SELECT path,date FROM folder WHERE parent = \'%s\'", g->sSelect.stack_query[g->sSelect.cur].right(9).left(8).body);
 					g->sSelect.unk4fa4[2] = sqlite3_snprintf(1024, buf, "SELECT path,date FROM folder WHERE parent = \'%s\'", g->sSelect.stack_query[g->sSelect.cur - 1].right(9).left(8).body);
 				}
-				g->sSelect.unk4fb4 = sqlite3_snprintf(1024, buf, "SELECT difficulty,folder,mode,path FROM song WHERE parent = \'%s\'", g->sSelect.stack_query[g->sSelect.cur].right(9).left(8).body);
 				g->sSelect.filter_clicked = 4;
 			}
 
@@ -2335,7 +2339,6 @@ void SubProcI_Select(game *g, sqlite3 *sql) {
 						g->sSelect.curQuery[2] = sqlite3_snprintf(1024, buf, "SELECT * FROM folder WHERE parent = \'%s\'", AssignCRC32(g->sSelect.bmsList[g->sSelect.cur_song].filepath.body).body);
 						g->sSelect.curQuery[1] = sqlite3_snprintf(1024, buf, "SELECT * FROM song LEFT JOIN score ON song.hash = score.hash WHERE parent = \'%s\'", AssignCRC32(g->sSelect.bmsList[g->sSelect.cur_song].filepath).body);
 						(g->sSelect).unk4fb8[0] = 0;
-						(g->sSelect).unk4fc0 = 1;
 						(g->sSelect).unk4fb8[1] = 0;
 						(g->sSelect).unk4fc4[0] = 1;
 						(g->sSelect).unk4fc4[1] = 0;
@@ -2348,7 +2351,6 @@ void SubProcI_Select(game *g, sqlite3 *sql) {
 						g->sSelect.queryCount = 2;
 						g->sSelect.unk4fa4[1] = sqlite3_snprintf(1024, buf, "SELECT path,date FROM folder WHERE parent = \'%s\'", AssignCRC32(g->sSelect.bmsList[g->sSelect.cur_song].filepath).body);
 						g->sSelect.unk4fa4[0] = sqlite3_snprintf(1024, buf, "SELECT path,date FROM song WHERE parent = \'%s\'", AssignCRC32(g->sSelect.bmsList[g->sSelect.cur_song].filepath).body);
-						g->sSelect.unk4fb4 = sqlite3_snprintf(1024, buf, "SELECT difficulty,folder,mode,path FROM song WHERE parent = \'%s\'", AssignCRC32(g->sSelect.bmsList[g->sSelect.cur_song].filepath).body);
 						g->sSelect.curQuery[1] = sqlite3_snprintf(1024, buf, "SELECT * FROM folder WHERE parent = \'%s\'", AssignCRC32(g->sSelect.bmsList[g->sSelect.cur_song].filepath).body);
 						g->sSelect.curQuery[0] = sqlite3_snprintf(1024, buf, "SELECT * FROM song LEFT JOIN score ON song.hash = score.hash WHERE parent = \'%s\'", AssignCRC32(g->sSelect.bmsList[g->sSelect.cur_song].filepath).body);
 						g->sSelect.unk4fb8[1] = 1;
@@ -2816,8 +2818,7 @@ int InitSelectBySearchResult(game *g, sqlite3 *sql) {
 			g->sSelect.filterDifficulty = 0;
 			g->config.select.difficulty = 0;
 		}
-		glb.pGame = g;
-		glb.pSql = sql;
+		glb_dbgame glb {sql, g};
 		CheckNewSong(&glb);
 		SetTimeLapse(170, &g->timer1);
 		ResetTimeLapse(171, &g->timer1);

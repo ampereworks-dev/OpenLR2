@@ -344,8 +344,6 @@ int DrawNotes(game *g, skstruct *sk, Timer *T, CONFIG_PLAY *cfg) {
 	}
 	g->gameplay.nabeatsu_x = 0.0;
 	g->gameplay.nabeatsu_y = 0.0;
-	g->gameplay.unusedX_7bf50 = 0.0;
-	g->gameplay.unusedY_7bf54 = 0.0;
 	if (cfg->m_nabeatsu > 0) {
 		int sec = (int)(GetTimeLapse(41, T) / 1000.0) % 60;
 		bool pass =	(sec == (sec / 3 * 3));

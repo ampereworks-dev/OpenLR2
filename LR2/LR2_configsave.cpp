@@ -799,8 +799,6 @@ int ReadSkinCustomize(SkinUser *sku, char *FilePath) {
 	(sku->adjust).note_1p_y = 0;
 	(sku->adjust).note_2p_x = 0;
 	(sku->adjust).note_2p_y = 0;
-	(sku->adjust).unk18 = 0;
-	(sku->adjust).unk1c = 0;
 	(sku->adjust).size_x = 0;
 	(sku->adjust).size_y = 0;
 	sku->customize_value[0] = 0;
@@ -1026,7 +1024,6 @@ int ReadConfig(game* g, const char* filepath) {
 	g->config.play.hiSpeed[1] = 200;
 	g->config.play.p1_lanecoverv = 0;
 	g->config.play.p2_lanecoverv = 0;
-	g->config.play.unknown_2 = 100;
 
 	hXml = new TiXmlDocument(filepath);
 

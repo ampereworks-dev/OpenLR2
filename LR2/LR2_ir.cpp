@@ -725,7 +725,6 @@ int OpenWebRanking(CSTR songmd5){
 	return 1;
 #else
 	CSTR url;
-	url.resize(126);
 	cstrSprintf(&url, "xdg-open \"http://www.dream-pro.info/~lavalse/LR2IR/search.cgi?mode=ranking&bmsmd5=%s#status&\" &", songmd5.body);
 	return system(url.body) == 0;
 #endif

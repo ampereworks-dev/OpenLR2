@@ -2028,7 +2028,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 			}
 			else {
 				filename = gp->courseFilepath[gp->courseStageNow];
-				ErrorLogFmtAdd("エキスパ:ステージ=%d、フルパス=%s\n", gp->courseStageNow, filename);
+				ErrorLogFmtAdd("エキスパ:ステージ=%d、フルパス=%s\n", gp->courseStageNow, filename.body);
 			}
 		}
 		hFile = fopen(filename, "r");

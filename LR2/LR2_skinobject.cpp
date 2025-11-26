@@ -2663,7 +2663,6 @@ int SetObjectValue_Slider(game *g, skstruct *sk, Timer *T, char flag) {
 	return 1;
 }
 
-
 //41dc30
 int Proc_Text(game *g, sqlite3 *sql, char flag) {
 
@@ -2760,7 +2759,7 @@ int Proc_Text(game *g, sqlite3 *sql, char flag) {
 					SetObjectString(g->txtStruct.st_text_num, buf, g->txtStruct.objectStr);
 					g->sSelect.bmsList[g->sSelect.cur_song].title = buf;
 					if (g->sSelect.bmsList[g->sSelect.cur_song].subtitle.isDiff("(null)")) {
-						cstrSprintf(&g->sSelect.bmsList[g->sSelect.cur_song].fulltitle, "%s %s", buf, g->sSelect.bmsList[g->sSelect.cur_song].subtitle);
+						cstrSprintf(&g->sSelect.bmsList[g->sSelect.cur_song].fulltitle, "%s %s", buf.body, g->sSelect.bmsList[g->sSelect.cur_song].subtitle.body);
 						g->sSelect.is_tag_edited = 1;
 						g->sSelect.is_coursemaking_done = 1;
 					}
@@ -2774,7 +2773,7 @@ int Proc_Text(game *g, sqlite3 *sql, char flag) {
 					SetObjectString(g->txtStruct.st_text_num - 10, buf, g->txtStruct.objectStr);
 					SetObjectString(g->txtStruct.st_text_num, buf, g->txtStruct.objectStr);
 					g->sSelect.bmsList[g->sSelect.cur_song].title = buf;
-					cstrSprintf(&g->sSelect.bmsList[g->sSelect.cur_song].fulltitle, "%s %s", g->sSelect.bmsList[g->sSelect.cur_song].title, buf);
+					cstrSprintf(&g->sSelect.bmsList[g->sSelect.cur_song].fulltitle, "%s %s", g->sSelect.bmsList[g->sSelect.cur_song].title.body, buf.body);
 					g->sSelect.is_tag_edited = 1;
 					g->sSelect.is_coursemaking_done = 1;
 					break;
@@ -2870,7 +2869,7 @@ int Proc_Text(game *g, sqlite3 *sql, char flag) {
 						}
 
 						if (query.isSame("(null)")) {
-							sqlite3_snprintf(1024, str, "SELECT * FROM song LEFT JOIN score ON song.hash = score.hash WHERE title LIKE \'%%%s%%\' OR genre LIKE \'%%%s%%\'  OR artist LIKE \'%%%s%%\' OR tag LIKE \'%%%s%%\' OR path LIKE \'%%%s%%\' OR subtitle LIKE \'%%%s%%\' OR subartist LIKE \'%%%s%%\'", buf, buf, buf, buf, buf, buf, buf);
+							sqlite3_snprintf(1024, str, "SELECT * FROM song LEFT JOIN score ON song.hash = score.hash WHERE title LIKE \'%%%s%%\' OR genre LIKE \'%%%s%%\'  OR artist LIKE \'%%%s%%\' OR tag LIKE \'%%%s%%\' OR path LIKE \'%%%s%%\' OR subtitle LIKE \'%%%s%%\' OR subartist LIKE \'%%%s%%\'", buf.body, buf.body, buf.body, buf.body, buf.body, buf.body, buf.body);
 							query.assign(str);
 						}
 

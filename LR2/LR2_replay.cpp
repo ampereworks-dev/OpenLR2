@@ -9,22 +9,22 @@ int MoveReplayFile(CSTR songMD5, CSTR localID){
 	}
 
 	CSTR path;
-	cstrSprintf(&path, "LR2files/Replay/%s/c", localID);
+	cstrSprintf(&path, "LR2files/Replay/%s/c", localID.body);
 	CreateDirectoryA(path, 0);
-	cstrSprintf(&path, "LR2files/Replay/%s/c/%s", localID,songMD5);
+	cstrSprintf(&path, "LR2files/Replay/%s/c/%s", localID.body, songMD5.body);
 	CreateDirectoryA(path, 0);
 
 	CSTR pathFrom;
 	int stage = 0;
-	cstrSprintf(&pathFrom, "LR2files/Replay/%s/__%d.lr2rep", localID, stage);
+	cstrSprintf(&pathFrom, "LR2files/Replay/%s/__%d.lr2rep", localID.body, stage);
 	while (pathFrom.canOpenFile()) {
 		CSTR pathTo;
-		cstrSprintf(&pathTo, "LR2files/Replay/%s/c/%s/%d.lr2rep", localID, songMD5, stage);
+		cstrSprintf(&pathTo, "LR2files/Replay/%s/c/%s/%d.lr2rep", localID.body, songMD5.body, stage);
 		MoveFileA(pathFrom, pathTo); //TOFIX : if file already exists at pathTo, it fails.
 		ErrorLogFmtAdd("リプレイの移動 stage%d\n", stage);
 
 		stage++;
-		cstrSprintf(&pathFrom, "LR2files/Replay/%s/__%d.lr2rep", localID, stage);
+		cstrSprintf(&pathFrom, "LR2files/Replay/%s/__%d.lr2rep", localID.body, stage);
 	}
 	ErrorLogFmtAdd("リプレイの移動終了 stage%d\n", stage);
 
@@ -44,7 +44,7 @@ int LoadReplayFileCourse(REPLAY *rp, CSTR songMD5, int stage, CSTR localID){
 	}
 
 	CSTR path;
-	cstrSprintf(&path, "LR2files/Replay/%s/c/%s/%d.lr2rep", localID, songMD5, stage);
+	cstrSprintf(&path, "LR2files/Replay/%s/c/%s/%d.lr2rep", localID.body, songMD5.body, stage);
 
 	if (!IsFileExist(path)) return 0;
 
@@ -82,7 +82,7 @@ int LoadReplayFile(REPLAY *rp, CSTR songMD5, CSTR localID) {
 	}
 
 	CSTR path;
-	cstrSprintf(&path, "LR2files/Replay/%s/%s.lr2rep", localID, songMD5);
+	cstrSprintf(&path, "LR2files/Replay/%s/%s.lr2rep", localID.body, songMD5.body);
 
 	if (!IsFileExist(path)) return 0;
 
@@ -119,7 +119,7 @@ int SaveReplay(REPLAY *rp, CSTR songMD5, CSTR localID) {
 	}
 
 	CSTR path;
-	cstrSprintf(&path, "LR2files/Replay/%s/%s.lr2rep", localID, songMD5);
+	cstrSprintf(&path, "LR2files/Replay/%s/%s.lr2rep", localID.body, songMD5.body);
 	pFile = fopen(path, "wb");
 	if (pFile == NULL) {
 		ErrorLogAdd("リプレイデータの保存に失敗しました。\n");

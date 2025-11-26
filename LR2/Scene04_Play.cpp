@@ -1495,10 +1495,10 @@ int ProcGame(game *g) {
 			CSTR tmp;
 
 			if (stage + 1 == g->sSelect.bmsList[g->sSelect.cur_song].courseStageCount) {
-				cstrSprintf(&tmp, "%s", g->sSelect.bmsList[g->sSelect.cur_song].courseTitle[stage]);
+				cstrSprintf(&tmp, "%s", g->sSelect.bmsList[g->sSelect.cur_song].courseTitle[stage].body);
 			}
 			else {
-				cstrSprintf(&tmp, "%s", g->sSelect.bmsList[g->sSelect.cur_song].courseTitle[stage]);
+				cstrSprintf(&tmp, "%s", g->sSelect.bmsList[g->sSelect.cur_song].courseTitle[stage].body);
 			}
 			SetObjectString(10, tmp, g->txtStruct.objectStr);
 		}
@@ -1846,7 +1846,7 @@ int ProcS_Play(game *g, sqlite3* sql) {
 			g->directoryPath = g->sSelect.metaSelected.filepath;
 			g->is_recordmode = 1;
 			if (g->directoryPath.length() == 0) {
-				cstrSprintf(&g->directoryPath, "%smovie.avi", g->baseDirectory);
+				cstrSprintf(&g->directoryPath, "%smovie.avi", g->baseDirectory.body);
 			}
 			g->rec.recMode = 2;
 			if (g->gameplay.replay.status == 2) {
@@ -1896,8 +1896,8 @@ int ProcS_Play(game *g, sqlite3* sql) {
 
 	if (g->net.rankingData.target_ID > 0 && g->net.isOnline == 1) {
 		if (gData.length() <= 0 || gData.isDiff("Z") == 0) {
-			ErrorLogFmtAdd("ゴースト無しでターゲットを設定します ターゲット番号 %d ターゲット名 %s\n", g->net.rankingData.target_number, g->net.rankingData.ranking[g->net.rankingData.target_number].name);
-			
+			ErrorLogFmtAdd("ゴースト無しでターゲットを設定します ターゲット番号 %d ターゲット名 %s\n", g->net.rankingData.target_number, g->net.rankingData.ranking[g->net.rankingData.target_number].name.body);
+
 			g->gameplay.targetScore.judgeExpect[5] = g->net.rankingData.ranking[g->net.rankingData.target_number].pg;
 			g->gameplay.targetScore.judgeExpect[4] = g->net.rankingData.ranking[g->net.rankingData.target_number].gr;
 			g->gameplay.targetScore.judgeExpect[3] = g->net.rankingData.ranking[g->net.rankingData.target_number].gd;

@@ -294,7 +294,7 @@ int ParseRivalData(long ID) {
 		if (cur->ToElement()) {
 			cstrSprintf(&name, "%s", cur->ToElement()->GetText());
 		}
-		ErrorLogFmtAdd("ライバル名:%s\n", name);
+		ErrorLogFmtAdd("ライバル名:%s\n", name.body);
 	}
 
 	cur = hXml->FirstChildElement("scorelist");
@@ -313,7 +313,7 @@ int ParseRivalData(long ID) {
 			delete(hXml);
 		}
 		ErrorLogFmtAdd("ライバルデータの読み込みに失敗しました。スコアが存在しないかも\n");
-		printfDx("ID%06d:ライバルデータ[%s]の更新はありません。\n", ID,	name);
+		printfDx("ID%06d:ライバルデータ[%s]の更新はありません。\n", ID, name.body);
 		return 0;
 	}
 
@@ -386,10 +386,10 @@ int ParseRivalData(long ID) {
 		}
 
 		cstrSprintf(&query, "INSERT INTO rival (hash,r_clear,r_totalnotes,r_maxcombo,r_perfect,r_great,r_good,r_bad,r_poor,r_minbp,r_option,r_lastupdate) VALUES(\'%s\',%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d)",
-			hash, clear, notes, combo, pg, gr, gd, bd, pr, minbp, option, lastupdate);
+			hash.body, clear, notes, combo, pg, gr, gd, bd, pr, minbp, option, lastupdate);
 		if (SQL_Run(query, pRivalDB)) {
 			cstrSprintf(&query, "UPDATE rival SET r_clear=%d,r_totalnotes=%d,r_maxcombo=%d,r_perfect=%d,r_great=%d,r_good=%d,r_bad=%d,r_poor=%d,r_minbp=%d,r_option=%d,r_lastupdate=%d WHERE hash=\'%s\'",
-				clear, notes, combo, pg, gr, gd, bd, pr, minbp, option, lastupdate, hash);
+				clear, notes, combo, pg, gr, gd, bd, pr, minbp, option, lastupdate, hash.body);
 			SQL_Run(query, pRivalDB);
 		}
 
@@ -404,10 +404,10 @@ int ParseRivalData(long ID) {
 	sqlite3_close(pRivalDB);
 
 	CSTR cfolder;
-	cstrSprintf(&cfolder, "#COMMAND __RIVAL__\n#MAXTRACKS %d\n#CATEGORY ライバルフォルダ\n#TITLE %s\n#INFORMATION_A %sのプレイした曲を表示します\n#INFORMAION_B\n", ID, name, name);
+	cstrSprintf(&cfolder, "#COMMAND __RIVAL__\n#MAXTRACKS %d\n#CATEGORY ライバルフォルダ\n#TITLE %s\n#INFORMATION_A %sのプレイした曲を表示します\n#INFORMAION_B\n", ID, name.body, name.body);
 	cstrSprintf(&path, "LR2files/Rival/%d.lr2folder", ID);
 	cfolder.toFile(path);
-	printfDx("ID%06d:ライバルデータ[%s]を更新しました。更新スコア数%d\n", ID, name, count);
+	printfDx("ID%06d:ライバルデータ[%s]を更新しました。更新スコア数%d\n", ID, name.body, count);
 	return 1;
 }
 
@@ -468,7 +468,7 @@ int NETWORK::GetInsaneList() {
 
 		if (TiXmlElement *val = cur->FirstChildElement("exlevel"); val) {
 			int exlevel = atol(val->ToElement()->GetText());
-			cstrSprintf(&query, "UPDATE song SET exlevel=%d WHERE hash=\'%s\'",exlevel,hash);
+			cstrSprintf(&query, "UPDATE song SET exlevel=%d WHERE hash=\'%s\'",exlevel,hash.body);
 			SQL_Run(query, pSongDB);
 		}
 
@@ -694,15 +694,15 @@ int NETWORK::GetRanking(CSTR hash, char flagInit) {
 	
 	ErrorLogAdd("IRxmlをダウンロードします\n");
 	if (hash.length() <= 50) {
-		cstrSprintf(&path, "LR2files/Ir/%s.xml", hash);
+		cstrSprintf(&path, "LR2files/Ir/%s.xml", hash.body);
 	}
 	else {
-		cstrSprintf(&path, "LR2files/Ir/%s.xml", hash.makeCRCstr());
+		cstrSprintf(&path, "LR2files/Ir/%s.xml", hash.makeCRCstr().body);
 	}
 
 	if (flagInit) this->rankingData.Init();
 
-	cstrSprintf(&this->param, "songmd5=%s&id=%d&lastupdate=%s", hash, this->IR_ID, this->rankingData.lastupdate);
+	cstrSprintf(&this->param, "songmd5=%s&id=%d&lastupdate=%s", hash.body, this->IR_ID, this->rankingData.lastupdate.body);
 	this->target_URL = "http://www.dream-pro.info/~lavalse/LR2IR/2/getrankingxml.cgi";
 	if (HTTPrequest() == 1) {
 		ErrorLogAdd("xmlを保存します\n");
@@ -764,10 +764,10 @@ void IRsendScore(NETWORK *ir) {
 	sData = MD5str(sData);
 
 	cstrSprintf(&ir->param, "songmd5=%s&id=%d&passmd5=%s&title=%s&genre=%s&artist=%s&maxbpm=%d&minbpm=%d&&playlevel=%d&clear=%d&exscore=%d&pg=%d&gr=%d&gd=%d&bd=%d&pr=%d&maxcombo=%d&playcount=%d&clearcount=%d&rate=%d&minbp=%d&totalnotes=%d&opt_history=%d&opt_this=%d&line=%d&judge=%d&inputtype=%d&ghost=%s&rseed=%d&clear_db=%d&clear_ex=%d&clear_sd=%d&scorehash=%s"
-		, ir->myRanking.songMD5.body, ir->IR_ID, ir->IR_passMD5.body, UrlEncode(ir->myRanking.title), UrlEncode(ir->myRanking.genre), UrlEncode(ir->myRanking.artist),
+		, ir->myRanking.songMD5.body, ir->IR_ID, ir->IR_passMD5.body, UrlEncode(ir->myRanking.title).body, UrlEncode(ir->myRanking.genre).body, UrlEncode(ir->myRanking.artist).body,
 		ir->myRanking.maxbpm, ir->myRanking.minbpm, ir->myRanking.playlevel, ir->myRanking.clear, ir->myRanking.exscore, ir->myRanking.pg, ir->myRanking.gr, ir->myRanking.gd, ir->myRanking.bd, ir->myRanking.pr, ir->myRanking.maxcombo,
 		ir->myRanking.playcount, ir->myRanking.clearcount, ir->myRanking.rate, ir->myRanking.minbp, ir->myRanking.totalnotes, ir->myRanking.opt_history, ir->myRanking.opt_this, ir->myRanking.line, ir->myRanking.judge,
-		ir->myRanking.inputtype, ir->myRanking.ghost.body, ir->myRanking.rseed,	ir->myRanking.clear_db, ir->myRanking.clear_ex, ir->myRanking.clear_sd, UrlEncode(sData));
+		ir->myRanking.inputtype, ir->myRanking.ghost.body, ir->myRanking.rseed,	ir->myRanking.clear_db, ir->myRanking.clear_ex, ir->myRanking.clear_sd, UrlEncode(sData).body);
 
 	ir->target_URL = "http://www.dream-pro.info/~lavalse/LR2IR/2/score.cgi";
 	httpResponse = 0; //DEBUG: do not send IR before test is done enough. ir->HTTPrequest();
@@ -796,7 +796,7 @@ int NETWORK::GetTargetInfo(int mode, CSTR songmd5, CSTR *oData, CSTR *oName, int
 		search = "average";
 	}
 
-	cstrSprintf(&param, "songmd5=%s&mode=%s&playerid=%d&targetid=%d", songmd5, search, IR_ID, rankingData.target_ID);
+	cstrSprintf(&param, "songmd5=%s&mode=%s&playerid=%d&targetid=%d", songmd5.body, search.body, IR_ID, rankingData.target_ID);
 	target_URL = "http://www.dream-pro.info/~lavalse/LR2IR/2/getghost.cgi";
 
 	if (HTTPrequest() != 1) {
@@ -873,7 +873,7 @@ int NETWORK::Login(int isDirectPlay) {
 	}
 #endif // _WIN32
 
-	cstrSprintf(&this->param, "passmd5=%s&id=%d&name=%s&version=%d", this->IR_passMD5, this->IR_ID, this->IR_name, 100130); //version 100130
+	cstrSprintf(&this->param, "passmd5=%s&id=%d&name=%s&version=%d", this->IR_passMD5.body, this->IR_ID, this->IR_name.body, 100130); //version 100130
 	this->target_URL = "http://www.dream-pro.info/~lavalse/LR2IR/2/login.cgi";
 	if (this->HTTPrequest() != 1) {
 		this->request_result = "サーバーとの接続に失敗しました。\n";
@@ -998,7 +998,7 @@ int SaveIRID(int IRID, CSTR ID) {
 
 	CSTR scorefile;
 	sqlite3 *pDb;
-	cstrSprintf(&scorefile, "LR2files/Database/Score/%s.db", ID);
+	cstrSprintf(&scorefile, "LR2files/Database/Score/%s.db", ID.body);
 	sqlite3_open(scorefile, &pDb);
 	CSTR query;
 	cstrSprintf(&query, "UPDATE player SET irid = %d", IRID);

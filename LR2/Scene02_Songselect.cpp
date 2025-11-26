@@ -630,7 +630,7 @@ int ShowReadmes(game *g) {
 	cstrSprintf(&search, "%s*.txt", g->txtStruct.readme.folderpath.body);
 	hFindFile = FindFirstFileA(search, (LPWIN32_FIND_DATAA)&FindFileData);
 	if (hFindFile == (HANDLE)-1) {
-		ErrorLogFmtAdd("テキストファイルが見つからない。%s\n", search);
+		ErrorLogFmtAdd("テキストファイルが見つからない。%s\n", search.body);
 		return -1;
 	}
 
@@ -1204,16 +1204,16 @@ int CmdSearch(game *g, CSTR *cmd, sqlite3 *sql) {
 
 				g->net.myRanking.ghost = ReadGhost(sql, g->sSelect.bmsList[g->sSelect.cur_song].hash);
 				CSTR scorehash;
-				cstrSprintf(&scorehash, "%s%s%d%d", g->net.IR_passMD5, g->net.myRanking.songMD5, g->net.myRanking.exscore, g->net.myRanking.clear);
+				cstrSprintf(&scorehash, "%s%s%d%d", g->net.IR_passMD5.body, g->net.myRanking.songMD5.body, g->net.myRanking.exscore, g->net.myRanking.clear);
 				scorehash = MD5str(scorehash);
 				cstrSprintf(&g->net.param, "songmd5=%s&id=%d&passmd5=%s&title=%s&genre=%s&artist=%s&maxbpm=%d&minbpm=%d&&playlevel=%d&clear=%d&exscore=%d&pg=%d&gr=%d&gd=%d&bd=%d&pr=%d&maxcombo=%d&playcount=%d&clearcount=%d&rate=%d&minbp=%d&totalnotes=%d&opt_history=%d&opt_this=%d&line=%d&judge=%d&inputtype=%d&ghost=%s&rseed=%d&clear_db=%d&clear_ex=%d&clear_sd=%d&scorehash=%s",
-					g->net.myRanking.songMD5, g->net.IR_ID, g->net.IR_passMD5, g->net.myRanking.title, g->net.myRanking.genre, g->net.myRanking.artist, g->net.myRanking.maxbpm, g->net.myRanking.minbpm, g->net.myRanking.playlevel, g->net.myRanking.clear,
+					g->net.myRanking.songMD5.body, g->net.IR_ID, g->net.IR_passMD5.body, g->net.myRanking.title.body, g->net.myRanking.genre.body, g->net.myRanking.artist.body, g->net.myRanking.maxbpm, g->net.myRanking.minbpm, g->net.myRanking.playlevel, g->net.myRanking.clear,
 					g->net.myRanking.exscore, g->net.myRanking.pg, g->net.myRanking.gr, g->net.myRanking.gd, g->net.myRanking.bd, g->net.myRanking.pr, g->net.myRanking.maxcombo, g->net.myRanking.playcount, g->net.myRanking.clearcount, g->net.myRanking.rate,
-					g->net.myRanking.minbp, g->net.myRanking.totalnotes, g->net.myRanking.opt_history, g->net.myRanking.opt_this, g->net.myRanking.line, g->net.myRanking.judge, g->net.myRanking.inputtype, g->net.myRanking.ghost, g->net.myRanking.rseed,
-					g->net.myRanking.clear_db, g->net.myRanking.clear_ex, g->net.myRanking.clear_sd, scorehash);
+					g->net.myRanking.minbp, g->net.myRanking.totalnotes, g->net.myRanking.opt_history, g->net.myRanking.opt_this, g->net.myRanking.line, g->net.myRanking.judge, g->net.myRanking.inputtype, g->net.myRanking.ghost.body, g->net.myRanking.rseed,
+					g->net.myRanking.clear_db, g->net.myRanking.clear_ex, g->net.myRanking.clear_sd, scorehash.body);
 				g->net.target_URL = "http://www.dream-pro.info/~lavalse/LR2IR/2/score.cgi";
 				g->net.HTTPrequest();
-				printfDx("%sを送信中です…", g->net.myRanking.title);
+				printfDx("%sを送信中です…", g->net.myRanking.title.body);
 				ScreenFlip();
 				ClsDrawScreen();
 				clsDx();
@@ -1545,8 +1545,8 @@ void ThreadProc_RankingAutoUpdate(void *param) { // TODO: take game&
 	}
 	g->sSelect.isRankingAutoUpdateThread = 1;
 	CSTR path;
-	if (hash.length() < 50) cstrSprintf(&path, "LR2files/Ir/%s.xml", hash);
-	else cstrSprintf(&path, "LR2files/Ir/%s.xml", hash.makeCRCstr());
+	if (hash.length() < 50) cstrSprintf(&path, "LR2files/Ir/%s.xml", hash.body);
+	else cstrSprintf(&path, "LR2files/Ir/%s.xml", hash.makeCRCstr().body);
 	
 	if (path.canOpenFile()) {
 		if (hash.isSame(g->sSelect.bmsList[g->sSelect.cur_song].hash)) {
@@ -2330,7 +2330,7 @@ void SubProcI_Select(game *g, sqlite3 *sql) {
 					g->sSelect.filterDifficulty = g->config.select.difficulty;
 					if (g->sSelect.bmsList[g->sSelect.cur_song].tag.length() > 2 && g->sSelect.bmsList[g->sSelect.cur_song].tag.isDiff("(null)")) {
 						g->sSelect.queryCount = 3;
-						g->sSelect.curQuery[0] = sqlite3_snprintf(1024, buf, "SELECT * FROM song LEFT JOIN score ON song.hash = score.hash WHERE %s", g->sSelect.bmsList[g->sSelect.cur_song].tag);
+						g->sSelect.curQuery[0] = sqlite3_snprintf(1024, buf, "SELECT * FROM song LEFT JOIN score ON song.hash = score.hash WHERE %s", g->sSelect.bmsList[g->sSelect.cur_song].tag.body);
 						g->sSelect.curQuery[2] = sqlite3_snprintf(1024, buf, "SELECT * FROM folder WHERE parent = \'%s\'", AssignCRC32(g->sSelect.bmsList[g->sSelect.cur_song].filepath.body).body);
 						g->sSelect.curQuery[1] = sqlite3_snprintf(1024, buf, "SELECT * FROM song LEFT JOIN score ON song.hash = score.hash WHERE parent = \'%s\'", AssignCRC32(g->sSelect.bmsList[g->sSelect.cur_song].filepath).body);
 						(g->sSelect).unk4fb8[0] = 0;
@@ -2991,8 +2991,8 @@ int InitSelectBySearchResult(game *g, sqlite3 *sql) {
 				g->sSelect.stack_query[g->sSelect.cur] = g->sSelect.curQuery;
 				g->sSelect.stack_isFolder[g->sSelect.cur] = 0;
 
-				if (g->sSelect.bmsListCount < 2) cstrSprintf(&msg, "%s (1 HIT)", g->sSelect.searchInput);
-				else cstrSprintf(&msg, "%s (%d HITS)", g->sSelect.searchInput, g->sSelect.bmsListCount);
+				if (g->sSelect.bmsListCount < 2) cstrSprintf(&msg, "%s (1 HIT)", g->sSelect.searchInput.body);
+				else cstrSprintf(&msg, "%s (%d HITS)", g->sSelect.searchInput.body, g->sSelect.bmsListCount);
 
 				SetObjectString(g->txtStruct.st_text_num, msg, g->txtStruct.objectStr);
 				g->sSelect.stack_searchTitle[g->sSelect.cur] = msg;

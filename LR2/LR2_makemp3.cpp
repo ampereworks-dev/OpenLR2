@@ -17,10 +17,10 @@ int RunMP3Encoder(ConfigStruct *cfg, CSTR wavPath, CSTR mp3Path, char deleteWav,
 
 	CSTR cmd;
 	if (movie) {
-		cstrSprintf(&cmd, "%s %s \"%s\" \"%s\"", cfg->tools.mp3enc_body, cfg->tools.mp3enc_option_movie, wavPath, mp3Path);
+		cstrSprintf(&cmd, "%s %s \"%s\" \"%s\"", cfg->tools.mp3enc_body.body, cfg->tools.mp3enc_option_movie.body, wavPath.body, mp3Path.body);
 	}
 	else {
-		cstrSprintf(&cmd, "%s %s \"%s\" \"%s\"", cfg->tools.mp3enc_body, cfg->tools.mp3enc_option_normal, wavPath, mp3Path);
+		cstrSprintf(&cmd, "%s %s \"%s\" \"%s\"", cfg->tools.mp3enc_body.body, cfg->tools.mp3enc_option_normal.body, wavPath.body, mp3Path.body);
 	}
 
 	STARTUPINFO sinfo;

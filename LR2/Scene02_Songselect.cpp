@@ -992,7 +992,6 @@ CSTR GetMissonString(int missionLevel, int line) {
 	}
 }
 
-
 //412ae0
 int SetObjectStrings_SongSelect(game *g) {
 
@@ -1048,7 +1047,7 @@ int SetObjectStrings_SongSelect(game *g) {
 	SetObjectString(71, g->txtStruct.option_str[16].str[g->config.play.scoregraph], g->txtStruct.objectStr);
 	SetObjectString(72, g->txtStruct.option_str[14].str[g->config.play.play_ghost], g->txtStruct.objectStr);
 	SetObjectString(73, g->txtStruct.option_str[15].str[g->config.play.p1_lanecover], g->txtStruct.objectStr);
-	if (g->txtStruct.option_str[10].count < 6 && g->config.play.hsfix == 5) SetObjectString(74, "MAINBPM", g->txtStruct.objectStr);
+	if (g->txtStruct.option_str[10].count <= g->config.play.hsfix) SetObjectString(74, HSFIXSTRINGS[g->config.play.hsfix], g->txtStruct.objectStr);
 	else SetObjectString(74, g->txtStruct.option_str[10].str[g->config.play.hsfix], g->txtStruct.objectStr);
 	SetObjectString(76, g->txtStruct.option_str[9].str[g->config.play.bga], g->txtStruct.objectStr);
 	SetObjectString(75, g->txtStruct.option_str[8].str[g->config.play.bgasize], g->txtStruct.objectStr);

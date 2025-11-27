@@ -84,6 +84,8 @@ typedef enum GRHANDLETYPE {
 	GRHTYPE_PREVIEW = 105
 }GRHANDLETYPE;
 
+constexpr const char* HSFIXSTRINGS[] = { "OFF", "MAXBPM", "MINBPM", "AVERAGE", "CONSTANT", "MAINBPM" };
+
 #define GrH_Stage 100
 #define GrH_BackBMP 101
 #define GrH_Banner 102

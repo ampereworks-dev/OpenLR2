@@ -73,16 +73,6 @@ int PLAYSCORE::ResetJudgeQueue(int size){
 
 //4a86c0
 int PLAYSCORE::ResizeJudgeQueue(size_t size){
-
-	if (this->judge_queue == NULL) {
-		this->judge_queue = NULL;
-		this->judge_queue_count = 0;
-		this->judge_queue = (char *)malloc(1000);
-		for (int i = 0; i < 1000; i++) {
-			this->judge_queue[i] = -1;
-		}
-		this->judge_queue_count = 1000;
-	}
 	this->judge_queue = (char *)realloc(this->judge_queue, size);
 	for (int i = this->judge_queue_count; i < size; i++) {
 		this->judge_queue[i] = -1;
@@ -132,20 +122,10 @@ int PLAYSCORE::DealJudgeFromQueue(void){
 	}
 	if (this->nownote > 0) {
 		this->judge[0] = ((this->nownote + 1) * this->judgeExpect[0]) / this->totalnotes;
-	}
-	if (this->nownote > 0) {
 		this->judge[1] = ((this->nownote + 1) * this->judgeExpect[1]) / this->totalnotes;
-	}
-	if (this->nownote > 0) {
 		this->judge[2] = ((this->nownote + 1) * this->judgeExpect[2]) / this->totalnotes;
-	}
-	if (this->nownote > 0) {
 		this->judge[3] = ((this->nownote + 1) * this->judgeExpect[3]) / this->totalnotes;
-	}
-	if (this->nownote > 0) {
 		this->judge[4] = ((this->nownote + 1) * this->judgeExpect[4]) / this->totalnotes;
-	}
-	if (this->nownote > 0) {
 		this->judge[5] = ((this->nownote + 1) * this->judgeExpect[5]) / this->totalnotes;
 	}
 	this->rate = this->judge[4] + this->judge[5] * 2;
@@ -211,7 +191,6 @@ int PLAYSCORE::SetDefaultGhost(int target, int notes){
 
 //4a89d0
 int PLAYSCORE::SetGhost(int exscore, int notes, CSTR name){
-
 	ErrorLogFmtAdd("exスコアからゴーストを設定します...");
 	InitJudgeQueue();
 	this->totalnotes = notes;
@@ -225,7 +204,6 @@ int PLAYSCORE::SetGhost(int exscore, int notes, CSTR name){
 
 //4a8a90 
 CSTR PLAYSCORE::EncodeGhostData(void) {
-	
 	if (this->judgecount == 0) return "GHOST_ERROR";
 
 	int rep = 0;
@@ -530,7 +508,6 @@ CSTR PLAYSCORE::EncodeGhostData(void) {
 
 //4a96b0
 int PLAYSCORE::DecodeGhostData(CSTR data) {
-	
 	CSTR decode;
 
 	for (int i = 0; i < data.length(); i++) {
@@ -807,8 +784,8 @@ int PLAYSCORE::SetScore(PLAYERSTATUS *pstat, char flagExpect) {
 
 //4448f0
 int WriteGhostInDatabase(sqlite3 *sql, CSTR songMD5, PLAYSCORE *score) {
-
 	ErrorLogAdd("データベースにゴーストを書き込みます\n");
+
 	CSTR ghostdata = score->EncodeGhostData();
 	CSTR query;
 	cstrSprintf(&query, "UPDATE score SET ghost = \'%s\' WHERE hash = \'%s\'", ghostdata.body, songMD5.body);

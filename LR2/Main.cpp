@@ -153,7 +153,6 @@ int main(int argc, char** argv) {
 		}
 		lr1ir = gs.config.network.lr1ir;
 		lr2ir = gs.config.network.lr2ir;
-		gs.flag_showFPS = 0;
 		ReadMIDI(&gs, "LR2files/Config/midi.xml");
 		if (gs.config.system.softwarerendering == 1) {
 			SetUse3DFlag(0);
@@ -265,13 +264,12 @@ int main(int argc, char** argv) {
 		}
 		ReadKeyConfig(&gs, "LR2files/Config/keyconfig.xml");
 		gs.is_clicked_screenModeChange = 0;
-		gs.flag_Screenshot = 0;
+		gs.flag_Screenshot = false;
 		ReadOptionstrFile(gs.txtStruct.option_str, "LR2files/Config/optionstr.csv");
 		gs.audio.is_fmod_disabled = gs.config.sound.disablefmod;
 		if (gs.config.sound.disablefmod != 0) {
 			gs.config.select.preview = 0;
 		}
-		gs.flag_unk420 = 0;
 		SetHPtimerFlag(gs.config.system.hptimer == 1);
 		SetManualTimerFlag(&gs.timer1, 0);
 		gs.timer1.movieFramerate = (double)gs.config.tools.movie_framerate;
@@ -1984,27 +1982,13 @@ int main(int argc, char** argv) {
 						}
 					}
 					gs.timer1.vSyncTick = GetTimeWrap();
-					if (gs.flag_Screenshot == 1) {
-						CSTR captureFilename;
+					if (gs.flag_Screenshot) {
+						gs.flag_Screenshot = false;
 						GetDateTime(&date);
+						CSTR captureFilename;
 						cstrSprintf(&captureFilename, "screenshot/LR2 %04d-%02d-%02d %02d-%02d-%02d.png", date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec);
 						SaveDrawScreenToPNG(0, 0, skinSizeX, skinSizeY, captureFilename, -1);
-						gs.flag_Screenshot = 0;
 						PlaySound(&gs.audio, &gs.audio.sysSound.screenshot, gs.audio.chnKey, -1);
-					}
-					else if (gs.flag_Screenshot == 2) {
-						CSTR captureFilename;
-						int scrdraw = MakeGraph(skinSizeX, skinSizeY, 0);
-						GetDrawScreenGraph(0, 0, skinSizeX, skinSizeY, scrdraw, 1);
-						SetDrawMode(1);
-						SetDrawBlendMode(0, 255);
-						DrawExtendGraph(0, 0, skinSizeX/2, skinSizeY/2, scrdraw, 0);
-						GetDateTime(&date);
-						cstrSprintf(&captureFilename, "screenshot/LR2 %04d-%02d-%02d %02d-%02d-%02d.png", date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec);
-						SaveDrawScreenToPNG(0, 0, skinSizeX/2, skinSizeY/2, captureFilename, -1);
-						DrawGraph(0, 0, scrdraw, 0);
-						DeleteGraph(scrdraw);
-						gs.flag_Screenshot = 0;
 					}
 
 					if (gs.is_recordmode) {
@@ -2089,7 +2073,7 @@ int main(int argc, char** argv) {
 					EditTag(&gs.sSelect.bmsList[gs.sSelect.cur_song],sql3);
 					gs.sSelect.is_clicked_tagedit = 0;
 					ProcS_Select(&gs);
-					gs.sSelect.is_filter_changed = 1;
+					gs.sSelect.is_filter_changed = true;
 					gs.sSelect.filter_clicked = 4;
 					SetObjectStrings_SongSelect(&gs);
 				}
@@ -2100,7 +2084,7 @@ int main(int argc, char** argv) {
 					gs.sSelect.is_tag_edited = 0;
 					ProcS_Select(&gs);
 					if (gs.sSelect.bmsList[gs.sSelect.cur_song].favorite != 2) {
-						gs.sSelect.is_filter_changed = 1;
+						gs.sSelect.is_filter_changed = true;
 						gs.sSelect.filter_clicked = 4;
 					}
 					SetObjectStrings_SongSelect(&gs);
@@ -2111,7 +2095,7 @@ int main(int argc, char** argv) {
 				}
 				if (gs.sSelect.is_filter_changed) {
 					SetBmsFilter(&gs, sql3);
-					gs.sSelect.is_filter_changed = 0;
+					gs.sSelect.is_filter_changed = false;
 				}
 				if (gs.is_clicked_screenModeChange == 1) {
 					for (int i = 0; i < 200; i++) {

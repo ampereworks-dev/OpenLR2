@@ -414,10 +414,10 @@ void ReactInput(game *g) {
 		g->timer2.rhythmTick = g->timer1.rhythmTick;
 	}
 	if (g->KeyInput.inputID[KEY_INPUT_F6] == 1) {
-		g->flag_Screenshot = 1;
+		g->flag_Screenshot = true;
 	}
 	if (g->KeyInput.inputID[KEY_INPUT_F7] == 1) {
-		g->flag_showFPS = (g->flag_showFPS == 0);
+		g->flag_showFPS = !g->flag_showFPS;
 	}
 }
 

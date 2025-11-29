@@ -44,7 +44,6 @@ class CSTR {
 		CSTR();
 		CSTR(const CSTR &copy, int len = 0);
 		CSTR(const char *str, int len = 0);
-		CSTR makeCRCstr();
 		CSTR& assign(const char *str, int len);
 		int icmp(CSTR *param_1);
 		CSTR left (int len);
@@ -60,4 +59,9 @@ class CSTR {
 		CSTR& trimWhiteSpace();
 		CSTR getFilename();
 };
-char * cstrSprintf(CSTR *str, const char *format, ...);
+
+char *cstrSprintf(CSTR *str, const char *format, ...)
+#ifndef _MSC_VER
+	__attribute__((format(printf, 2, 3)))
+#endif // _MSC_VER
+	;

@@ -1,10 +1,27 @@
 ﻿#include "LR2_configsave.h"
 
+#include <filesystem>
+#include <iterator>
+
 static void adjust_input_filepath(CSTR& path)
 {
 #ifndef _WIN32
 	path.replace("\\", "/");
 #endif // _WIN32
+}
+
+static void adjust_trailing_slash(CSTR& path)
+{
+	if (path.length() == 0)
+		return;
+	for (int i = path.length() - 1; i >= 0; i--) {
+		if (path.body[i] != '\\' && path.body[i] != '/') { // find_last_of
+			break;
+		}
+		path.body[i] = '\0';
+	}
+	*path.atPos(path.length()) = /* path += */ std::filesystem::path::preferred_separator;
+	*path.atPos(path.length()) = /* path += */ '\0';
 }
 
 //43c220
@@ -14,25 +31,21 @@ int Read_JukeboxPath(CONFIG_JUKEBOX *box, TiXmlDocument *xml){
 	}
 	box->numOfPath = 0;
 
-	TiXmlElement *cur;
-	if ((cur = xml->FirstChildElement("config")) && (cur = cur->FirstChildElement("jukebox")) &&
-		(cur = cur->FirstChildElement("path")) && cur->ToElement()) {
+	if (TiXmlElement *cur; (cur = xml->FirstChildElement("config")) &&
+				(cur = cur->FirstChildElement("jukebox")) &&
+				(cur = cur->FirstChildElement("path")) &&
+				cur->ToElement()) {
 
-		cstrSprintf(&box->path[0], "%s", cur->ToElement()->GetText());
-		CSTR tp2;
-		tp2.assign(&box->path[0]);
-		if (tp2.right(2).isSame("\\\\")) {
-			tp2.left(tp2.length() - 1);
-			box->path[0].assign(tp2.outstr());
-		}
-		adjust_input_filepath(box->path[0]);
-		box->numOfPath = 1;
-
-		while (box->numOfPath < 1000 && (cur = cur->NextSiblingElement()) && cur->ToElement()) {
-			cstrSprintf(&box->path[box->numOfPath], "%s", cur->ToElement()->GetText());
+		do {
+			box->path[box->numOfPath] = cur->ToElement()->GetText();
+			if (box->path[box->numOfPath].length() == 0) {
+				continue;
+			}
 			adjust_input_filepath(box->path[box->numOfPath]);
+			adjust_trailing_slash(box->path[box->numOfPath]);
 			box->numOfPath++;
-		}
+		} while (box->numOfPath < std::size(box->path) &&
+			(cur = cur->NextSiblingElement()) && cur->ToElement());
 
 		return 1;
 	}
@@ -78,6 +91,8 @@ int ReadKeyConfig(game *game, const char *FilePath) {
 	ReadXml_Int_Multi("keyconfig", "key31", "id", (game->config).input.buttonMap[0x1f], hXml);
 	ReadXml_Int_Multi("keyconfig", "key32", "id", (game->config).input.buttonMap[0x20], hXml);
 	ReadXml_Int_Multi("keyconfig", "key33", "id", (game->config).input.buttonMap[0x21], hXml);
+
+	delete hXml;
 
 	return 1;
 }
@@ -877,9 +892,7 @@ int ReadSkinCustomize(SkinUser *sku, char *FilePath) {
 	////0~39 repeat
 	//ReadXml_Str("skincustomize", "customfile", "filename_0", CSTR(""), &sku->customize_filename[0], hXml);
 
-	if (hXml) {
-		delete(hXml);
-	}
+	delete(hXml);
 
 	return 1;
 }

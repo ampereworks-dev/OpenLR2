@@ -2,6 +2,8 @@
 #include "LR2.h"
 #include "Scenes.h"
 
+#include "filesystem.h"
+
 //4198d0
 int SkinSelect_SoundSet(game *g, CSTR filepath) {
 	
@@ -313,7 +315,7 @@ int MakeSkinPreview(game* g, skstruct* sk, SkinManage* sm) {
 		g->skstruct2.op[900 + i] = 0;
 	}
 	DeleteGraph(sk->GrHandle[GrH_Stage]);
-	sk->GrHandle[GrH_Stage] = LoadGraph("LR2files/Config/title.bmp", 0);
+	sk->GrHandle[GrH_Stage] = LoadGraph(fs::make_preferred("LR2files/Config/title.bmp").data(), 0);
 	LoadScene(sk, sm->Data[sm->previewID].skinFile, 0, 1);
 	return 0;
 }
@@ -329,66 +331,66 @@ int PlayPreviewSample(game *g) {
 		scratchSide = g->skstruct2.scratchside_1 + g->skstruct2.scratchside_2 * 2;
 	if (g->skinData.select == 1 && g->skinData.Data[g->skinData.skinID[1]].type == SKINTYPE_7KEYS)
 		scratchSide = g->skstruct2.scratchside_1 + g->skstruct2.scratchside_2 * 2;
-	if (g->skinData.select == 13 && g->skinData.Data[g->skinData.skinID[13]].type == SKINTYPE_5KEYSBATTLE)
+	if (g->skinData.select == 13 && g->skinData.Data[g->skinData.skinID[13]].type == SKINTYPE_7KEYSBATTLE)
 		scratchSide = g->skstruct2.scratchside_1 + g->skstruct2.scratchside_2 * 2;
 	ProcS_Select(g);
 	ReleaseBGA(g);
 	switch (g->skinData.select) {
 		default: //case 0:?
-			ReadKeyConfig(g, "LR2files/Config/keyconfig.xml");
+			ReadKeyConfig(g, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 			g->sSelect.metaSelected.keymode = 7;
 			InitGameplay(&g->gameplay, &tCfg.play);
-			ParseBmsFile(&g->gameplay, "LR2files/Config/sample_7.bme", &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide);
-			LoadBmsResource(&g->gameplay, "LR2files/Config/sample_7.bme", &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide, 0);
+			ParseBmsFile(&g->gameplay, fs::make_preferred("LR2files/Config/sample_7.bme").data(), &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide);
+			LoadBmsResource(&g->gameplay, fs::make_preferred("LR2files/Config/sample_7.bme").data(), &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide, 0);
 			break;
 
 		case 1:
 			if (g->skinData.Data[g->skinData.skinID[1]].type == SKINTYPE_7KEYS) 
-				ReadKeyConfig(g, "LR2files/Config/keyconfig.xml");
+				ReadKeyConfig(g, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 			else 
-				ReadKeyConfig(g, "LR2files/Config/keyconfig_5.xml");
+				ReadKeyConfig(g, fs::make_preferred("LR2files/Config/keyconfig_5.xml").data());
 			g->sSelect.metaSelected.keymode = 5;
 			InitGameplay(&g->gameplay, &tCfg.play);
-			ParseBmsFile(&g->gameplay, "LR2files/Config/sample_5.bme", &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide);
-			LoadBmsResource(&g->gameplay, "LR2files/Config/sample_5.bme", &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide, 0);
+			ParseBmsFile(&g->gameplay, fs::make_preferred("LR2files/Config/sample_5.bme").data(), &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide);
+			LoadBmsResource(&g->gameplay, fs::make_preferred("LR2files/Config/sample_5.bme").data(), &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide, 0);
 			break;
 
 		case 2:
-			ReadKeyConfig(g, "LR2files/Config/keyconfig.xml");
+			ReadKeyConfig(g, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 			g->sSelect.metaSelected.keymode = 14;
 			InitGameplay(&g->gameplay, &tCfg.play);
-			ParseBmsFile(&g->gameplay, "LR2files/Config/sample_14.bme", &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide);
-			LoadBmsResource(&g->gameplay, "LR2files/Config/sample_14.bme", &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide, 0);
+			ParseBmsFile(&g->gameplay, fs::make_preferred("LR2files/Config/sample_14.bme").data(), &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide);
+			LoadBmsResource(&g->gameplay, fs::make_preferred("LR2files/Config/sample_14.bme").data(), &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide, 0);
 			break;
 
 		case 3:
 			if (g->skinData.Data[g->skinData.skinID[3]].type == SKINTYPE_14KEYS)
-				ReadKeyConfig(g, "LR2files/Config/keyconfig.xml");
+				ReadKeyConfig(g, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 			else
-				ReadKeyConfig(g, "LR2files/Config/keyconfig_5.xml");
+				ReadKeyConfig(g, fs::make_preferred("LR2files/Config/keyconfig_5.xml").data());
 			g->sSelect.metaSelected.keymode = 10;
 			InitGameplay(&g->gameplay, &tCfg.play);
-			ParseBmsFile(&g->gameplay, "LR2files/Config/sample_10.bme", &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide);
-			LoadBmsResource(&g->gameplay, "LR2files/Config/sample_10.bme", &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide, 0);
+			ParseBmsFile(&g->gameplay, fs::make_preferred("LR2files/Config/sample_10.bme").data(), &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide);
+			LoadBmsResource(&g->gameplay, fs::make_preferred("LR2files/Config/sample_10.bme").data(), &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide, 0);
 			break;
 
 		case 4:
-			ReadKeyConfig(g, "LR2files/Config/keyconfig_p.xml");
+			ReadKeyConfig(g, fs::make_preferred("LR2files/Config/keyconfig_p.xml").data());
 			g->sSelect.metaSelected.keymode = 9;
 			InitGameplay(&g->gameplay, &tCfg.play);
-			ParseBmsFile(&g->gameplay, "LR2files/Config/sample_9.pms", &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide);
-			LoadBmsResource(&g->gameplay, "LR2files/Config/sample_9.pms", &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide, 0);
+			ParseBmsFile(&g->gameplay, fs::make_preferred("LR2files/Config/sample_9.pms").data(), &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide);
+			LoadBmsResource(&g->gameplay, fs::make_preferred("LR2files/Config/sample_9.pms").data(), &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide, 0);
 			break;
 
 		case 13:
-			if (g->skinData.Data[g->skinData.skinID[13]].type == SKINTYPE_5KEYSBATTLE)
-				ReadKeyConfig(g, "LR2files/Config/keyconfig.xml");
+			if (g->skinData.Data[g->skinData.skinID[13]].type == SKINTYPE_7KEYSBATTLE)
+				ReadKeyConfig(g, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 			else
-				ReadKeyConfig(g, "LR2files/Config/keyconfig_5.xml");
+				ReadKeyConfig(g, fs::make_preferred("LR2files/Config/keyconfig_5.xml").data());
 			g->sSelect.metaSelected.keymode = 5;
 			InitGameplay(&g->gameplay, &tCfg.play);
-			ParseBmsFile(&g->gameplay, "LR2files/Config/sample_5.bme", &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide);
-			LoadBmsResource(&g->gameplay, "LR2files/Config/sample_5.bme", &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide, 0);
+			ParseBmsFile(&g->gameplay, fs::make_preferred("LR2files/Config/sample_5.bme").data(), &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide);
+			LoadBmsResource(&g->gameplay, fs::make_preferred("LR2files/Config/sample_5.bme").data(), &g->audio, &tCfg, &g->sSelect.metaSelected, 1, scratchSide, 0);
 			break;
 	}
 
@@ -438,7 +440,7 @@ int ProcS_SkinSelect(game *g) {
 	int &n = d.previewID;
 	SkinHeader &skd = d.Data[n];
 
-	cstrSprintf(&path, "LR2files/SkinCustomize/%s.xml", MD5str(skd.skinFile));
+	cstrSprintf(&path, fs::make_preferred("LR2files/SkinCustomize/%s.xml").data(), MD5str(skd.skinFile));
 	ReadSkinCustomize(&sku, path);
 
 	for (int i = 0; i < 20; i++) {
@@ -502,8 +504,8 @@ int SkinPreviewNext(SkinManage *sm, SKINTYPE type){
 				return 1;
 			}
 		}
-		else if (type == SKINTYPE_7KEYSBATTLE) {
-			if (newType == SKINTYPE_5KEYSBATTLE) {
+		else if (type == SKINTYPE_5KEYSBATTLE) {
+			if (newType == SKINTYPE_7KEYSBATTLE) {
 				sm->previewID = i;
 				return 1;
 			}
@@ -528,8 +530,8 @@ int SkinPreviewNext(SkinManage *sm, SKINTYPE type){
 				return 1;
 			}
 		}
-		else if (type == SKINTYPE_7KEYSBATTLE) {
-			if (newType == SKINTYPE_5KEYSBATTLE) {
+		else if (type == SKINTYPE_5KEYSBATTLE) {
+			if (newType == SKINTYPE_7KEYSBATTLE) {
 				sm->previewID = i;
 				return 1;
 			}
@@ -565,8 +567,8 @@ int SkinPreviewPrev(SkinManage *sm, SKINTYPE type) {
 				return 1;
 			}
 		}
-		else if (type == SKINTYPE_7KEYSBATTLE) {
-			if (newType == SKINTYPE_5KEYSBATTLE) {
+		else if (type == SKINTYPE_5KEYSBATTLE) {
+			if (newType == SKINTYPE_7KEYSBATTLE) {
 				sm->previewID = i;
 				return 1;
 			}
@@ -591,8 +593,8 @@ int SkinPreviewPrev(SkinManage *sm, SKINTYPE type) {
 				return 1;
 			}
 		}
-		else if (type == SKINTYPE_7KEYSBATTLE) {
-			if (newType == SKINTYPE_5KEYSBATTLE) {
+		else if (type == SKINTYPE_5KEYSBATTLE) {
+			if (newType == SKINTYPE_7KEYSBATTLE) {
 				sm->previewID = i;
 				return 1;
 			}

@@ -1,6 +1,7 @@
 ﻿#include "LR2_skinmanage.h"
 #include "Engine.h"
 #include "LR2_configsave.h"
+#include "filesystem.h"
 
 #include <filesystem>
 
@@ -33,7 +34,7 @@ int SetFirstSkin_5k(SkinManage *sm, SKINTYPE type, CSTR *skinName){
 	sm->skinID[type] = -1;
 	for (int i = 0; i < sm->Count; i++) {
 		if (sm->Data[i].skinFile.isSame(skinName) &&
-			(sm->Data[i].type == type || (sm->Data[i].type == type - 1 && (type == SKINTYPE_5KEYS || type == SKINTYPE_10KEYS || type == SKINTYPE_7KEYSBATTLE)))) {
+			(sm->Data[i].type == type || (sm->Data[i].type == type - 1 && (type == SKINTYPE_5KEYS || type == SKINTYPE_10KEYS || type == SKINTYPE_5KEYSBATTLE)))) {
 			sm->skinID[type] = i;
 			ErrorLogFmtAdd("SetFirstSkin 正しくスキン番号を設定しました。種別%d パス%s 番号%d\n", type, skinName->body, i);
 			return 1;
@@ -41,7 +42,7 @@ int SetFirstSkin_5k(SkinManage *sm, SKINTYPE type, CSTR *skinName){
 	}
 	ErrorLogFmtAdd("SetFirstSkin()で該当のタイプのスキンが見つかりませんでした。種別%d パス%s\n", type, skinName->body);
 	for (int i = 0; i < sm->Count; i++) {
-		if (sm->Data[i].type == type || (sm->Data[i].type == type -1 && (type == SKINTYPE_5KEYS || type == SKINTYPE_10KEYS || type == SKINTYPE_7KEYSBATTLE) )) {
+		if (sm->Data[i].type == type || (sm->Data[i].type == type -1 && (type == SKINTYPE_5KEYS || type == SKINTYPE_10KEYS || type == SKINTYPE_5KEYSBATTLE) )) {
 			skinName->assign(&sm->Data[i].skinFile);
 			sm->skinID[type] = i;
 			return 1;
@@ -77,7 +78,7 @@ int SetFirstSkin_5kb(SkinManage *sm, SKINTYPE type, CSTR *skinName) {
 
 	sm->skinID[type] = -1;
 	for (int i = 0; i < sm->Count; i++) {
-		if (sm->Data[i].skinFile.isSame(skinName) && (sm->Data[i].type == 13 || sm->Data[i].type == 12)) {
+		if (sm->Data[i].skinFile.isSame(skinName) && (sm->Data[i].type == SKINTYPE_5KEYSBATTLE || sm->Data[i].type == SKINTYPE_7KEYSBATTLE)) {
 			sm->skinID[type] = i;
 			ErrorLogFmtAdd("SetFirstSkin 正しくスキン番号を設定しました。種別%d パス%s 番号%d\n", type, skinName->body, i);
 			return 1;
@@ -85,7 +86,7 @@ int SetFirstSkin_5kb(SkinManage *sm, SKINTYPE type, CSTR *skinName) {
 	}
 	ErrorLogFmtAdd("SetFirstSkin()で該当のタイプのスキンが見つかりませんでした。種別%d パス%s\n", type, skinName->body);
 	for (int i = 0; i < sm->Count; i++) {
-		if (sm->Data[i].type == 13 || sm->Data[i].type == 12) {
+		if (sm->Data[i].type == SKINTYPE_5KEYSBATTLE || sm->Data[i].type == SKINTYPE_7KEYSBATTLE) {
 			skinName->assign(&sm->Data[i].skinFile);
 			sm->skinID[type] = i;
 			return 1;
@@ -101,8 +102,8 @@ int SetFirstSkins(game *g){
 	ErrorLogAdd("スキンを列挙します。\n");
 	sm = &g->skinData;
 	InitSkinData(sm);
-	MakeSkinList(sm, CSTR("LR2files/Theme/"));
-	MakeSkinList(sm, CSTR("LR2files/Sound/"));
+	MakeSkinList(sm, CSTR(fs::make_preferred("LR2files/Theme/").data()));
+	MakeSkinList(sm, CSTR(fs::make_preferred("LR2files/Sound/").data()));
 	ErrorLogAdd("スキンの列挙を終了しました。\n");
 
 	if (SetFirstSkin(sm, SKINTYPE_7KEYS, &g->config.skin.skinFilePath[0]) == -1) {
@@ -115,7 +116,7 @@ int SetFirstSkins(game *g){
 		ErrorLogAdd("14keysスキンが有りません。\n");
 	}
 	if (SetFirstSkin_10k(sm, SKINTYPE_10KEYS, &g->config.skin.skinFilePath[3]) == -1) {
-		ErrorLogAdd("14keysスキンが有りません。\n");
+		ErrorLogAdd("10keysスキンが有りません。\n");
 	}
 	if (SetFirstSkin(sm, SKINTYPE_9KEYS, &g->config.skin.skinFilePath[4]) == -1) {
 		ErrorLogAdd("9keysスキンが有りません。\n");
@@ -175,6 +176,7 @@ int SetFirstSkins(game *g){
 
 //4a7390
 int InitSkinData(SkinManage *skm){
+	// FIXME: 1) move to SkinManage constructor 2) move to std::vector. This leaks memory.
 	skm->Max = 100;
 	skm->Data = (SkinHeader *)malloc(sizeof(SkinHeader) * 100);
 	assert(skm->Data != nullptr);
@@ -222,7 +224,7 @@ int ParseLR2SkinCustom(SkinManage *skm, CSTR filepath) {
 	FILE *pFile;
 	char* pBuffer;
 
-	cstrSprintf(&md5Filepath, "LR2files/SkinCustomize/%s.xml", MD5str(filepath) );
+	cstrSprintf(&md5Filepath, fs::make_preferred("LR2files/SkinCustomize/%s.xml").data(), MD5str(filepath) );
 	ReadSkinCustomize(&skCustom, md5Filepath);
 	pFile = fopen(filepath, "r");
 	if (!pFile) return 0;

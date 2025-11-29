@@ -1,6 +1,7 @@
 ﻿#include "LR2_makemp3.h"
 #include "Engine.h"
 #include "LR2_bmsload.h"
+#include "filesystem.h"
 
 #ifndef _WIN32
 #include <iostream>
@@ -79,7 +80,6 @@ int Proc_Auto2avi(game *g, CSTR /*directory*/, CSTR filename) {
 
 	for (int i = 0; i < g->gameplay.bmsobj.count; i++) {
 		double len = 0;
-		g->gameplay.bmsobj.notes[i].op;
 		if (g->gameplay.bmsobj.notes[i].op == 1 || (10 <= g->gameplay.bmsobj.notes[i].op  && g->gameplay.bmsobj.notes[i].op < 30)) {
 			if (i + 1 < g->gameplay.bmsobj.count) {
 				double endtime = g->gameplay.keysound[(int)g->gameplay.bmsobj.notes[i].val].length;
@@ -108,7 +108,7 @@ int Proc_Auto2avi(game *g, CSTR /*directory*/, CSTR filename) {
 	CSTR ext = filename.right(3).lower();
 	if(ext.isSame("mp3")) {
 		CSTR tPath = g->baseDirectory;
-		tPath.add("LR2files/temp.wav");
+		tPath.add(fs::make_preferred("LR2files/temp.wav").data());
 		WriteSoundFile(&g->audio, tPath, 0);
 		RunMP3Encoder(&g->config, tPath, filename, 1, 0);
 	}
@@ -130,7 +130,6 @@ int RecordBmsSound(game *g, CSTR oPath) {
 	ProcessMessage();
 	if (g->rec.recMode != 2) {
 		g->gameplay.song_runtime += startTime;
-		g->config.tools.mp3_volume;
 		GetSoundBuffer(&g->audio, g->gameplay.song_runtime, g->config.tools.mp3_volume);
 
 		for (int i = 0; i < g->gameplay.bmsobj.count; i++) {
@@ -164,11 +163,11 @@ int RecordBmsSound(game *g, CSTR oPath) {
 	CSTR wavPath;
 	if (g->config.tools.movie_audio == 0) {
 		wavPath = g->baseDirectory;
-		wavPath.add("LR2files/movie_temp.wav");
+		wavPath.add(fs::make_preferred("LR2files/movie_temp.wav").data());
 		WriteSoundFile(&g->audio, wavPath, GetTimeWrap()*44100.0 / 1000.0 * 2);
 
 		CSTR mp3Path(g->baseDirectory);
-		mp3Path.add("LR2files/movie_temp.mp3");
+		mp3Path.add(fs::make_preferred("LR2files/movie_temp.mp3").data());
 		if (RunMP3Encoder(&g->config, wavPath, mp3Path, 1, 1) == 1) {
 			g->rec.InsertAudioToMovie(mp3Path, true);
 		}
@@ -178,7 +177,7 @@ int RecordBmsSound(game *g, CSTR oPath) {
 	}
 	else if (g->config.tools.movie_audio == 1) {
 		wavPath = g->baseDirectory;
-		wavPath.add("LR2files/movie_temp.wav");
+		wavPath.add(fs::make_preferred("LR2files/movie_temp.wav").data());
 		WriteSoundFile(&g->audio, wavPath, GetTimeWrap()*44100.0 / 1000.0 * 2);
 		g->rec.InsertAudioToMovie(wavPath, true);
 	}

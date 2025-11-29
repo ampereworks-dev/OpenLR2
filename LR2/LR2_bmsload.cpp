@@ -1,6 +1,7 @@
 ﻿#include "LR2_bmsload.h"
 #include "Engine.h"
 #include "LR2_replay.h"
+#include "filesystem.h"
 
 #include <algorithm>
 #include <unordered_map>
@@ -479,7 +480,7 @@ int LoadBmsResource(gameplay *gp, CSTR /*BMSfilepath*/, AUDIO *aud, ConfigStruct
 
 	int Rtmp, Gtmp, Btmp;
 
-	ErrorLogAdd("BMSの画像とサウンドをロードします");
+	ErrorLogAdd("BMSの画像とサウンドをロードします\n");
 
 	if ((cfg->play).autojudge == 2) { //silent
 		gp->loadObject_loaded = gp->loadObject_total;
@@ -734,6 +735,9 @@ int InitGameplay_retry(gameplay *gp, AUDIO *snd, game *g) {
 
 //4ad7e0
 double RealTimeToBMSTime(gameplay *gp, double time){
+	if (gp->bpmt_count == 0) {
+		return {};
+	}
 
 	if (time <= gp->bpmt_data[0].realtime) {
 		return gp->bpmt_data[0].converted;
@@ -3971,19 +3975,19 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 	if (gp->soundonly == 1 && bgaFlag && (cfg->play.bga == 3 || cfg->play.bga == 1 || (cfg->play.bga == 2 && gp->isAutoplay)) && cfg->play.autojudge != 2) {
 		DeleteGraph(gp->bgaHandle[1295]);
 		gp->bgaHandle[1295] = -1;
-		CSTR defaultMovieFile = GetRandomFile("LR2files/Movie/*.mpg", 0);
+		CSTR defaultMovieFile = GetRandomFile(fs::make_preferred("LR2files/Movie/*.mpg").data(), 0);
 		if (defaultMovieFile.isDiff("ERROR")) gp->bgaHandle[1295] = LoadGraph(defaultMovieFile);
 		if (gp->bgaHandle[1295] == -1) {
-			defaultMovieFile = GetRandomFile("LR2files/Movie/*.avi", 0);
+			defaultMovieFile = GetRandomFile(fs::make_preferred("LR2files/Movie/*.avi").data(), 0);
 			if (defaultMovieFile.isDiff("ERROR")) gp->bgaHandle[1295] = LoadGraph(defaultMovieFile);
 			if (gp->bgaHandle[1295] == -1) {
-				defaultMovieFile = GetRandomFile("LR2files/Movie/*.wmv", 0);
+				defaultMovieFile = GetRandomFile(fs::make_preferred("LR2files/Movie/*.wmv").data(), 0);
 				if (defaultMovieFile.isDiff("ERROR")) gp->bgaHandle[1295] = LoadGraph(defaultMovieFile);
 				if (gp->bgaHandle[1295] == -1) {
-					defaultMovieFile = GetRandomFile("LR2files/Movie/*.mp4", 0);
+					defaultMovieFile = GetRandomFile(fs::make_preferred("LR2files/Movie/*.mp4").data(), 0);
 					if (defaultMovieFile.isDiff("ERROR")) gp->bgaHandle[1295] = LoadGraph(defaultMovieFile);
 					if (gp->bgaHandle[1295] == -1) {
-						defaultMovieFile = GetRandomFile("LR2files/Movie/*.ogv", 0);
+						defaultMovieFile = GetRandomFile(fs::make_preferred("LR2files/Movie/*.ogv").data(), 0);
 						if (defaultMovieFile.isDiff("ERROR")) gp->bgaHandle[1295] = LoadGraph(defaultMovieFile);
 					}
 				}

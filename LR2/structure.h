@@ -982,15 +982,15 @@ struct SONGSELECT {
 	CSTR newsongfolder;
 	int panel_unk;
 	int panel;
-	char is_mouseOnSongBars;
-	char is_mouseOnSelected;
-	char is_mouseOnTextInput;
-	char is_filter_changed;
-	char is_clicked_filter;
-	char is_coursemaking_done; /* and tag edit */
-	char is_clicked_autoplay_replay;
-	char is_clicked_keyconfig;
-	char is_clicked_skinselect;
+	bool is_mouseOnSongBars;
+	bool is_mouseOnSelected;
+	bool is_mouseOnTextInput;
+	bool is_filter_changed;
+	bool is_clicked_filter;
+	bool is_coursemaking_done; /* and tag edit */
+	bool is_clicked_autoplay_replay;
+	bool is_clicked_keyconfig;
+	bool is_clicked_skinselect;
 	CSTR playerPassMD5;
 	CSTR playerID;
 	char is_clicked_tagedit;
@@ -1140,18 +1140,17 @@ struct PLAYERSTATUS {
 
 struct PLAYSCORE {
 	CSTR name;
-	char * judge_queue;
-	int judge_queue_count;
-	int ghostReadCount;
-	int judgecount;
-	int nownote;
-	int totalnotes;
-	int judgeExpect[6];
-	int judge[6];
-	int rate;
-	int exscore;
+	char* judge_queue{};
+	int judge_queue_capacity{};
+	int ghostReadCount{};
+	int judge_queue_len{};
+	int nownote{};
+	int totalnotes{};
+	int judgeExpect[6]{};
+	int judge[6]{};
+	int rate{};
+	int exscore{};
 
-	PLAYSCORE();
 	int InitJudgeQueue(void);
 	int ResetJudgeQueue(int size);
 	int ResizeJudgeQueue(size_t size);
@@ -1370,7 +1369,7 @@ struct NETWORK {
 	CSTR IR_passMD5;
 	CSTR IR_name;
 	int IR_ID{0};
-	int rivals[20];
+	int rivals[20]{};
 	int rivalcount{};
 	int getrival{};
 	CSTR domain = "www.dream-pro.info";
@@ -1423,8 +1422,6 @@ struct game {
 	int po4sceneFadeout;
 	int po4cur_song;
 	char po4_23da8;
-	char po4_23da9;
-	int po4_hThread_ParseBMS;
 	int po4MainMenuCursor;
 	int procSelecter; /* 2:select 3:deciide 4:play 5:result 6:keyconfig 7:skinselect */
 	int procPhase;
@@ -1432,9 +1429,8 @@ struct game {
 	struct gameplay gameplay;
 	char is_clicked_screenModeChange;
 	int isSkipDrawTick; /* skip frame? */
-	int flag_Screenshot; /* char */
-	char flag_unk420;
-	char flag_showFPS;
+	bool flag_Screenshot{};
+	bool flag_showFPS{};
 	char cmd_nosave;
 	int cmd_directplay;
 	char cmd_auto;

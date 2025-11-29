@@ -4,6 +4,7 @@
 #include "Engine.h"
 #include "LR2.h"
 #include "Scenes.h"
+#include "filesystem.h"
 
 #include <chrono>
 #include <filesystem>
@@ -101,7 +102,7 @@ int main(int argc, char** argv) {
 		GetModuleFileName(NULL, (LPCH)curDir, 260);
 		*(char*)(strrchr(curDir, '\\') + 1) = '\x00';
 		SetCurrentDirectory((LPCSTR)curDir);
-		gs.baseDirectory.assign(curDir, 0).add("/");
+		gs.baseDirectory.assign(curDir, 0).add("\\");
 	}
 #else // TODO(utf-8): use this
 	{
@@ -124,7 +125,7 @@ int main(int argc, char** argv) {
 	copy_if_not_exists("LR2files/Config/midi_def.xml", "LR2files/Config/midi.xml");
 	ErrorLogAdd("コンフィグを読み込みます…");
 
-	if (!ReadConfig(&gs, "LR2files/Config/config.xml") && gs.is_starter == false) {
+	if (!ReadConfig(&gs, fs::make_preferred("LR2files/Config/config.xml").data()) && gs.is_starter == false) {
 		MessageBoxA(NULL, "コンフィグファイルが見つかりません。", "エラー", NULL);
 		return -1;
 	}
@@ -153,8 +154,7 @@ int main(int argc, char** argv) {
 		}
 		lr1ir = gs.config.network.lr1ir;
 		lr2ir = gs.config.network.lr2ir;
-		gs.flag_showFPS = 0;
-		ReadMIDI(&gs, "LR2files/Config/midi.xml");
+		ReadMIDI(&gs, fs::make_preferred("LR2files/Config/midi.xml").data());
 		if (gs.config.system.softwarerendering == 1) {
 			SetUse3DFlag(0);
 		}
@@ -263,15 +263,14 @@ int main(int argc, char** argv) {
 			std::filesystem::create_directories("LR2files/SkinCustomize", ec);
 			std::filesystem::create_directories("screenshot", ec);
 		}
-		ReadKeyConfig(&gs, "LR2files/Config/keyconfig.xml");
+		ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 		gs.is_clicked_screenModeChange = 0;
-		gs.flag_Screenshot = 0;
-		ReadOptionstrFile(gs.txtStruct.option_str, "LR2files/Config/optionstr.csv");
+		gs.flag_Screenshot = false;
+		ReadOptionstrFile(gs.txtStruct.option_str, fs::make_preferred("LR2files/Config/optionstr.csv").data());
 		gs.audio.is_fmod_disabled = gs.config.sound.disablefmod;
 		if (gs.config.sound.disablefmod != 0) {
 			gs.config.select.preview = 0;
 		}
-		gs.flag_unk420 = 0;
 		SetHPtimerFlag(gs.config.system.hptimer == 1);
 		SetManualTimerFlag(&gs.timer1, 0);
 		gs.timer1.movieFramerate = (double)gs.config.tools.movie_framerate;
@@ -324,6 +323,8 @@ int main(int argc, char** argv) {
 		}
 #endif // _WIN32
 
+		// DxLib-for-Linux can only set title of an already existing window
+		if constexpr (!is_linux()) { SetMainWindowText(LR2TITLE); }
 		// DxLib-for-Linux only writes to stderr when writing to the log file.
 		SetOutApplicationLogValidFlag(gs.config.system.outputlog || is_linux());
 #ifdef _WIN32
@@ -345,7 +346,7 @@ int main(int argc, char** argv) {
 		}
 #endif // _WIN32
 		if (DxLib_Init() != -1) {
-			SetMainWindowText(LR2TITLE);
+			if constexpr (is_linux()) { SetMainWindowText(LR2TITLE); }
 			ChangeFont("", 0);
 			SetLogFontSize(14); //DXLIBVER: change this for further dxlib version
 #ifdef _WIN32
@@ -373,7 +374,7 @@ int main(int argc, char** argv) {
 				ErrorLogAdd(gs.net.request_result);
 			}
 
-			loadingGrHandle = LoadGraph("LR2files/Config/loading.bmp", 0);
+			loadingGrHandle = LoadGraph(fs::make_preferred("LR2files/Config/loading.bmp").data(), 0);
 
 			int backgroundGrHandle = MakeScreen(640, 480, 0); //TODO_RESOULUTION
 			SetDrawScreen(backgroundGrHandle);
@@ -381,7 +382,9 @@ int main(int argc, char** argv) {
 			SetDrawScreen(DX_SCREEN_BACK);
 
 			memcpy(gs.config.jukebox.rival, gs.net.rivals, 4 * 20);
-			sqlite3_open(gs.is_starter ? "LR2files/Database.db" : "LR2files/Database/song.db", &sql3);
+			sqlite3_open(gs.is_starter
+					? fs::make_preferred("LR2files/Database.db" ).data()
+					: fs::make_preferred("LR2files/Database/song.db").data(), &sql3);
 			LoadLR2CustomFolder(sql3, &gs.config.jukebox, pathScoreDB, gs.is_starter, gs.cmd_directplay);
 			if ( gs.cmd_directplay == false && gs.config.network.lr2ir == 1 && (((unsigned char)gs.config.jukebox.customfolder & 0x80) != 0)) {
 				gs.net.GetInsaneList();
@@ -502,25 +505,15 @@ int main(int argc, char** argv) {
 			gs.gameplay.bmsobj_line.noteVal = 0;
 			gs.gameplay.bmsobj_line.autoplay = 0;
 			gs.gameplay.bpmt_buffersize = 0;
-			gs.gameplay.highScore.judge_queue_count = 0;
-			gs.gameplay.highScore.judge_queue = NULL;
-			gs.gameplay.p1Score.judge_queue_count = 0;
-			gs.gameplay.p1Score.judge_queue = NULL;
-			gs.gameplay.targetScore.judge_queue_count = 0;
-			gs.gameplay.targetScore.judge_queue = NULL;
 			gs.gameplay.isCourse = 0;
 			gs.gameplay.isPreviewLoad = 0;
 			gs.gameplay.previewStatus = 0;
-			if (gs.gameplay.hThreadPreview.joinable()) {
-				gs.gameplay.hThreadPreview.join();
-			}
 			gs.gameplay.courseType = -1;
 			gs.gameplay.courseStageNow = 0;
 			gs.gameplay.timetick = GetTimeWrap();
 			gs.gameplay.flag_threadDoingProcGame = 0;
 			InitSkin(&gs.skstruct, 0, 0);
 			gs.skstruct.fontname.assign(&gs.config.skin.fontname);
-			if(gs.hThreadBanner.joinable()) gs.hThreadBanner.join();
 			for (int i = 0; i < 6480; i++) gs.gameplay.keysound->load = 0;
 			for (int i = 0; i < 200; i++) gs.skstruct2.caption[i].fillzero();
 			for (int i = 0; i < 10; i++) gs.skstruct2.helpfilePath[i].fillzero();
@@ -589,7 +582,7 @@ int main(int argc, char** argv) {
 			InitSound(&gs.audio,gs.config.sound.bufferlength,gs.config.sound.numbuffers,gs.config.sound.disabledsp,gs.config.sound.output,gs.config.sound.driver);
 			ReadLR2SoundSet(&gs, gs.config.skin.skinFilePath[10], 0);
 			if (gs.is_starter == false) {
-				if (LoadSound(&gs.audio, &gs.gameplay.muon, CSTR("LR2files/Config/muon.wav"), 1, gs.config.sound.disabledsp, 0) == -1) {
+				if (LoadSound(&gs.audio, &gs.gameplay.muon, fs::make_preferred("LR2files/Config/muon.wav").data(), 1, gs.config.sound.disabledsp, 0) == -1) {
 					ErrorLogAdd("muon.wavがありません\n");
 					gs.procSelecter = 0;
 				}
@@ -718,7 +711,9 @@ int main(int argc, char** argv) {
 								memcpy(&gs.config.play, &gs.gameplay.targetCfg, sizeof(CONFIG_PLAY));
 							}
 							gs.gameplay.ghostBattle = '\0';
-							ReadKeyConfig(&gs, (gs.config.select.control == 0) ? "LR2files/Config/keyconfig.xml" : "LR2files/Config/keyconfig_p.xml");
+							ReadKeyConfig(&gs, (gs.config.select.control == 0)
+									? fs::make_preferred("LR2files/Config/keyconfig.xml" ).data()
+									: fs::make_preferred("LR2files/Config/keyconfig_p.xml").data());
 							DeleteGraph(gs.skstruct.GrHandle[GrH_Stage]);
 							gs.skstruct.GrHandle[GrH_Stage] = -1;
 							DeleteGraph(gs.skstruct.GrHandle[GrH_BackBMP]);
@@ -908,14 +903,14 @@ int main(int argc, char** argv) {
 							if (gs.gameplay.ghostBattle == 1) {
 								if (gs.sSelect.bmsList[gs.sSelect.cur_song].keymode == 5) {
 									LoadSceneG(&gs, &gs.skstruct, 13);
-									if (gs.skinData.Data[gs.skinData.skinID[13]].type != SKINTYPE_7KEYSBATTLE)
-										ReadKeyConfig(&gs, "LR2files/Config/keyconfig.xml");
+									if (gs.skinData.Data[gs.skinData.skinID[13]].type != SKINTYPE_5KEYSBATTLE)
+										ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 									else 
-										ReadKeyConfig(&gs, "LR2files/Config/keyconfig_5.xml");
+										ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig_5.xml").data());
 								}
 								else {
 									LoadSceneG(&gs, &gs.skstruct, 12);
-									ReadKeyConfig(&gs, "LR2files/Config/keyconfig.xml");
+									ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 								}
 							}
 							else if (gs.config.select.control == 1 && (gs.sSelect.metaSelected.keymode == 5 || gs.sSelect.metaSelected.keymode == 7)) {
@@ -925,7 +920,7 @@ int main(int argc, char** argv) {
 								else if (gs.config.play.battle == 1) {
 									LoadSceneG(&gs, &gs.skstruct, 14);
 								}
-								ReadKeyConfig(&gs,"LR2files/Config/keyconfig_p.xml");
+								ReadKeyConfig(&gs,fs::make_preferred("LR2files/Config/keyconfig_p.xml").data());
 							}
 							else {
 								switch (gs.sSelect.metaSelected.keymode) {
@@ -933,23 +928,23 @@ int main(int argc, char** argv) {
 										if (gs.config.play.battle == 0) {
 											LoadSceneG(&gs, &gs.skstruct, 1);
 											if (gs.skinData.Data[gs.skinData.skinID[1]].type != SKINTYPE_5KEYS)
-												ReadKeyConfig(&gs, "LR2files/Config/keyconfig.xml");
+												ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 											else
-												ReadKeyConfig(&gs, "LR2files/Config/keyconfig_5.xml");
+												ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig_5.xml").data());
 										}
 										else if (gs.config.play.battle == 1) {
 											LoadSceneG(&gs, &gs.skstruct, 13);
-											if (gs.skinData.Data[gs.skinData.skinID[13]].type != SKINTYPE_7KEYSBATTLE)
-												ReadKeyConfig(&gs, "LR2files/Config/keyconfig.xml");
+											if (gs.skinData.Data[gs.skinData.skinID[13]].type != SKINTYPE_5KEYSBATTLE)
+												ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 											else
-												ReadKeyConfig(&gs, "LR2files/Config/keyconfig_5.xml");
+												ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig_5.xml").data());
 										}
 										else if (gs.config.play.battle == 2 || gs.config.play.battle == 3) {
 											LoadSceneG(&gs, &gs.skstruct, 3);
 											if (gs.skinData.Data[gs.skinData.skinID[3]].type != SKINTYPE_10KEYS)
-												ReadKeyConfig(&gs, "LR2files/Config/keyconfig.xml");
+												ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 											else
-												ReadKeyConfig(&gs, "LR2files/Config/keyconfig_5.xml");
+												ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig_5.xml").data());
 										}
 										break;
 
@@ -963,13 +958,13 @@ int main(int argc, char** argv) {
 										else if (gs.config.play.battle == 2 || gs.config.play.battle == 3) {
 											LoadSceneG(&gs, &gs.skstruct, 2);
 										}
-										ReadKeyConfig(&gs, "LR2files/Config/keyconfig.xml");
+										ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 										break;
 
 									case 9:
 										if (gs.config.play.battle == 3) {
 											LoadSceneG(&gs, &gs.skstruct, 0);
-											ReadKeyConfig(&gs, "LR2files/Config/keyconfig.xml");
+											ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 											break;
 										}
 										else if (gs.config.play.battle == 0 || gs.config.play.battle == 2) {
@@ -978,30 +973,30 @@ int main(int argc, char** argv) {
 										else if (gs.config.play.battle == 1) {
 											LoadSceneG(&gs, &gs.skstruct, 4);
 										}
-										ReadKeyConfig(&gs, "LR2files/Config/keyconfig_p.xml");
+										ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig_p.xml").data());
 										break;
 
 									case 10:
 										if (gs.config.play.battle == 0) {
 											LoadSceneG(&gs, &gs.skstruct, 3);
 											if (gs.skinData.Data[gs.skinData.skinID[3]].type == SKINTYPE_10KEYS)
-												ReadKeyConfig(&gs, "LR2files/Config/keyconfig_5.xml"); 
+												ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig_5.xml").data()); 
 											else
-												ReadKeyConfig(&gs, "LR2files/Config/keyconfig.xml");
+												ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 										}
 										else if (gs.config.play.battle == 1 || gs.config.play.battle == 2) {
 											LoadSceneG(&gs, &gs.skstruct, 13);
-											if (gs.skinData.Data[gs.skinData.skinID[13]].type == SKINTYPE_7KEYSBATTLE)
-												ReadKeyConfig(&gs, "LR2files/Config/keyconfig_5.xml");
+											if (gs.skinData.Data[gs.skinData.skinID[13]].type == SKINTYPE_5KEYSBATTLE)
+												ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig_5.xml").data());
 											else
-												ReadKeyConfig(&gs, "LR2files/Config/keyconfig.xml");
+												ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 										}
 										else if (gs.config.play.battle == 3) {
 											LoadSceneG(&gs, &gs.skstruct, 1);
 											if (gs.skinData.Data[gs.skinData.skinID[1]].type == SKINTYPE_5KEYS)
-												ReadKeyConfig(&gs, "LR2files/Config/keyconfig_5.xml");
+												ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig_5.xml").data());
 											else
-												ReadKeyConfig(&gs, "LR2files/Config/keyconfig.xml");
+												ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 										}
 										break;
 
@@ -1015,14 +1010,14 @@ int main(int argc, char** argv) {
 										else if(gs.config.play.battle == 3) {
 											LoadSceneG(&gs, &gs.skstruct, 0);
 										}
-										ReadKeyConfig(&gs, "LR2files/Config/keyconfig.xml");
+										ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 										break;
 								}
 							}
 
 							if (gs.config.play.m_lunaris) {
 								LoadSceneG(&gs, &gs.skstruct, 0);
-								ReadKeyConfig(&gs, "LR2files/Config/keyconfig.xml");
+								ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 								gs.gameplay.isAutoplay = 0;
 							}
 							for (int i = 0; i < gs.skstruct.num_of_ImageFont; i++) {
@@ -1051,7 +1046,7 @@ int main(int argc, char** argv) {
 							break;
 						case 8:
 							LoadSceneG(&gs, &gs.skstruct, 0);
-							ReadKeyConfig(&gs, "LR2files/Config/keyconfig.xml");
+							ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 							LUNARIS_START(&gs);
 							break;
 						case 9:
@@ -1117,7 +1112,7 @@ int main(int argc, char** argv) {
 							LoadSceneG(&gs, &gs.skstruct, 18);
 							break;
 						case 11:
-							LoadScene(&gs.skstruct, CSTR("LR2files/event.csv"), 0, 0);
+							LoadScene(&gs.skstruct, fs::make_preferred("LR2files/event.csv").data(), 0, 0);
 							break;
 						case 13:
 							ProcS_CourseResult(&gs,sql3);
@@ -1343,7 +1338,7 @@ int main(int argc, char** argv) {
 							break;
 						case 4: {
 							CSTR skinMD5;
-							cstrSprintf(&skinMD5, "LR2files/SkinCustomize/%s.xml", gs.skstruct.skinMD5.body);
+							cstrSprintf(&skinMD5, fs::make_preferred("LR2files/SkinCustomize/%s.xml").data(), gs.skstruct.skinMD5.body);
 							SkinUser tmpSk;
 							ReadSkinCustomize(&tmpSk, skinMD5);
 							tmpSk.adjust.shift_x = gs.skstruct.adjust.shift_x;
@@ -1403,7 +1398,7 @@ int main(int argc, char** argv) {
 								ErrorLogAdd("BMSの音を初期化しました\n");
 							}
 
-							ReadKeyConfig(&gs, "LR2files/Config/keyconfig.xml");
+							ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 							if (gs.gameplay.replay.status == 2) {
 								ReleaseReplayBuffer(&gs.gameplay.replay);
 								gs.audio.param.eq_gain[0] = gs.gameplay.replay.aud.eq_gain[0];
@@ -1510,7 +1505,7 @@ int main(int argc, char** argv) {
 							}
 							break;
 						case 6:
-							ReadKeyConfig(&gs, "LR2files/Config/keyconfig.xml");
+							ReadKeyConfig(&gs, fs::make_preferred("LR2files/Config/keyconfig.xml").data());
 							break;
 						case 7:
 							ClearSkinGraph(&gs.skstruct2);
@@ -1984,27 +1979,13 @@ int main(int argc, char** argv) {
 						}
 					}
 					gs.timer1.vSyncTick = GetTimeWrap();
-					if (gs.flag_Screenshot == 1) {
-						CSTR captureFilename;
+					if (gs.flag_Screenshot) {
+						gs.flag_Screenshot = false;
 						GetDateTime(&date);
+						CSTR captureFilename;
 						cstrSprintf(&captureFilename, "screenshot/LR2 %04d-%02d-%02d %02d-%02d-%02d.png", date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec);
 						SaveDrawScreenToPNG(0, 0, skinSizeX, skinSizeY, captureFilename, -1);
-						gs.flag_Screenshot = 0;
 						PlaySound(&gs.audio, &gs.audio.sysSound.screenshot, gs.audio.chnKey, -1);
-					}
-					else if (gs.flag_Screenshot == 2) {
-						CSTR captureFilename;
-						int scrdraw = MakeGraph(skinSizeX, skinSizeY, 0);
-						GetDrawScreenGraph(0, 0, skinSizeX, skinSizeY, scrdraw, 1);
-						SetDrawMode(1);
-						SetDrawBlendMode(0, 255);
-						DrawExtendGraph(0, 0, skinSizeX/2, skinSizeY/2, scrdraw, 0);
-						GetDateTime(&date);
-						cstrSprintf(&captureFilename, "screenshot/LR2 %04d-%02d-%02d %02d-%02d-%02d.png", date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec);
-						SaveDrawScreenToPNG(0, 0, skinSizeX/2, skinSizeY/2, captureFilename, -1);
-						DrawGraph(0, 0, scrdraw, 0);
-						DeleteGraph(scrdraw);
-						gs.flag_Screenshot = 0;
 					}
 
 					if (gs.is_recordmode) {
@@ -2089,7 +2070,7 @@ int main(int argc, char** argv) {
 					EditTag(&gs.sSelect.bmsList[gs.sSelect.cur_song],sql3);
 					gs.sSelect.is_clicked_tagedit = 0;
 					ProcS_Select(&gs);
-					gs.sSelect.is_filter_changed = 1;
+					gs.sSelect.is_filter_changed = true;
 					gs.sSelect.filter_clicked = 4;
 					SetObjectStrings_SongSelect(&gs);
 				}
@@ -2100,7 +2081,7 @@ int main(int argc, char** argv) {
 					gs.sSelect.is_tag_edited = 0;
 					ProcS_Select(&gs);
 					if (gs.sSelect.bmsList[gs.sSelect.cur_song].favorite != 2) {
-						gs.sSelect.is_filter_changed = 1;
+						gs.sSelect.is_filter_changed = true;
 						gs.sSelect.filter_clicked = 4;
 					}
 					SetObjectStrings_SongSelect(&gs);
@@ -2111,7 +2092,7 @@ int main(int argc, char** argv) {
 				}
 				if (gs.sSelect.is_filter_changed) {
 					SetBmsFilter(&gs, sql3);
-					gs.sSelect.is_filter_changed = 0;
+					gs.sSelect.is_filter_changed = false;
 				}
 				if (gs.is_clicked_screenModeChange == 1) {
 					for (int i = 0; i < 200; i++) {
@@ -2231,8 +2212,8 @@ int main(int argc, char** argv) {
 			gs.config.network.lr1ir = lr1ir;
 			gs.config.network.lr2ir = lr2ir;
 			if ( gs.auto2avi == 0 && gs.is_recordmode == 0 && gs.rec.recMode == 0) {
-				WriteConfigXml(&gs, "LR2files/Config/config.xml");
-				WriteMidiXml(&gs, "LR2files/Config/midi.xml");
+				WriteConfigXml(&gs, fs::make_preferred("LR2files/Config/config.xml").data());
+				WriteMidiXml(&gs, fs::make_preferred("LR2files/Config/midi.xml").data());
 			}
 			CloseMIDI();
 			for (int i = 0; i < 6480; i++) {

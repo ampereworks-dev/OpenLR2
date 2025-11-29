@@ -12,7 +12,6 @@ void ThreadProc_PO4parseBMS(game *g) {
 	InitGameplay(&g->gameplay, &g->config.play);
 	
 	ParseBmsFile(&g->gameplay, g->sSelect.metaSelected.filepath, &g->audio, &g->config, &g->sSelect.metaSelected, g->skstruct.flag_BGA, 0);
-	g->po4_hThread_ParseBMS = 0;
 	g->gameplay.bmsResourceLoaded = 1;
 	return;
 }
@@ -28,7 +27,6 @@ int ProcI_PO4Select(game *g, sqlite3 *sql) { //not tested
 		g->po4_unk23d88 = 0;
 		g->po4flagSceneStart = '\x01';
 		g->po4flagSceneEnd = '\0';
-		g->po4_hThread_ParseBMS = 0;
 		g->sSelect.listCalculatedBar = 0;
 		g->sSelect.barMoveStartTime = GetTimeWrap();
 		g->sSelect.barMoveEndTime = GetTimeWrap();
@@ -394,7 +392,6 @@ int ProcI_PO4Select(game *g, sqlite3 *sql) { //not tested
 					SetTimeLapse(15, &g->timer1);
 					PlaySound(&g->audio, &g->audio.sysSound.option_change, g->audio.chnKey, -1);
 				}
-				g->po4_23da9 = 1;
 				break;
 			}
 

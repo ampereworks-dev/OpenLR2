@@ -2,6 +2,7 @@
 #include "Engine.h"
 #include "LR2.h"
 #include <stdio.h>
+#include "filesystem.h"
 
 #ifndef _WIN32
 #include "En_dxlibstub.h"
@@ -1485,11 +1486,11 @@ void CheckNewSong(glb_dbgame *glb) {
 		if (err) {
 			ErrorLogAdd("未設定の#DIFFICULTYを設定します。\n");
 			SetUndefinedDifficulty(glb->pSql);
-			sqlite3_exec(glb->pSql, "DELETE FROM folder WHERE path=\'LR2files/CustomFolder/newsong.lr2folder\'", 0, 0, 0);
+			sqlite3_exec(glb->pSql, fs::make_preferred("DELETE FROM folder WHERE path=\'LR2files/CustomFolder/newsong.lr2folder\'").data(), 0, 0, 0);
 			sqlite3_snprintf(1024, buf, "SELECT * FROM song WHERE adddate > %d", GetNowUnixtime() - jb.titleflash * 3600);
 			sqlite3_prepare(glb->pSql, buf, -1, &pStmt, NULL);
 			if (sqlite3_step(pStmt) == 100) {
-				jb.path[jb.numOfPath] = "LR2files/CustomFolder/newsong.lr2folder";
+				jb.path[jb.numOfPath] = fs::make_preferred("LR2files/CustomFolder/newsong.lr2folder").data();
 				GetFolderDataFromPath(jb.path[jb.numOfPath], glb->pSql);
 			}
 			sqlite3_finalize(pStmt);
@@ -1544,8 +1545,8 @@ static void ThreadProc_RankingAutoUpdate(game* g) {
 		g->net.rankingData.rivalID = g->sSelect.stack_rivalID[g->sSelect.cur];
 	}
 	CSTR path;
-	if (hash.length() < 50) cstrSprintf(&path, "LR2files/Ir/%s.xml", hash.body);
-	else cstrSprintf(&path, "LR2files/Ir/%s.xml", hash.makeCRCstr().body);
+	if (hash.length() < 50) cstrSprintf(&path, fs::make_preferred("LR2files/Ir/%s.xml").data(), hash.body);
+	else cstrSprintf(&path, fs::make_preferred("LR2files/Ir/%s.xml").data(), AssignCRC32(hash).body);
 	
 	if (path.canOpenFile()) {
 		if (hash.isSame(g->sSelect.bmsList[g->sSelect.cur_song].hash)) {
@@ -1681,6 +1682,8 @@ static void ThreadProc_LoadPreview(game *g) {
 		g->gameplay.previewStatus = 0;
 		g->gameplay.isPreviewLoad = 0;
 	}
+
+	g->gameplay.hThreadPreview.detach(); // Detach ourselves TODO: refactor surrounding code to avoid this
 }
 
 
@@ -3028,6 +3031,7 @@ int SwapBmsList(SONGSELECT *ss){
 
 //444650
 int InitBmsList(SONGSELECT *ss) {
+	// FIXME: 1) move to SONGSELECT constructor 2) move to std::vector. This leaks memory.
 	ss->bmsListSize = 1000;
 	ss->cur = 0;
 	ss->bmsList = (SONGDATA*)malloc(sizeof(SONGDATA) * 1000);

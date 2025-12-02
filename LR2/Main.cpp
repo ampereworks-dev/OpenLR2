@@ -2142,7 +2142,7 @@ int main(int argc, char** argv) {
 					SetObjectStrings_SongSelect(&gs);
 				}
 #endif // _WIN32
-				SetMouseDispFlag( (gs.KeyInput.mouse_oldX < 640 && gs.KeyInput.mouse_oldY < 480) ? 0:1  ); //TODO_RESOULUTION
+				SetMouseDispFlag( (gs.KeyInput.mouse_oldX < skinSizeX && gs.KeyInput.mouse_oldY < skinSizeY) ? 0:1  ); //TODO_RESOULUTION
 				if ( (gs.procSelecter == 2 || gs.procSelecter == 9) && gs.KeyInput.inputID[KEY_INPUT_ESCAPE]
 					 && (GetTimeLapse(4,&gs.timer1) < 0.0 || GetTimeLapse(4, &gs.timer1) > 100.0) 
 					 && gs.txtStruct.st_text_num == -1 

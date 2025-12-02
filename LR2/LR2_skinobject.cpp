@@ -4017,8 +4017,8 @@ int MouseOnDSTD(DSTdraw *dstd, int *x, int *y){ //1 right 2 left
 
 	xv = *x;
 	yv = *y;
-	fxv = (float)xv; //TODO_RESOULUTION
-	if ( xv < 640 && 0 <= xv && yv < 480 && 0 <= yv 
+	fxv = (float)xv; 
+	if ( xv < skinSizeX && 0 <= xv && yv < skinSizeY && 0 <= yv 
 		&& dstd->x <= fxv && fxv <= dstd->w + dstd->x
 		&& dstd->y <= (float)yv && (float)yv <= dstd->h + dstd->y) {
 		

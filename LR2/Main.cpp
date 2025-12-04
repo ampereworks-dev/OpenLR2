@@ -28,21 +28,12 @@ int WINAPI WinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/, LPSTR /
 	return main(__argc, __argv);
 }
 
-/* TODO(utf-8): use this
 static std::filesystem::path GetExecutablePath()
 {
-	wchar_t fullpath[256]{};
+	wchar_t fullpath[MAX_PATH]{};
 	if (!GetModuleFileNameW(nullptr, fullpath, std::size(fullpath)))
 		return {};
 	return std::filesystem::path(fullpath).parent_path();
-}
-*/
-
-static std::filesystem::path GetExecutablePath()
-{
-	std::wstring exePath(MAX_PATH, 0);
-	GetModuleFileNameW(nullptr, exePath.data(), MAX_PATH);
-	return std::filesystem::path(exePath).parent_path();
 }
 
 #else
@@ -85,23 +76,18 @@ int main(int argc, char** argv) {
 	while (!IsDebuggerPresent()) std::this_thread::sleep_for(std::chrono::milliseconds(200));
 #endif
 
-	int loadingGrHandle;
-
 	sqlite3* sql3;
-
-	CSTR pathScoreDB;
-	CSTR newPath;
-	DATEDATA date;
 
 	int wSizeY;
 	int wSizeX;
-	int lr1ir;
-	int lr2ir;
 	game gs;
 
 	const bool use_dx9 = getenv("OPENLR2_NO_DX9") == nullptr; // chown2: crashes on DxLib_Init with DX9 for me
 
 	int tmp;
+
+	SetUseCharCodeFormat(DX_CHARCODEFORMAT_UTF8);
+	SetFontCharCodeFormat(DX_CHARCODEFORMAT_UTF8);
 
 	{
 		auto curDir = GetExecutablePath();
@@ -148,8 +134,8 @@ int main(int argc, char** argv) {
 		gs.config.jukebox.numOfPath = 1;
 		gs.config.jukebox.path[0].assign("BeatVocaloids/");
 	}
-	lr1ir = gs.config.network.lr1ir;
-	lr2ir = gs.config.network.lr2ir;
+	int lr1ir = gs.config.network.lr1ir;
+	int lr2ir = gs.config.network.lr2ir;
 	ReadMIDI(&gs, fs::make_preferred("LR2files/Config/midi.xml").data());
 	if (gs.config.system.softwarerendering == 1) {
 		SetUse3DFlag(0);
@@ -230,6 +216,7 @@ int main(int argc, char** argv) {
 		}
 	}
 	gs.config.system.thread = 0;
+	CSTR pathScoreDB;
 	cstrSprintf(&pathScoreDB, "LR2files/Database/Score/%s.db", gs.config.player.id.body);
 	if (gs.is_starter == '\0') {
 		if (IsFileExist(pathScoreDB) == false) {
@@ -251,6 +238,7 @@ int main(int argc, char** argv) {
 	if (gs.config.select.disabledifficultyfilter == 1) gs.config.select.ignoredifficultyall = 0;
 	memcpy(&gs.sSelect.filter, &gs.config.select, sizeof(CONFIG_SELECT));
 	{
+		CSTR newPath;
 		std::error_code ec; // ignore errors
 		cstrSprintf(&newPath, "LR2files/Replay/%s", gs.config.player.id.body);
 		std::filesystem::create_directories(newPath.body, ec);
@@ -334,8 +322,6 @@ int main(int argc, char** argv) {
 		ErrorLogFmtAdd("動画作成モードなのでVSyncを待ちます。\n");
 	}
 #ifdef _WIN32
-	SetUseCharCodeFormat(DX_CHARCODEFORMAT_UTF8);
-	SetFontCharCodeFormat(DX_CHARCODEFORMAT_UTF8);
 	SetMultiThreadFlag(1);
 	SetUseFPUPreserveFlag(1);
 	SetUseDirectInputFlag(1); //DXLIBVER: not in original, but we need it to make same reaction.
@@ -372,7 +358,7 @@ int main(int argc, char** argv) {
 		ErrorLogAdd(gs.net.request_result);
 	}
 
-	loadingGrHandle = LoadGraph(fs::make_preferred("LR2files/Config/loading.bmp").data(), 0);
+	int loadingGrHandle = LoadGraph(fs::make_preferred("LR2files/Config/loading.bmp").data(), 0);
 
 	int backgroundGrHandle = MakeScreen(640, 480, 0); //TODO_RESOULUTION
 	SetDrawScreen(backgroundGrHandle);
@@ -1981,6 +1967,7 @@ int main(int argc, char** argv) {
 			gs.timer1.vSyncTick = GetTimeWrap();
 			if (gs.flag_Screenshot) {
 				gs.flag_Screenshot = false;
+				DATEDATA date;
 				GetDateTime(&date);
 				CSTR captureFilename;
 				cstrSprintf(&captureFilename, "screenshot/LR2 %04d-%02d-%02d %02d-%02d-%02d.png", date.Year, date.Mon, date.Day, date.Hour, date.Min, date.Sec);

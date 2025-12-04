@@ -1,5 +1,5 @@
 ﻿#include "En_recordmovie.h"
-
+#include "filesystem.h"
 #include <cstring>
 
 #include "structure.h"
@@ -382,13 +382,13 @@ int Mp3toWavF(FILE *iFile, FILE *oFile) { //TODO : need test
 bool Mp3toWavP(char *iPath, char *oPath) {
 	FILE *iFile, *oFile;
 
-	iFile = _wfopen(utf2ws(iPath).c_str(), L"rb");
+	iFile = fopen(iPath, "rb");
 	if (iFile == NULL) {
 		ErrorLogFmtAdd("入力ファイルが開けません(%s)。\n", iPath);
 		_exit(1);
 	}
 
-	oFile = _wfopen(utf2ws(iPath).c_str(), L"wb");
+	oFile = fopen(iPath, "wb");
 	if (oFile == NULL) {
 		ErrorLogFmtAdd("出力ファイルが開けません(%s)。\n", oPath);
 		_exit(1);

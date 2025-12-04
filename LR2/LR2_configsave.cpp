@@ -1,5 +1,5 @@
 ﻿#include "LR2_configsave.h"
-
+#include "filesystem.h"
 #include <filesystem>
 #include <iterator>
 
@@ -193,7 +193,7 @@ int WriteConfigXml(game *g, const char *filename){
 	FILE *pFile;
 	char buf[256];
 	
-	pFile = _wfopen(utf2ws(filename).c_str(), L"w");
+	pFile = fopen(filename, "w");
 	if (pFile == NULL) return 0; 
 	
 	fputs("<?xml version=\"1.0\" encoding=\"shift_jis\"?>\n", pFile);
@@ -631,7 +631,7 @@ int WriteKeyConfig(game *g, const char *filepath, int key) {
 	FILE *pFile;
 	CONFIG_INPUT cfg_in;
 
-	pFile = _wfopen(utf2ws(filepath).c_str(), L"w");
+	pFile = fopen(filepath, "w");
 	if (pFile == (FILE *)0x0) {
 		return 0;
 	}
@@ -748,7 +748,7 @@ int WriteKeyConfig(game *g, const char *filepath, int key) {
 int WriteMidiXml(game *g, const char *filename) {
 	FILE *pFile;
 
-	pFile = _wfopen(utf2ws(filename).c_str(), L"w");
+	pFile = fopen(filename, "w");
 	if (pFile == NULL) {
 		return 0;
 	}
@@ -894,7 +894,7 @@ int WriteSkinCustomizeXml(SkinUser *sku, char *filepath) {
 	
 	FILE *pFile;
 
-	pFile = _wfopen(utf2ws(filepath).c_str(), L"w");
+	pFile = fopen(filepath, "w");
 	if (pFile == (FILE *)0x0) {
 		return 0;
 	}

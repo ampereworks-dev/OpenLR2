@@ -13,7 +13,7 @@
 #include <cmath>
 #include <array>
 #include <cstdint>
-
+#include "filesystem.h"
 using std::uintptr_t;
 
 #ifdef _WIN32
@@ -441,7 +441,7 @@ void WriteSoundFile(AUDIO *aud, CSTR filename, uint size) {
 	FILE* _File;
 	char header1[12], header2[24], header3[8];
 
-	_File = _wfopen(utf2ws(filename.body).c_str(), L"wb");
+	_File = fopen(filename.body, "wb");
 	if ((size != 0) && (size <= aud->size)) {
 		aud->size = size;
 	}

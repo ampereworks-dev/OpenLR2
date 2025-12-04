@@ -74,8 +74,8 @@ void MD5byte(char **iStr, uint len, char *oByte);
 char* MD5str(char *iStr);
 
 //string convert
-std::wstring utf2ws(const std::string_view str);
-std::string ws2utf(const std::wstring_view wstr);
-std::string utf2ansi(const std::string_view in, unsigned int codepage);
-std::string ansi2utf(const std::string_view str, unsigned int codepage);
+std::wstring utf2ws(std::string_view str);
+std::string ws2utf(std::wstring_view wstr);
+std::string utf2ansi(std::string_view in, unsigned int codepage);
+std::string ansi2utf(std::string_view str, unsigned int codepage);
 std::u32string utf8_to_utf32(const std::string& str);

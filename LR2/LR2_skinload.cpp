@@ -3,7 +3,7 @@
 #include "LR2_configsave.h"
 #include "En_fileutil.h"
 #include "filesystem.h"
-
+#include "filesystem.h"
 bool IsMultibyte(byte ch){
 	/*if (0x80 < ch) {
 		if (ch < 0xa0) return true;
@@ -938,7 +938,7 @@ int ReadSkin(skstruct *sk,CSTR FilePath, int unused, int skin_num, SkinUser* sku
 	ErrorLogFmtAdd("スキンの読み込みを開始します。 %s\n", FilePath.body);
 	ErrorLogTabAdd();
 
-	pFile = _wfopen(utf2ws(FilePath.body).c_str(), L"r");
+	pFile = fopen(FilePath.body, "r");
 	CSTR dir(FilePath.getDirectory());
 	line = 0;
 
@@ -949,6 +949,7 @@ int ReadSkin(skstruct *sk,CSTR FilePath, int unused, int skin_num, SkinUser* sku
 	}
 	pFbuf = fBuf.outstr();
 	for (pFbuf = fgets(pFbuf, 1023, pFile); pFbuf; pFbuf = fgets(pFbuf, 1023, pFile)) {
+		fBuf = ansi2utf(pFbuf, 932).c_str();
 		//if (sk->image.dstSize - 1 == sk->image.srcSize) {
 		//	sk->image.src = (SRCstruct*)realloc(sk->image.src, (sk->image.dstSize + 50) * sizeof(SRCstruct));
 		//	sk->image.dst = (DSTstruct*)realloc(sk->image.dst, (sk->image.dstSize + 50) * sizeof(DSTstruct));

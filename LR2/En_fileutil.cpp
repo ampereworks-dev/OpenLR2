@@ -2,7 +2,7 @@
 #include <md5.h>
 #include "DxLib/DxLib.h" //log
 #include <codecvt>
-
+#include "filesystem.h"
 #ifndef _WIN32
 #include <chrono>
 #include <filesystem>
@@ -67,7 +67,7 @@ std::u32string utf8_to_utf32(const std::string& str) {
 
 int makeFileHash(LPCSTR filepath, LPCSTR oBuf) {
 	FILE* pFile;
-	pFile = _wfopen(utf2ws(filepath).c_str(), L"rb");
+	pFile = fopen(filepath, "rb");
 	if (!pFile)  return -1;
 	unsigned char* md5buf = (unsigned char*)md5File(pFile);
 	fclose(pFile);

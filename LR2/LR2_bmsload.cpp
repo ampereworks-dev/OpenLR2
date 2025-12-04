@@ -2,7 +2,7 @@
 #include "Engine.h"
 #include "LR2_replay.h"
 #include "filesystem.h"
-
+#include "filesystem.h"
 #include <algorithm>
 #include <unordered_map>
 
@@ -2000,7 +2000,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 				ErrorLogFmtAdd("エキスパ:ステージ=%d、フルパス=%s\n", gp->courseStageNow, filename.body);
 			}
 		}
-		hFile = _wfopen(utf2ws(filename.body).c_str(), L"r");
+		hFile = fopen(filename.body, "r");
 		if (hFile == NULL) {
 			ErrorLogAdd("BMSを開けません。\n");
 			return -1;
@@ -2030,6 +2030,7 @@ int ParseBmsFile(gameplay *gp, CSTR filename, AUDIO *aud, ConfigStruct* cfg, BMS
 				*fBuf.atPos(0) = '\0';
 				continue;
 			}
+			fBuf = ansi2utf(pFbuf, 932).c_str();
 			fBufOrg = fBuf;
 			fBuf.upper();
 

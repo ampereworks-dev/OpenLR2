@@ -1,5 +1,5 @@
 #include "strclass.h"
-
+#include "filesystem.h"
 #include <cstring>
 #include <span>
 #include <string>
@@ -334,7 +334,7 @@ int CSTR::toFile(const char *filepath) {
 	FILE *_File;
 	char *pcVar2;
 
-	_File = _wfopen(utf2ws(filepath).c_str(), L"w");
+	_File = fopen(filepath, "w");
 	if (_File == (FILE *)0x0) {
 		return -1;
 	}
@@ -414,7 +414,7 @@ char* CSTR::atPos(int pos) {
 bool CSTR::canOpenFile() {
 	FILE *_File;
 
-	_File = _wfopen(utf2ws(body).c_str(), L"r");
+	_File = fopen(body, "r");
 	if (_File == NULL) {
 		return false;
 	}

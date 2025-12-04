@@ -3,7 +3,6 @@
 #include "LR2.h"
 #include <stdio.h>
 #include "filesystem.h"
-
 #ifndef _WIN32
 #include "En_dxlibstub.h"
 #endif // _WIN32
@@ -650,7 +649,7 @@ int ShowReadmes(game *g) {
 		g->txtStruct.readme.path = g->txtStruct.readme.folderpath;
 		g->txtStruct.readme.path.add(filename.c_str());
 
-		_wfopen_s(&pFile, utf2ws(g->txtStruct.readme.path.body).c_str(), L"r");
+		pFile = fopen(g->txtStruct.readme.path.body, "r");
 
 		char *pFbuf = fBuf.outstr();
 		if (pFile != NULL) {
@@ -713,17 +712,14 @@ int ShowReadme(game *g, CSTR path) {
 
 	CSTR fBuf(0x400);
 
-#ifdef _WIN32
-	_wfopen_s(&pFile, utf2ws(g->txtStruct.readme.path.body).c_str(), L"r");
-#else
 	pFile = fopen(g->txtStruct.readme.path, "r");
-#endif // _WIN32
 
 	char *pFbuf = fBuf.outstr();
 	if (pFile != NULL) {
 		g->txtStruct.readme.show = 1;
 		pFbuf = fBuf.outstr();
 		for (pFbuf = fgets(pFbuf, 0x3FC, pFile); pFbuf; pFbuf = fgets(pFbuf, 0x3FC, pFile)) {
+			fBuf = ansi2utf(pFbuf, 932).c_str();
 			g->txtStruct.readme.body[g->txtStruct.readme.lines] = fBuf;
 			g->txtStruct.readme.lines++;
 			int len = GetTextGraphLength(&fBuf, &g->skstruct.ImageFonts[g->skstruct.src_README[0].cycle]);

@@ -92,7 +92,7 @@ int ReadKeyConfig(game *game, const char *FilePath) {
 	ReadXml_Int_Multi("keyconfig", "key32", "id", (game->config).input.buttonMap[0x20], hXml);
 	ReadXml_Int_Multi("keyconfig", "key33", "id", (game->config).input.buttonMap[0x21], hXml);
 
-	delete hXml;
+	delete(hXml);
 
 	return 1;
 }

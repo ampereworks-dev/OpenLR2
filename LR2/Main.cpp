@@ -113,6 +113,10 @@ int main(int argc, char** argv) {
 		MessageBoxA(NULL, "Failed to read main config", "エラー", NULL);
 		return -1;
 	}
+	if (!ReadOpenLr2Config(&gs, fs::make_preferred("LR2files/Config/openlr2-config.xml").data()) && gs.is_starter == false) {
+		MessageBoxA(NULL, "Failed to read OpenLR2 config", "エラー", NULL);
+		return -1;
+	}
 	if (gs.config.jukebox.numOfPath <= 0 && gs.is_starter == false) {
 		MessageBoxA(NULL, "設定プログラムのJUKEBOX1タブで、\n曲を検索するフォルダの登録を行ってください。", "エラー", NULL);
 		return -1;
@@ -2204,8 +2208,9 @@ int main(int argc, char** argv) {
 	gs.config.sound.fxp2_2 = gs.audio.param.fxParam[2][1];
 	gs.config.network.lr1ir = lr1ir;
 	gs.config.network.lr2ir = lr2ir;
-	if ( gs.auto2avi == 0 && gs.is_recordmode == 0 && gs.rec.recMode == 0) {
+	if (gs.auto2avi == 0 && gs.is_recordmode == 0 && gs.rec.recMode == 0) {
 		WriteConfigXml(&gs, fs::make_preferred("LR2files/Config/config.xml").data());
+		WriteOpenLr2ConfigXml(&gs, fs::make_preferred("LR2files/Config/openlr2-config.xml").data());
 		WriteMidiXml(&gs, fs::make_preferred("LR2files/Config/midi.xml").data());
 	}
 	CloseMIDI();

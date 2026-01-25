@@ -192,11 +192,10 @@ int ReadMIDI(game *gs, const char *filepath){
 }
 
 int WriteConfigXml(game *g, const char *filename){
-	FILE *pFile;
 	char buf[256];
 	
-	pFile = fopen(filename, "w");
-	if (pFile == NULL) return 0; 
+	FILE *pFile = fopen(filename, "w");
+	if (pFile == nullptr) return 0;
 
 	fputs("<?xml version=\"1.0\" encoding=\"shift_jis\"?>\n", pFile);
 	fputs("<config>\n", pFile);
@@ -315,9 +314,6 @@ int WriteConfigXml(game *g, const char *filename){
 	fputs(buf, pFile);
 
 	sprintf(buf, "\t\t<%s>%d</%s>\n", "disablecurspeedchange", (g->config).play.disablecurspeedchange, "disablecurspeedchange");
-	fputs(buf, pFile);
-
-	sprintf(buf, "\t\t<%s>%d</%s>\n", "gaugeautoshift", (g->config).play.m_gas, "gaugeautoshift");
 	fputs(buf, pFile);
 	fputs("\t</play>\n", pFile);
 
@@ -529,7 +525,6 @@ int WriteConfigXml(game *g, const char *filename){
 	WriteXML_Tab2Str(pFile, "play_7_b", (g->config).skin.skinFilePath[12]);
 	WriteXML_Tab2Str(pFile, "play_5_b", (g->config).skin.skinFilePath[13]);
 	WriteXML_Tab2Str(pFile, "play_9_b", (g->config).skin.skinFilePath[14]);
-	WriteXML_Tab2Str(pFile, "courseresult", (g->config).skin.skinFilePath[15]); //SKINTYPE_COURSERESULT
 	WriteXML_Tab2Str(pFile, "fontname", (g->config).skin.fontname);
 	sprintf(buf, "\t\t<%s>%d</%s>\n", "disableimagefont", (g->config).skin.disableimagefont, "disableimagefont");
 	fputs(buf, pFile);
@@ -612,6 +607,33 @@ int WriteConfigXml(game *g, const char *filename){
 	return 1;
 }
 
+int WriteOpenLr2ConfigXml(game *g, const char *filename){
+	char buf[256];
+
+	FILE *pFile = fopen(filename, "w");
+	if (pFile == nullptr) return 0;
+
+	fputs("<?xml version=\"1.0\" encoding=\"shift_jis\"?>\n", pFile);
+	fputs("<config>\n", pFile);
+
+	fputs("\t<play>\n", pFile);
+	sprintf(buf, "\t\t<%s>%d</%s>\n", "gaugeautoshift", (g->config).play.m_gas, "gaugeautoshift");
+	fputs(buf, pFile);
+	fputs("\t</play>\n", pFile);
+
+	fputs("\t<skin>\n", pFile);
+	WriteXML_Tab2Str(pFile, "courseresult", (g->config).skin.skinFilePath[15]);
+	fputs("\t</skin>\n", pFile);
+
+	fputs("</config>\n", pFile);
+
+	fclose(pFile);
+
+	file_utf_to_ansi(filename);
+
+	return 1;
+}
+
 void WriteXML_KeyConfig(FILE *hFile, CONFIG_INPUT cfg_in, const char *tag, int num){
 	char buf[256];
 
@@ -631,10 +653,9 @@ void WriteXML_KeyConfig(FILE *hFile, CONFIG_INPUT cfg_in, const char *tag, int n
 }
 
 int WriteKeyConfig(game *g, const char *filepath, int key) {
-	FILE *pFile;
 	CONFIG_INPUT cfg_in;
 
-	pFile = fopen(filepath, "w");
+	FILE *pFile = fopen(filepath, "w");
 	if (pFile == (FILE *)0x0) {
 		return 0;
 	}
@@ -750,10 +771,8 @@ int WriteKeyConfig(game *g, const char *filepath, int key) {
 }
 
 int WriteMidiXml(game *g, const char *filename) {
-	FILE *pFile;
-
-	pFile = fopen(filename, "w");
-	if (pFile == NULL) {
+	FILE *pFile = fopen(filename, "w");
+	if (pFile == nullptr) {
 		return 0;
 	}
 	fputs("<?xml version=\"1.0\" encoding=\"shift_jis\"?>\n", pFile);
@@ -896,10 +915,7 @@ int ReadSkinCustomize(SkinUser *sku, char *FilePath) {
 
 // test
 int WriteSkinCustomizeXml(SkinUser *sku, char *filepath) {
-	
-	FILE *pFile;
-
-	pFile = fopen(filepath, "w");
+	FILE *pFile = fopen(filepath, "w");
 	if (pFile == (FILE *)0x0) {
 		return 0;
 	}
@@ -1180,7 +1196,6 @@ int ReadConfig(game* g, const char* filepath) {
 	ReadXml_Int("config", "play", "gomiscore", 0, &g->config.play.gomiscore, hXml);
 	ReadXml_Int("config", "play", "disableleftclickexit", 0, &g->config.play.disableleftclickexit, hXml);
 	ReadXml_Int("config", "play", "disablecurspeedchange", 0, &g->config.play.disablecurspeedchange, hXml);
-	ReadXml_PositiveIntAsBool("config", "play", "gaugeautoshift", false, &g->config.play.m_gas, hXml);
 	ReadXml_Str("config", "skin", "play_7", "", &g->config.skin.skinFilePath[0], hXml);
 	ReadXml_Str("config", "skin", "play_5", "", &g->config.skin.skinFilePath[1], hXml);
 	ReadXml_Str("config", "skin", "play_14", "", &g->config.skin.skinFilePath[2], hXml);
@@ -1196,7 +1211,6 @@ int ReadConfig(game* g, const char* filepath) {
 	ReadXml_Str("config", "skin", "play_7_b", "", &g->config.skin.skinFilePath[12], hXml);
 	ReadXml_Str("config", "skin", "play_5_b", "", &g->config.skin.skinFilePath[13], hXml);
 	ReadXml_Str("config", "skin", "play_9_b", "", &g->config.skin.skinFilePath[14], hXml);
-	ReadXml_Str("config", "skin", "courseresult", "", &g->config.skin.skinFilePath[15], hXml); //SKINTYPE_COURSERESULT
 	ReadXml_Str("config", "skin", "fontname", "Ariel", &g->config.skin.fontname, hXml);
 	ReadXml_Int("config", "skin", "disableimagefont", 0, &g->config.skin.disableimagefont, hXml);
 	ReadXml_Str("config", "player", "id", "", &g->config.player.id, hXml);
@@ -1244,6 +1258,20 @@ int ReadConfig(game* g, const char* filepath) {
 	ReadXml_Int("config", "tools", "autobmptopng", 0, &g->config.tools.autobmptopng, hXml);
 	ReadXml_Int("config", "tools", "autofumensearch", 0, &g->config.tools.autofumensearch, hXml);
 	
+	delete(hXml);
+	return 1;
+}
+
+int ReadOpenLr2Config(game* g, const char* filepath) {
+	TiXmlDocument *hXml = new TiXmlDocument(filepath);
+	if (!parse_cp932_xml(hXml, filepath)) {
+		if (hXml) {
+			delete(hXml);
+		}
+		hXml = nullptr;
+	}
+	ReadXml_PositiveIntAsBool("config", "play", "gaugeautoshift", false, &g->config.play.m_gas, hXml);
+	ReadXml_Str("config", "skin", "courseresult", "", &g->config.skin.skinFilePath[15], hXml);
 	delete(hXml);
 	return 1;
 }

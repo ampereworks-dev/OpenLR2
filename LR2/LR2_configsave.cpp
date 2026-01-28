@@ -645,7 +645,6 @@ void WriteXML_KeyConfig(FILE *hFile, CONFIG_INPUT cfg_in, const char *tag, int n
 	fputs("\t</", hFile);
 	fputs(tag, hFile);
 	fputs(">\n", hFile);
-	return;
 }
 
 int WriteKeyConfig(game *g, const char *filepath, int key) {

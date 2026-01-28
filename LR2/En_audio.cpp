@@ -1199,7 +1199,6 @@ void RAWSOUND::ExpandBuffer(int minSize) {
 		this->data = buf;
 		this->dataSize = newSize;
 	}
-	return;
 }
 
 void RAWSOUND::MakeBitDepth16(void){
@@ -1212,7 +1211,6 @@ void RAWSOUND::MakeBitDepth16(void){
 		this->bits = 16;
 		this->length = this->length * 2;
 	}
-	return;
 }
 
 void RAWSOUND::MakeStereo(void){
@@ -1227,7 +1225,6 @@ void RAWSOUND::MakeStereo(void){
 		this->channels = 2;
 		this->length = this->length * 2;
 	}
-	return;
 }
 
 // TODO: I cannot understand this... replace with library would be good
@@ -1283,5 +1280,4 @@ void RAWSOUND::MakeSampleRate44100(void) {
 		this->length = size;
 		this->samples = 44100;
 	}
-	return;
 }

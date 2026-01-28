@@ -95,7 +95,6 @@ void LUNARIS_LAND() {
 			lun_field[x + 4][y + i] = lun_nowblockshape[4][i];
 		}
 	}
-	return;
 }
 
 // 2left 4right 8down
@@ -300,7 +299,6 @@ void LUNARIS_NEXT(void) {
 	LUNARIS_NEXTRANDOMROTATE();
 	lun_x = 1;
 	lun_y = -2;
-	return;
 }
 
 int DrawLunaris(game *g) {

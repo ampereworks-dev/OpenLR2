@@ -201,7 +201,6 @@ void CSTR::resize2(int size) {
 		}
 		body = (char *)calloc(1, size);
 	}
-	return;
 }
 
 CSTR& CSTR::fillzero() {

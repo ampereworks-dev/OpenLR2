@@ -43,7 +43,6 @@ void ProcLoadBmsResource(game *g) {
 	g->gameplay.flag_closingPhase = '\0';
 	LoadBmsResource(&g->gameplay, g->sSelect.metaSelected.filepath, &g->audio, &g->config, &g->sSelect.metaSelected, g->skstruct.flag_BGA, g->skstruct.flag_flip, 0);
 	g->gameplay.bmsResourceLoaded = 1;
-	return;
 }
 
 
@@ -1312,7 +1311,6 @@ void DPtoSP(gameplay *gp) { //test completed
 		}
 	}
 	qsort(gp->bmsobj.notes, gp->bmsobj.count, sizeof(NoteStruct), CMP_NotesByRealTimingOp);
-	return;
 }
 
 void PMStoSP(gameplay *gp) { //test&fix completed
@@ -1580,7 +1578,6 @@ void PMStoSP(gameplay *gp) { //test&fix completed
 			ErrorLogFmtAdd("###########################################################\n空気を読まな いスクラッチ 小節%d チャンネル%d\n", measure, 10);
 	}
 
-	return;
 }
 
 int DPsplitLaneScratch(LaneStruct *lane, int start, CHARTCONVERTER *cc) {

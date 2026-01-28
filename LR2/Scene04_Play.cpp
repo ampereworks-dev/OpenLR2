@@ -1781,7 +1781,6 @@ void ProcGameThread(game *g) {
 		g->gameplay.flag_threadDoingProcGame = 0;
 	}
 	g->gameplay.flag_threadExist = 0;
-	return;
 }
 
 int ProcS_Play(game *g, sqlite3* sql) {

@@ -134,7 +134,6 @@ void WriteXML_Tab2Int(FILE *hFile, const char *tag, int value){
 
 	sprintf(buf, "\t\t<%s>%d</%s>\n", tag, value, tag);
 	fputs(buf, hFile);
-	return;
 }
 
 void WriteXML_Tab2Str(FILE *hFile, const char *tag, CSTR str){
@@ -147,5 +146,4 @@ void WriteXML_Tab2Str(FILE *hFile, const char *tag, CSTR str){
 	str.replace("\"", "&quot;");
 	sprintf(buf, "\t\t<%s>%s</%s>\n", tag, str.body, tag);
 	fputs(buf, hFile);
-	return;
 }

@@ -12,7 +12,6 @@ void ThreadProc_PO4parseBMS(game *g) {
 	
 	ParseBmsFile(&g->gameplay, g->sSelect.metaSelected.filepath, &g->audio, &g->config, &g->sSelect.metaSelected, g->skstruct.flag_BGA, 0);
 	g->gameplay.bmsResourceLoaded = 1;
-	return;
 }
 
 int ProcI_PO4Select(game *g, sqlite3 *sql) { //not tested

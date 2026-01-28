@@ -47,7 +47,6 @@ void MYRANKING::InitRanking() {
 	this->line = 0;
 	this->judge = 0;
 	this->inputtype = 0;
-	return;
 }
 
 int CMP_PlayerByExscore(const void *p1, const void *p2) {
@@ -68,7 +67,6 @@ void RANKING::ExpandRankingBuffer(int add) {
 	}
 
 	this->rankingMax += add;
-	return;
 }
 
 void RANKING::Init() {
@@ -105,7 +103,6 @@ void RANKING::Init() {
 		this->ranking[i].comment.fillzero();
 	}
 
-	return;
 }
 
 int RANKING::ParseXML(const char* path) {

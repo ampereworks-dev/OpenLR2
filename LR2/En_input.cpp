@@ -287,14 +287,12 @@ void ProcessInput(inputStructure *is, int interval) {
 		if (is->inputID[i] == 1) break;
 	}
 
-	return;
 }
 
 void CALLBACK MIDIInProc(HMIDIIN /*hMidiIn*/, uint wMsg, dword /*dwInstance*/, dword dwParam1, dword dwParam2){
 	if (wMsg == 0x3c3) { // = 963
 		GetMidiInput(dwParam1, dwParam2);
 	}
-	return;
 }
 
 int WaitInput(inputStructure *is){

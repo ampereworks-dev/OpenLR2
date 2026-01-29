@@ -1676,7 +1676,7 @@ void ProcGameThread(game *g) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(16));
 		if (g->gameplay.flag_closingPhase) {
 			g->gameplay.flag_threadExist = 0;
-			break;
+			return;
 		}
 	}
 
@@ -1691,7 +1691,7 @@ void ProcGameThread(game *g) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(16));
 		if (g->gameplay.flag_closingPhase) {
 			g->gameplay.flag_threadExist = 0;
-			break;
+			return;
 		}
 	}
 
@@ -1705,7 +1705,7 @@ void ProcGameThread(game *g) {
 		ReactInput(g);
 		if (g->gameplay.flag_closingPhase) {
 			g->gameplay.flag_threadExist = 0;
-			break;
+			return;
 		}
 	}
 
@@ -1781,7 +1781,6 @@ void ProcGameThread(game *g) {
 		g->gameplay.flag_threadDoingProcGame = 0;
 	}
 	g->gameplay.flag_threadExist = 0;
-	return;
 }
 
 int ProcS_Play(game *g, sqlite3* sql) {

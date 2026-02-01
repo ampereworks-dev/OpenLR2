@@ -30,7 +30,6 @@ int InitKeysound(game *g){
 }
 
 int ReleaseBGA(game *g){
-
 	for (int i = 0; i < 6480; i++) {
 		DeleteGraph(g->gameplay.bgaHandle[i]);
 		g->gameplay.bgaHandle[i] = -1;

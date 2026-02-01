@@ -795,10 +795,7 @@ int main(int argc, char** argv) {
 						}
 						ErrorLogAdd("BMSの音を初期化しました\n");
 					}
-					for (int i = 0; i < 6480; i++) {
-						DeleteGraph(gs.gameplay.bgaHandle[i]);
-						gs.gameplay.bgaHandle[i] = -1;
-					}
+					ReleaseBGA(&gs);
 
 					gs.sSelect.panel_unk = -1;
 					ReadLR2SoundSet(&gs, gs.config.skin.skinFilePath[10], 0);
@@ -1473,10 +1470,7 @@ int main(int argc, char** argv) {
 								ReleaseSound(&gs.audio, &gs.gameplay.keysound[i]);
 							}
 							ErrorLogAdd("BMSの音を初期化しました\n");
-							for (int i = 0; i < 6480; i++) {
-								DeleteGraph(gs.gameplay.bgaHandle[i]);
-								gs.gameplay.bgaHandle[i] = -1;
-							}
+							ReleaseBGA(&gs);
 						}
 					}
 					StopSysSound(&gs);

@@ -1106,9 +1106,8 @@ static void QuickRestart(game& game, bool newRandom) {
 		game.gameplay.flag_retry = 0;
 	}
 
-	for (int i = 0; i < 6480; i++) {
-		StopSound(&game.audio, &game.gameplay.keysound[i]);
-	}
+	ReleaseBGA(&game); // ugly place for this
+	StopAllKeysound(&game);
 }
 
 int ProcI_Play(game *g) {

@@ -756,6 +756,7 @@ int LoadFolderDataFromDB(CSTR query, SONGDATA *song, sqlite3 *sql, int difficult
 		}
 		else if (nowDifficulty == sd.difficulty || difficulty == 0) {
 			difficultyCount++;
+			COPY_SONGDATA(&slist[slistCount], &sd);
 
 			slistCount++;
 			folderSongCount++;

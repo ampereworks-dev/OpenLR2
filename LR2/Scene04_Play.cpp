@@ -1106,9 +1106,8 @@ static void QuickRestart(game& game, bool newRandom) {
 		game.gameplay.flag_retry = 0;
 	}
 
-	for (int i = 0; i < 6480; i++) {
-		StopSound(&game.audio, &game.gameplay.keysound[i]);
-	}
+	ReleaseBGA(&game); // ugly place for this
+	StopAllKeysound(&game);
 }
 
 int ProcI_Play(game *g) {
@@ -1787,9 +1786,7 @@ int ProcS_Play(game *g, sqlite3* sql) {
 
 	int iTemp;
 
-	if (g->gameplay.hThreadPreview.joinable()) {
-		g->gameplay.hThreadPreview.join();
-	}
+	g->gameplay.hThreadPreview = {};
 	g->gameplay.flag_closingPhase = 0;
 	
 	CSTR gData, gName;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <future>
 #include <mutex>
 #include <thread>
 #include <unordered_map>
@@ -1077,10 +1078,10 @@ struct TextStruct {
 };
 
 struct REPLAY {
-	struct ReplayData * data;
-	int max;
-	int count;
-	int status; /* 0:off 1:recording 2:playing */
+	ReplayData* data{};
+	int max{};
+	int count{};
+	int status{}; /* 0:off 1:recording 2:playing */
 	struct CONFIG_PLAY cfg;
 	struct AUDIO_PARAM aud;
 };
@@ -1313,7 +1314,7 @@ struct gameplay {
 	int fadeoutBGAend[10];
 	int bgaMixer[10];
 	char isPreviewLoad;
-	std::jthread hThreadPreview;
+	std::future<void> hThreadPreview;
 	int previewStatus; /* 1:start 2:loaded */
 	CSTR previewBMShash;
 	CSTR previewBMSfilepath;
@@ -1436,7 +1437,7 @@ struct game {
 	int po4MainMenuCursor;
 	int procSelecter; /* 2:select 3:deciide 4:play 5:result 6:keyconfig 7:skinselect */
 	int procPhase;
-	std::jthread hThreadBanner;
+	std::vector<std::future<std::pair<std::pair<std::string, std::string>, int>>> hThreadBanner;
 	struct gameplay gameplay;
 	char is_clicked_screenModeChange;
 	int isSkipDrawTick; /* skip frame? */

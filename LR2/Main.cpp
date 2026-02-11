@@ -766,7 +766,7 @@ int main(int argc, char** argv) {
 				ret += '}';
 				return ret;
 			};
-			std::ofstream("nowplaying.json") << get_scene_status_string(gs);
+			std::ofstream("nowstate.json") << get_scene_status_string(gs);
 
 			InitFade(&gs.audio);
 			gs.gameplay.flag_closingPhase = 1;

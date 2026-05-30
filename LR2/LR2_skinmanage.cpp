@@ -244,35 +244,36 @@ int ParseLR2SkinCustom(SkinManage *skm, CSTR filepath) {
 			skm->Data[skm->Count].thumbnail.assign(&csvBuf.str[4]);
 			skm->Data[skm->Count].informationP5 = csvBuf.val[5];
 			skm->Data[skm->Count].unused18 = -1;
-			skm->Data[skm->Count].targetX = csvBuf.val[6] == 0 ? 640: csvBuf.val[6];
-			skm->Data[skm->Count].targetY = csvBuf.val[7] == 0 ? 480: csvBuf.val[7];
+			skm->Data[skm->Count].targetX = csvBuf.val[6] < 640 ? 640 : csvBuf.val[6];
+			skm->Data[skm->Count].targetY = csvBuf.val[7] < 480 ? 480 : csvBuf.val[7];
 			skm->Count ++;
 			if (skm->Count == skm->Max) {
 				ExpandSkinMax(skm);
 			}
 		}
 		else if (buffer.left(11).isSame("#RESOLUTION")) {
-
+			SplitCSV(buffer, &csvBuf, ",");
 			switch (csvBuf.val[1]) {
-			case 0:
-				skm->Data[skm->Count].targetX = 640;
-				skm->Data[skm->Count].targetY = 480;
+			case 0: //TOFIX : count-1 is not reliable, temp code 260530
+				skm->Data[skm->Count - 1].targetX = 640;
+				skm->Data[skm->Count - 1].targetY = 480;
 				break;
 			case 1:
-				skm->Data[skm->Count].targetX = 1280;
-				skm->Data[skm->Count].targetY = 720;
+				skm->Data[skm->Count - 1].targetX = 1280;
+				skm->Data[skm->Count - 1].targetY = 720;
 				break;
 			case 2:
-				skm->Data[skm->Count].targetX = 1920;
-				skm->Data[skm->Count].targetY = 1080;
+				skm->Data[skm->Count - 1].targetX = 1920;
+				skm->Data[skm->Count - 1].targetY = 1080;
 				break;
 			case 3:
-				skm->Data[skm->Count].targetX = 3840;
-				skm->Data[skm->Count].targetY = 2160;
-
+				skm->Data[skm->Count - 1].targetX = 3840;
+				skm->Data[skm->Count - 1].targetY = 2160;
+				break;
 			default:
-				skm->Data[skm->Count].targetX = csvBuf.val[1] >= 640 ? 640 : csvBuf.val[1];
-				skm->Data[skm->Count].targetY = csvBuf.val[2] >= 480 ? 480 : csvBuf.val[2];
+				skm->Data[skm->Count - 1].targetX = (csvBuf.val[1] < 640) ? 640 : csvBuf.val[1];
+				skm->Data[skm->Count - 1].targetY = (csvBuf.val[2] < 480) ? 480 : csvBuf.val[2];
+				break;
 			}
 		}
 		else if (buffer.left(13).isSame("#CUSTOMOPTION")) {

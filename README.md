@@ -29,6 +29,11 @@ or backup your 'LR2files\Database\Score\'
 
 ~(accidents can be occur, by saving score with OpenLR2 and sending score with original LR2. DO NOT MIX yet)~
 
+## I want use HD skins
+<img width="441" height="64" alt="image" src="https://github.com/user-attachments/assets/30f21a53-aa14-430b-ae74-9a11c62f3c49" />
+
+add #RESOLUTION under #INFORMATION
+
 ## known issues
  - score save issue on NONSTOP MIX
  - readme left click scroll is faster than original (not important)

@@ -1,0 +1,48 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "windows-vs",
+      "generator": "Visual Studio 17 2022",
+      "architecture": {
+        "value": "Win32",
+        "strategy": "set"
+      },
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS_INIT": "/MP /arch:IA32 /W4 /wo4244 /permissive-"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "windows-vs-asan",
+      "inherits": "windows-vs",
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS_INIT": "/MP /arch:IA32 /W4 /wo4244 /permissive- /fsanitize=address"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "windows-vs-asan-debug",
+      "configurePreset": "windows-vs-asan",
+      "displayName": "x86 Debug (ASAN)",
+      "configuration": "Debug"
+    },
+    {
+      "name": "windows-vs-debug",
+      "configurePreset": "windows-vs",
+      "displayName": "x86 Debug",
+      "configuration": "Debug"
+    },
+    {
+      "name": "windows-vs-relwithdebinfo",
+      "configurePreset": "windows-vs",
+      "displayName": "x86 RelWithDebInfo",
+      "configuration": "RelWithDebInfo"
+    }
+  ]
+}

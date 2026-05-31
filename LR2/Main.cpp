@@ -240,7 +240,7 @@ int main(int argc, char** argv) {
 	}
 	//make beta3 score backup
 	CSTR pathScoreDBBackUp;
-	cstrSprintf(&pathScoreDB, "LR2files/Database/Score/%s.db_backup", gs.config.player.id.body);
+	cstrSprintf(&pathScoreDBBackUp, "LR2files/Database/Score/%s.db_backup", gs.config.player.id.body);
 	CopyFile(pathScoreDB, pathScoreDBBackUp, true); //intended failure when exist
 
 	gs.sSelect.playerPassMD5.assign(&gs.config.player.passMD5);

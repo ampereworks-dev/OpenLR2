@@ -1025,11 +1025,11 @@ int LRDraw(DrawingBuf *drBuf, TextStruct *txt, SONGSELECT *sSel, skstruct *sks, 
 	if (draw.fontHandle == -1) {
 		if (draw.grHandle != -1) {
 			if (0 <= draw.subHandle && draw.subHandle < 20 && drBuf->isHidSud[draw.subHandle] > 0) {
-				SetDrawArea(0, drBuf->top[draw.subHandle], 640, drBuf->bottom[draw.subHandle]); //TODO_RESOULUTION
+				SetDrawArea(0, drBuf->top[draw.subHandle], skinSizeX, drBuf->bottom[draw.subHandle]); //TODO_RESOULUTION
 			}
 			LRDrawImg(&draw.grHandle, &draw);
 			if (0 <= draw.subHandle && draw.subHandle < 20 && drBuf->isHidSud[draw.subHandle] > 0) {
-				SetDrawArea(0, 0, 640, 480);
+				SetDrawArea(0, 0, skinSizeX, skinSizeY);
 			}
 			return 1;
 		}
